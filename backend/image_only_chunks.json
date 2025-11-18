@@ -1,0 +1,54 @@
+{
+  "chunks": [
+    {
+      "text": "1. **Description**: The image is a solid green rectangle with no additional features, patterns, or text.\n\n2. **Purpose and Relationship**: The image appears to be a decorative element or a section divider within the document. It is likely used to separate different sections or to add visual interest to the page.\n\n3. **Extracted Text**: There is no text visible in the image.\n\n4. **Image Type**: This is a graphic element, specifically a colored rectangle, used for design purposes.",
+      "metadata": {
+        "type": "image",
+        "section": "Visual Content",
+        "context": "Image from page 1",
+        "tags": [
+          "image",
+          "visual"
+        ],
+        "page": 1,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "row_index": "",
+        "image_id": "p1-img-0-0",
+        "box": {
+          "l": 73.5,
+          "t": 50.55999755859375,
+          "r": 541.5,
+          "b": 55.80999755859375
+        },
+        "anchored": true
+      }
+    },
+    {
+      "text": "1. **Description**: The image is a solid green rectangle with no additional features, patterns, or text.\n\n2. **Purpose and Relationship to Surrounding Text**: The image appears to be a placeholder or a design element within the document. It does not contain any information or text that directly relates to the surrounding content about achievements and responsibilities.\n\n3. **Extracted Text**: There is no visible text within the image.\n\n4. **Image Type**: The image is a simple graphic element, likely used as a design feature or separator within the document.",
+      "metadata": {
+        "type": "image",
+        "section": "Visual Content",
+        "context": "Image from page 2",
+        "tags": [
+          "image",
+          "visual"
+        ],
+        "page": 2,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "row_index": "",
+        "image_id": "p2-img-0-0",
+        "box": {
+          "l": 73.5,
+          "t": 50.55999755859375,
+          "r": 541.5,
+          "b": 55.80999755859375
+        },
+        "anchored": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "chunks": [
+    {
+      "text": "Josh Denziel S. Joves",
+      "metadata": {
+        "type": "heading",
+        "section": "Contact Information",
+        "context": "Name of the individual",
+        "tags": [
+          "contact",
+          "personal"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1
+      }
+    },
+    {
+      "text": "Denz.joves@gmail.com | https://www.linkedin.com/in/josh-denziel-joves-824769394/ | 09499973474 | https://github.com/Jdenziieel/denz-portfolio",
+      "metadata": {
+        "type": "paragraph",
+        "section": "Contact Information",
+        "context": "Contact details including email, LinkedIn, phone number, and GitHub portfolio",
+        "tags": [
+          "contact",
+          "email",
+          "LinkedIn",
+          "GitHub"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1
+      }
+    },
+    {
+      "text": "Career Objective: A graduating student committed to learning industry best practices, including end-to-end development processes, client requirement analysis, and technology-driven problem solving. Seeks a role that cultivates technical depth, leadership capability, and eager hands-on experience while supporting initiatives involving artificial intelligence and modern application architectures. Aims to build a strong foundation in solution design and system architecture as part of a long-term career in the technology field.",
+      "metadata": {
+        "type": "paragraph",
+        "section": "Career Objective",
+        "context": "Statement of career goals and aspirations",
+        "tags": [
+          "career",
+          "objective",
+          "technology"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1
+      }
+    },
+    {
+      "text": "Education: University of Santo Tomas - BS Information and Technology - August 2022 - June 2026 University of Santo Tomas - AB in Economics  - August 2018 - June 2022",
+      "metadata": {
+        "type": "paragraph",
+        "section": "Education",
+        "context": "Educational background and degrees obtained",
+        "tags": [
+          "education",
+          "university",
+          "degrees"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1
+      }
+    },
+    {
+      "text": "Certification: CompTIA IT Fundamentals (ITF+) Certification",
+      "metadata": {
+        "type": "paragraph",
+        "section": "Certification",
+        "context": "Certification obtained in IT fundamentals",
+        "tags": [
+          "certification",
+          "IT"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1
+      }
+    },
+    {
+      "text": "Technical Skills: Java, C++, JavaScript, PHP, MySQL, Kotlin, Firebase, C#, ASP.NET, AngularJs, React, Express.js, Node.js, MongoDB, Python, Django, FastAPI, Laravel, HTML, CSS, Bootstrap, Tailwind CSS",
+      "metadata": {
+        "type": "list",
+        "section": "Technical Skills",
+        "context": "List of technical skills and programming languages",
+        "tags": [
+          "skills",
+          "technical",
+          "programming"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1
+      }
+    },
+    {
+      "text": "Achievements/Responsibilities: - Served as Project Manager for a bakeshop attendance and salary computation web application (MERN stack), leading end-to-end project execution from client consultation to delivery, gathering and validating requirements, contributing to system architecture and business logic, evaluating technical approaches, resolving design issues, managing tasks via Trello, coordinating stakeholder communication, preparing SPMP/SRS/SDD documentation, and performing comprehensive scenario-based manual testing to ensure system quality and alignment with project standards. - Led the design and development of an agentic AI system for a logistics company web application, integrating LLM-powered knowledge-base querying, an AI assistant capable of emulating real assistant workflows, and intelligent data mapping with automated data entry. Built core AI workflows using Python, React, LangChain, LangGraph, and OpenAI LLM/embedding models, with agent services deployed independently as microservices on AWS as part of an ongoing Capstone Project.",
+      "metadata": {
+        "type": "list",
+        "section": "Achievements/Responsibilities",
+        "context": "Description of key projects and roles undertaken",
+        "tags": [
+          "achievements",
+          "responsibilities",
+          "projects"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+/*
+ * A modern, professional design system using CSS variables.
+ * This makes it easy to maintain and update the theme.
+*/
+:root {
+  --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  
+  --color-bg: #FFFFFF;
+  --color-bg-subtle: #F8F9FA;
+  --color-border: #E9ECEF;
+  
+  --color-text-primary: #212529;
+  --color-text-secondary: #6C757D;
+
+  --color-primary: #0D6EFD;
+  --color-primary-light: #E7F1FF;
+  --border-radius: 8px;
+  --transition-speed: 0.2s ease-in-out;
+}
+
+/* Main sidebar container using a flex column layout */
+.sidebar {
+  background-color: var(--color-bg);
+  width: var(--sidebar-width);
+  height: 100vh;
+  border-right: 1px solid var(--color-border);
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-family: var(--font-family);
+  z-index: 1000;
+  
+  display: flex;
+  flex-direction: column;
+  padding: 20px; /* ✅ UPDATED: Increased from 16px for more breathing room */
+  box-sizing: border-box;
+}
+
+/* Header section with the logo */
+.sidebar-header {
+  padding: 8px 0px; /* Adjusted horizontal padding */
+  margin-bottom: 24px;
+}
+
+.logo {
+  width: 90px;
+  height: auto;
+}
+
+/* Navigation list styling */
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Individual navigation items (now an <a> tag via React Router's <Link>) */
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px; /* ✅ UPDATED: Increased padding for a taller, more spacious feel */
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  transition: all var(--transition-speed);
+  position: relative; /* For the notification dot */
+}
+
+.nav-item:hover {
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+}
+
+/* Active state: subtle background and a clear indicator bar */
+.nav-item.active {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+  /* This inset box-shadow creates the left border without affecting layout */
+  box-shadow: inset 3px 0 0 0 var(--color-primary);
+}
+
+.nav-icon {
+  margin-right: 16px;
+  flex-shrink: 0;
+  /* Icons in active state inherit the primary color */
+  transition: color var(--transition-speed);
+}
+
+.nav-label {
+  font-size: 14px;
+  white-space: nowrap;
+  flex-grow: 1;
+}
+
+.notification-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  margin-left: auto;
+}
+
+
+/*
+ * User Profile at the bottom.
+ * `margin-top: auto` in a flex column pushes this to the end.
+*/
+.user-profile {
+  margin-top: auto;
+  padding: 12px;
+  background-color: var(--color-bg-subtle);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-details {
+  flex-grow: 1;
+  min-width: 0; /* Prevents text overflow issues in flex containers */
+}
+
+.user-name, .user-email {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.user-email {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* A clean, modern button for logout/options */
+.logout-button {
+  background: none;
+  border: none;
+  padding: 4px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+
+.logout-button:hover {
+  background-color: #DEE2E6; /* A slightly darker subtle background */
+  color: var(--color-text-primary);
+}
+
+/* Dropdown for logout (appears on hover of three dots) */
+
+.logout-dropdown {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  min-width: 120px;
+  padding: 6px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Upward dropdown animation */
+.logout-dropdown-up {
+  animation: fadeInUp 0.18s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.logout-dropdown-btn {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 8px 16px;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+.logout-dropdown-btn:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

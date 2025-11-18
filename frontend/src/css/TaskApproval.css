@@ -1,0 +1,178 @@
+/* --- Base Layout --- */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.page-content {
+  margin-left: 220px;
+  flex-grow: 1;
+  padding: 2rem;
+  box-sizing: border-box;
+  background-color: #f8fafc;
+}
+
+
+/* --- Professional Design Enhancements --- */
+
+.task-approval-page {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  color: #1e293b;
+  margin-left: 220px;
+}
+
+/* Page Header */
+.page-content .page-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.page-content .header-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.page-content .header-subtitle {
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+/* Main Content Card Wrapper */
+.page-content .content-card {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* Task List & Individual Cards */
+.content-card .task-list {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.task-list .task-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  transition: box-shadow 0.2s;
+}
+.task-list .task-card:hover {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Sections */
+.task-card .card-header {
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.task-card .card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.task-card .card-body {
+  padding: 0 1.5rem 1rem;
+  font-size: 0.875rem;
+}
+.card-body p {
+  margin: 0.5rem 0;
+  color: #475569;
+}
+.card-body p strong {
+  color: #334155;
+}
+
+.task-card .card-footer {
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
+/* Status Badge */
+.status {
+  padding: 0.125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.status.pending {
+  background-color: #FFF8E8; /* Lighter version of your yellow */
+  color: #B48A14; /* Darker version of your yellow */
+}
+
+/* Action Buttons */
+.btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-approve {
+  background-color: #26326E; /* Changed */
+  color: white;
+}
+.btn-approve:hover {
+  background-color: #1A234A; /* Darkened for hover */
+}
+
+.btn-reject {
+  background-color: transparent; /* Changed */
+  color: #26326E; /* Changed */
+  border-color: #26326E; /* Changed */
+}
+.btn-reject:hover {
+  background-color: #26326E; /* Changed */
+  color: white; /* Added for contrast */
+}
+
+/* Message for when no tasks are available */
+.no-tasks-message {
+    text-align: center;
+    color: #64748b;
+    font-style: italic;
+    padding: 2rem;
+}
+
+/* Responsive Design */
+@media (min-width: 640px) {
+  .page-content .page-header {
+    flex-direction: row;
+    align-items: center;
+  }
+}
