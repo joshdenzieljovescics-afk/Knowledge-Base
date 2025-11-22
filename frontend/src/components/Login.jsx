@@ -2,14 +2,45 @@ import React, { useState } from 'react';
 import '../css/Login.css'; // Import your CSS for styling
 import truckImage from '../assets/truckImage.png';
 
+const API_BASE_URL = 'http://localhost:8009';
+const ACCESS_TOKEN = 'access_token';
+
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Email:', email, 'Password:', password);
-    onLogin();
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Store the access token in localStorage
+        localStorage.setItem(ACCESS_TOKEN, data.access_token);
+        console.log('Login successful, token stored');
+        onLogin();
+      } else {
+        setError(data.error || 'Login failed');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('Failed to connect to server');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -26,6 +57,7 @@ const Login = ({ onLogin }) => {
               </div>
             </div>
             <h2 className="title">Login</h2>
+            {error && <div className="error-message">{error}</div>}
             <form onSubmit={handleSubmit} className="login-form">
               <div className="input-group">
                 <label htmlFor="email">Email</label>
@@ -47,8 +79,8 @@ const Login = ({ onLogin }) => {
                   required
                 />
               </div>
-              <button type="submit" className="login-button">
-                Login
+              <button type="submit" className="login-button" disabled={loading}>
+                {loading ? 'Logging in...' : 'Login'}
               </button>
             </form>
             <div className="divider">

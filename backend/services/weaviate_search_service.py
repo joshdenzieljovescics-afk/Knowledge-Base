@@ -6,7 +6,7 @@ from database.weaviate_client import get_weaviate_client
 class WeaviateSearchService:
     def __init__(self):
         self.client = get_weaviate_client()
-        self.collection_name = "DocumentChunk"
+        self.collection_name = "KnowledgeBase"  # Changed from DocumentChunk to match actual collection
     
     def hybrid_search(
         self,
@@ -18,6 +18,12 @@ class WeaviateSearchService:
         Perform hybrid search (semantic + keyword) on Weaviate
         """
         try:
+            print(f"\n[WeaviateSearch] 🔍 HYBRID SEARCH STARTING")
+            print(f"[WeaviateSearch] Query: {query}")
+            print(f"[WeaviateSearch] Limit: {limit}")
+            print(f"[WeaviateSearch] Filters: {filters}")
+            print(f"[WeaviateSearch] Collection: {self.collection_name}")
+            
             collection = self.client.collections.get(self.collection_name)
             
             # Build where filter if provided
@@ -29,44 +35,101 @@ class WeaviateSearchService:
                         "operator": "ContainsAny",
                         "valueTextArray": filters['document_ids']
                     }
+                    print(f"[WeaviateSearch] Applied document filter: {filters['document_ids']}")
             
             # Hybrid search (combines vector and BM25)
-            response = collection.query.hybrid(
-                query=query,
-                limit=limit,
-                where=where_filter,
-                return_metadata=["score", "distance"],
-                return_properties=[
-                    "chunk_id",
-                    "text",
-                    "chunk_type",
-                    "document_id",
-                    "document_name",
-                    "page",
-                    "section",
-                    "metadata"
-                ]
-            )
+            print(f"[WeaviateSearch] Executing hybrid search (vector + BM25)...")
+            
+            # Note: Some Weaviate versions don't support 'where' in hybrid queries
+            # Apply filters after retrieval if needed
+            if where_filter:
+                print(f"[WeaviateSearch] Note: Filters will be applied post-query")
+                response = collection.query.hybrid(
+                    query=query,
+                    limit=limit * 2,  # Get more to account for filtering
+                    return_metadata=["score", "distance"],
+                    return_properties=[
+                        "chunk_id",
+                        "text",
+                        "type",  # Changed from chunk_type
+                        "page",
+                        "section",
+                        "context",
+                        "tags"
+                    ],
+                    return_references=[
+                        weaviate.classes.query.QueryReference(
+                            link_on="ofDocument",
+                            return_properties=["file_name"]
+                        )
+                    ]
+                )
+            else:
+                response = collection.query.hybrid(
+                    query=query,
+                    limit=limit,
+                    return_metadata=["score", "distance"],
+                    return_properties=[
+                        "chunk_id",
+                        "text",
+                        "type",  # Changed from chunk_type
+                        "page",
+                        "section",
+                        "context",
+                        "tags"
+                    ],
+                    return_references=[
+                        weaviate.classes.query.QueryReference(
+                            link_on="ofDocument",
+                            return_properties=["file_name"]
+                        )
+                    ]
+                )
             
             # Format results
             results = []
             for obj in response.objects:
-                results.append({
+                # Get document name from reference
+                document_name = "Unknown"
+                document_id = None
+                if hasattr(obj, 'references') and obj.references.get('ofDocument'):
+                    doc_ref = obj.references['ofDocument'].objects[0] if obj.references['ofDocument'].objects else None
+                    if doc_ref:
+                        document_name = doc_ref.properties.get('file_name', 'Unknown')
+                        document_id = str(doc_ref.uuid) if hasattr(doc_ref, 'uuid') else None
+                
+                result = {
                     'chunk_id': obj.properties.get('chunk_id'),
                     'text': obj.properties.get('text'),
-                    'chunk_type': obj.properties.get('chunk_type'),
-                    'document_id': obj.properties.get('document_id'),
-                    'document_name': obj.properties.get('document_name'),
+                    'chunk_type': obj.properties.get('type', 'text'),  # Map 'type' to 'chunk_type'
+                    'document_id': document_id,
+                    'document_name': document_name,
                     'page': obj.properties.get('page'),
-                    'section': obj.properties.get('section'),
-                    'metadata': obj.properties.get('metadata', {}),
+                    'section': obj.properties.get('section', ''),
+                    'context': obj.properties.get('context', ''),
+                    'tags': obj.properties.get('tags', []),
                     'score': obj.metadata.score if hasattr(obj.metadata, 'score') else 0.5,
-                })
+                }
+                
+                # Apply document filter if specified
+                if where_filter and document_id:
+                    if document_id in filters.get('document_ids', []):
+                        results.append(result)
+                else:
+                    results.append(result)
+            
+            # Trim to requested limit if we got extra for filtering
+            if where_filter and len(results) > limit:
+                results = results[:limit]
+            
+            print(f"[WeaviateSearch] ✅ Hybrid search returned {len(results)} results")
+            if results:
+                print(f"[WeaviateSearch] Top result: {results[0].get('document_name')} (score: {results[0].get('score'):.3f})")
             
             return results
             
         except Exception as e:
-            print(f"Error in hybrid search: {e}")
+            print(f"[WeaviateSearch] ❌ Error in hybrid search: {e}")
             import traceback
             traceback.print_exc()
             return []
@@ -85,8 +148,9 @@ class WeaviateSearchService:
             
             where_filter = None
             if filters and 'document_ids' in filters and filters['document_ids']:
+                # Use reference path for filtering
                 where_filter = {
-                    "path": ["document_id"],
+                    "path": ["ofDocument"],
                     "operator": "ContainsAny",
                     "valueTextArray": filters['document_ids']
                 }
@@ -97,8 +161,13 @@ class WeaviateSearchService:
                 where=where_filter,
                 return_metadata=["distance"],
                 return_properties=[
-                    "chunk_id", "text", "chunk_type", "document_id",
-                    "document_name", "page", "section", "metadata"
+                    "chunk_id", "text", "type", "page", "section", "context", "tags"
+                ],
+                return_references=[
+                    weaviate.classes.query.QueryReference(
+                        link_on="ofDocument",
+                        return_properties=["file_name"]
+                    )
                 ]
             )
             
@@ -108,15 +177,25 @@ class WeaviateSearchService:
                 distance = obj.metadata.distance if hasattr(obj.metadata, 'distance') else 1.0
                 score = 1 / (1 + distance)
                 
+                # Get document name from reference
+                document_name = "Unknown"
+                document_id = None
+                if hasattr(obj, 'references') and obj.references.get('ofDocument'):
+                    doc_ref = obj.references['ofDocument'].objects[0] if obj.references['ofDocument'].objects else None
+                    if doc_ref:
+                        document_name = doc_ref.properties.get('file_name', 'Unknown')
+                        document_id = str(doc_ref.uuid) if hasattr(doc_ref, 'uuid') else None
+                
                 results.append({
                     'chunk_id': obj.properties.get('chunk_id'),
                     'text': obj.properties.get('text'),
-                    'chunk_type': obj.properties.get('chunk_type'),
-                    'document_id': obj.properties.get('document_id'),
-                    'document_name': obj.properties.get('document_name'),
+                    'chunk_type': obj.properties.get('type', 'text'),
+                    'document_id': document_id,
+                    'document_name': document_name,
                     'page': obj.properties.get('page'),
-                    'section': obj.properties.get('section'),
-                    'metadata': obj.properties.get('metadata', {}),
+                    'section': obj.properties.get('section', ''),
+                    'context': obj.properties.get('context', ''),
+                    'tags': obj.properties.get('tags', []),
                     'score': score
                 })
             
@@ -139,20 +218,38 @@ class WeaviateSearchService:
                     "operator": "Equal",
                     "valueText": chunk_id
                 },
-                limit=1
+                limit=1,
+                return_properties=["chunk_id", "text", "type", "page", "section", "context", "tags"],
+                return_references=[
+                    weaviate.classes.query.QueryReference(
+                        link_on="ofDocument",
+                        return_properties=["file_name"]
+                    )
+                ]
             )
             
             if response.objects:
                 obj = response.objects[0]
+                
+                # Get document name from reference
+                document_name = "Unknown"
+                document_id = None
+                if hasattr(obj, 'references') and obj.references.get('ofDocument'):
+                    doc_ref = obj.references['ofDocument'].objects[0] if obj.references['ofDocument'].objects else None
+                    if doc_ref:
+                        document_name = doc_ref.properties.get('file_name', 'Unknown')
+                        document_id = str(doc_ref.uuid) if hasattr(doc_ref, 'uuid') else None
+                
                 return {
                     'chunk_id': obj.properties.get('chunk_id'),
                     'text': obj.properties.get('text'),
-                    'chunk_type': obj.properties.get('chunk_type'),
-                    'document_id': obj.properties.get('document_id'),
-                    'document_name': obj.properties.get('document_name'),
+                    'chunk_type': obj.properties.get('type', 'text'),
+                    'document_id': document_id,
+                    'document_name': document_name,
                     'page': obj.properties.get('page'),
-                    'section': obj.properties.get('section'),
-                    'metadata': obj.properties.get('metadata', {})
+                    'section': obj.properties.get('section', ''),
+                    'context': obj.properties.get('context', ''),
+                    'tags': obj.properties.get('tags', [])
                 }
             
             return None

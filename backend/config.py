@@ -20,6 +20,21 @@ class Config:
     WEAVIATE_URL = os.environ.get("WEAVIATE_URL")
     WEAVIATE_API_KEY = os.environ.get("WEAVIATE_API_KEY")
     
+    # JWT Configuration
+    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
+    
+    # Security Configuration
+    ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")  # development, staging, production
+    ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3000").split(",")
+    
+    # Rate Limiting (can be overridden via environment)
+    RATE_LIMIT_ENABLED = os.environ.get("RATE_LIMIT_ENABLED", "true").lower() == "true"
+    
+    # HTTPS/TLS (Production only)
+    USE_HTTPS = os.environ.get("USE_HTTPS", "false").lower() == "true"
+    SSL_CERTFILE = os.environ.get("SSL_CERTFILE")  # Path to SSL certificate
+    SSL_KEYFILE = os.environ.get("SSL_KEYFILE")    # Path to SSL private key
+    
     # Processing Configuration
     BATCH_SIZE = 100
     MAX_TOKENS = 1000
@@ -35,7 +50,7 @@ class Config:
     MATCH_SCORE_THRESHOLD = 80
     CROSS_PAGE_LINE_WINDOW = 20
     
-    # Flask Configuration
+    # FastAPI Configuration
     DEBUG = True
     PORT = 8009
     

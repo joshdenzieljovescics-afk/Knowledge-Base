@@ -129,6 +129,41 @@
   border-top: 1px solid #3e3f4b;
 }
 
+.token-stats {
+  background: #2a2b32;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.token-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.token-stat-row:last-child {
+  margin-bottom: 0;
+}
+
+.token-label {
+  color: #8e8ea0;
+  font-weight: 500;
+}
+
+.token-value {
+  color: #ececf1;
+  font-weight: 600;
+  margin: 0 8px;
+}
+
+.token-cost {
+  color: #10a37f;
+  font-weight: 700;
+}
+
 .upload-docs-btn {
   width: 100%;
   padding: 10px 12px;
@@ -382,9 +417,31 @@
   font-size: 12px;
 }
 
+.source-section {
+  font-size: 12px;
+  color: #ececf1;
+  margin: 4px 0;
+  padding-left: 4px;
+  border-left: 2px solid #10a37f;
+}
+
+.source-context {
+  font-size: 11px;
+  color: #c5c5d2;
+  margin: 4px 0;
+  font-style: italic;
+}
+
+.source-tags {
+  font-size: 11px;
+  color: #8e8ea0;
+  margin: 4px 0;
+}
+
 .source-score {
   font-size: 11px;
   color: #8e8ea0;
+  margin-top: 6px;
 }
 
 /* ==================== Input Area ==================== */

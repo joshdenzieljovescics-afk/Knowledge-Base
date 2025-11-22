@@ -1,5 +1,6 @@
 """Database CRUD operations for Weaviate."""
 import uuid
+from weaviate.classes.query import Filter
 from database.weaviate_client import get_weaviate_client, ensure_collections_exist
 from config import Config
 
@@ -50,13 +51,9 @@ def delete_document_and_chunks(doc_id: str):
     docs = client.collections.get("Document")
     chunks = client.collections.get("KnowledgeBase")
 
-    # Delete children (chunks)
+    # Delete children (chunks) using proper Filter.by_ref syntax
     chunks.data.delete_many(
-        where={
-            "path": ["ofDocument", "id"],
-            "operator": "Equal",
-            "valueText": doc_id
-        }
+        where=Filter.by_ref("ofDocument").by_id().equal(doc_id)
     )
 
     # Delete parent (document)

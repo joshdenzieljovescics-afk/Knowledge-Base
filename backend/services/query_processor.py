@@ -36,24 +36,49 @@ class QueryProcessor:
     
     def _is_followup(self, query: str) -> bool:
         """Check if query is a follow-up"""
+        # Expanded pattern list for better detection
         followup_patterns = [
+            # Original patterns
             'what about', 'how about', 'tell me more',
             'can you explain', 'what does that mean',
             'elaborate', 'more details', 'continue',
             'and that', 'about it', 'about that',
-            'the same', 'similar'
+            'the same', 'similar',
+            
+            # Questions asking for more
+            'explain further', 'go deeper', 'more on',
+            'expand on', 'clarify', 'break down',
+            
+            # Comparative follow-ups
+            'compared to', 'versus', 'difference between',
+            'what\'s the difference', 'how does that differ',
+            
+            # Continuation patterns
+            'also', 'additionally', 'furthermore',
+            'what else', 'anything else', 'what more',
+            
+            # Specific aspect requests
+            'what part', 'which section', 'where in',
+            'show me the', 'find the part where',
+            
+            # Clarification requests
+            'i don\'t understand', 'confused about',
+            'what did you mean', 'can you rephrase'
         ]
         query_lower = query.lower()
         
-        # Check for pronouns
-        pronouns = ['it', 'that', 'this', 'those', 'these', 'they', 'them']
+        # Enhanced pronoun detection (including possessives)
+        pronouns = ['it', 'that', 'this', 'those', 'these', 'they', 'them', 'its', 'their', 'theirs']
         words = query_lower.split()
         has_pronoun = any(word in pronouns for word in words)
         
         # Check for follow-up patterns
         has_pattern = any(pattern in query_lower for pattern in followup_patterns)
         
-        return has_pronoun or has_pattern
+        # Detect very short questions (likely follow-ups)
+        is_very_short = len(words) <= 4 and ('?' in query or has_pronoun)
+        
+        return has_pronoun or has_pattern or is_very_short
     
     def _resolve_references(self, query: str, context: List[Dict]) -> str:
         """Resolve ambiguous references using context"""

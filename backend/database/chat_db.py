@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import List, Dict, Optional
 
 class ChatDatabase:
-    def __init__(self, db_path: str = "chat_sessions.db"):
+    def __init__(self, db_path: str = "database/chat_sessions.db"):
         self.db_path = db_path
         self._init_db()
     
@@ -24,6 +24,9 @@ class ChatDatabase:
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL,
                 message_count INTEGER DEFAULT 0,
+                total_tokens_used INTEGER DEFAULT 0,
+                total_cost_usd REAL DEFAULT 0.0,
+                last_token_update TEXT,
                 metadata TEXT
             )
         """)
@@ -108,6 +111,20 @@ class ChatDatabase:
             SET updated_at = ?, message_count = message_count + 1
             WHERE session_id = ?
         """, (now, session_id))
+        
+        # Update token usage if this is an assistant message with token data
+        if role == "assistant" and metadata and 'tokens_used' in metadata:
+            tokens = metadata['tokens_used']
+            # Estimate cost: $5/1M input + $15/1M output, approximate 50/50 split = $10/1M average
+            cost = (tokens / 1_000_000) * 10
+            
+            cursor.execute("""
+                UPDATE sessions
+                SET total_tokens_used = total_tokens_used + ?,
+                    total_cost_usd = total_cost_usd + ?,
+                    last_token_update = ?
+                WHERE session_id = ?
+            """, (tokens, cost, now, session_id))
         
         # Auto-generate title from first user message
         cursor.execute("""
@@ -275,3 +292,51 @@ class ChatDatabase:
         conn.close()
         
         return affected > 0
+    
+    def get_session_token_usage(self, session_id: str) -> Optional[Dict]:
+        """Get token usage statistics for a session"""
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            SELECT total_tokens_used, total_cost_usd, last_token_update
+            FROM sessions
+            WHERE session_id = ?
+        """, (session_id,))
+        
+        row = cursor.fetchone()
+        conn.close()
+        
+        if not row:
+            return None
+        
+        return {
+            'total_tokens': row['total_tokens_used'] or 0,
+            'total_cost_usd': row['total_cost_usd'] or 0.0,
+            'last_update': row['last_token_update']
+        }
+    
+    def get_user_total_tokens(self, user_id: str) -> Dict:
+        """Get total token usage across all sessions for a user"""
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            SELECT 
+                SUM(total_tokens_used) as total_tokens,
+                SUM(total_cost_usd) as total_cost,
+                COUNT(*) as session_count
+            FROM sessions
+            WHERE user_id = ?
+        """, (user_id,))
+        
+        row = cursor.fetchone()
+        conn.close()
+        
+        return {
+            'total_tokens': row[0] or 0,
+            'total_cost_usd': row[1] or 0.0,
+            'session_count': row[2] or 0
+        }
+

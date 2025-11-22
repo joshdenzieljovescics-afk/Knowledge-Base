@@ -108,15 +108,27 @@ def anchor_chunks_to_pdf(result_chunks, structured):
             if matched_lines:
                 chunk_box = calculate_chunk_box(matched_lines)
                 
-                # Add box and page info to chunk metadata
-                chunk["metadata"]["box"] = chunk_box
-                chunk["metadata"]["page"] = matched_lines[0].get("page", 1)
-                chunk["metadata"]["line_count"] = len(matched_lines)
-                chunk["metadata"]["anchored"] = True
-                chunk["metadata"]["matched_line_ids"] = matched_line_ids
-                
-                print(f"[DEBUG] Anchored text chunk: page={chunk['metadata']['page']}, "
-                      f"lines={len(matched_lines)}, box={chunk_box}")
+                # Handle both single box and multiple boxes (cross-page)
+                if isinstance(chunk_box, list):
+                    # Multiple boxes (cross-page content)
+                    chunk["metadata"]["boxes"] = chunk_box
+                    chunk["metadata"]["page"] = chunk_box[0].get("page", matched_lines[0].get("page", 1))
+                    chunk["metadata"]["line_count"] = len(matched_lines)
+                    chunk["metadata"]["anchored"] = True
+                    chunk["metadata"]["matched_line_ids"] = matched_line_ids
+                    
+                    print(f"[DEBUG] Anchored cross-page chunk: pages={[b['page'] for b in chunk_box]}, "
+                          f"lines={len(matched_lines)}, boxes={len(chunk_box)}")
+                else:
+                    # Single box (same-page content)
+                    chunk["metadata"]["box"] = chunk_box
+                    chunk["metadata"]["page"] = matched_lines[0].get("page", 1)
+                    chunk["metadata"]["line_count"] = len(matched_lines)
+                    chunk["metadata"]["anchored"] = True
+                    chunk["metadata"]["matched_line_ids"] = matched_line_ids
+                    
+                    print(f"[DEBUG] Anchored text chunk: page={chunk['metadata']['page']}, "
+                          f"lines={len(matched_lines)}, box={chunk_box}")
             else:
                 # Mark as unanchored but still add metadata structure
                 chunk["metadata"]["anchored"] = False

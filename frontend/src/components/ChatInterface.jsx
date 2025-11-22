@@ -9,6 +9,12 @@ function ChatInterface() {
   const [loading, setLoading] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [error, setError] = useState('');
+  const [tokenUsage, setTokenUsage] = useState({
+    session_tokens: 0,
+    session_cost: 0,
+    total_tokens: 0,
+    total_cost: 0
+  });
   
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
@@ -31,6 +37,36 @@ function ChatInterface() {
   useEffect(() => {
     loadSessions();
   }, []);
+
+  // Load token usage when session changes
+  useEffect(() => {
+    if (currentSessionId) {
+      loadTokenUsage();
+    }
+  }, [currentSessionId]);
+
+  const loadTokenUsage = async () => {
+    try {
+      const [sessionRes, userRes] = await Promise.all([
+        fetch(`http://localhost:8009/chat/session/${currentSessionId}/tokens`),
+        fetch(`http://localhost:8009/chat/user/tokens`)
+      ]);
+      
+      const sessionData = await sessionRes.json();
+      const userData = await userRes.json();
+      
+      if (sessionData.success && userData.success) {
+        setTokenUsage({
+          session_tokens: sessionData.total_tokens,
+          session_cost: sessionData.total_cost_usd,
+          total_tokens: userData.total_tokens,
+          total_cost: userData.total_cost_usd
+        });
+      }
+    } catch (err) {
+      console.error('Error loading token usage:', err);
+    }
+  };
 
   const loadSessions = async () => {
     try {
@@ -124,8 +160,8 @@ function ChatInterface() {
           metadata: data.metadata || {}
         }]);
         
-        // Refresh sessions to update titles
-        await loadSessions();
+        // Refresh sessions to update titles and reload token usage
+        await Promise.all([loadSessions(), loadTokenUsage()]);
       } else {
         throw new Error(data.error || 'Unknown error');
       }
@@ -215,6 +251,20 @@ function ChatInterface() {
         </div>
 
         <div className="sidebar-footer">
+          {currentSessionId && (
+            <div className="token-stats">
+              <div className="token-stat-row">
+                <span className="token-label">Session:</span>
+                <span className="token-value">{tokenUsage.session_tokens.toLocaleString()} tokens</span>
+                <span className="token-cost">${tokenUsage.session_cost.toFixed(4)}</span>
+              </div>
+              <div className="token-stat-row">
+                <span className="token-label">Total:</span>
+                <span className="token-value">{tokenUsage.total_tokens.toLocaleString()} tokens</span>
+                <span className="token-cost">${tokenUsage.total_cost.toFixed(2)}</span>
+              </div>
+            </div>
+          )}
           <button onClick={() => setUploadModalOpen(true)} className="upload-docs-btn">
             📄 Upload Documents
           </button>
@@ -271,6 +321,28 @@ function ChatInterface() {
                                 <span className="source-doc">{source.document_name}</span>
                                 <span className="source-page">Page {source.page}</span>
                               </div>
+                              
+                              {/* Display section if available */}
+                              {source.section && (
+                                <div className="source-section">
+                                  📑 Section: {source.section}
+                                </div>
+                              )}
+                              
+                              {/* Display context if available */}
+                              {source.context && (
+                                <div className="source-context">
+                                  ℹ️ {source.context}
+                                </div>
+                              )}
+                              
+                              {/* Display tags if available */}
+                              {source.tags && source.tags.length > 0 && (
+                                <div className="source-tags">
+                                  🏷️ {source.tags.join(', ')}
+                                </div>
+                              )}
+                              
                               <div className="source-score">
                                 Relevance: {(source.relevance_score * 100).toFixed(0)}%
                               </div>

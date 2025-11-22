@@ -90,6 +90,7 @@ def lines_are_continuous(line1, line2):
 def calculate_chunk_box(matched_lines):
     """
     Enhanced version that handles cross-page bounding boxes correctly.
+    Returns multiple boxes (one per page) for cross-page content.
     """
     if not matched_lines:
         return {"l": 0, "t": 0, "r": 0, "b": 0}
@@ -102,53 +103,64 @@ def calculate_chunk_box(matched_lines):
         else:
             flattened_lines.append(item)
 
-    # Get all line boxes
-    line_boxes = []
+    # Get all line boxes with page info
+    line_data = []
     for line in flattened_lines:
         if isinstance(line, dict) and "box" in line and line["box"]:
-            line_boxes.append(line["box"])
+            line_data.append({
+                "box": line["box"],
+                "page": line.get("page", 1)
+            })
     
-    if not line_boxes:
+    if not line_data:
         return {"l": 0, "t": 0, "r": 0, "b": 0}
     
-    # Group boxes by page for cross-page handling
+    # Group boxes by page
     boxes_by_page = {}
-    for i, line in enumerate(flattened_lines):
-        page = line.get("page", 1)
-        boxes_by_page.setdefault(page, []).append((line_boxes[i], line))
+    for data in line_data:
+        page = data["page"]
+        boxes_by_page.setdefault(page, []).append(data["box"])
     
-    # Calculate bounds considering page structure
+    # Check if content spans multiple pages
     if len(boxes_by_page) == 1:
-        # Single page - use existing logic
+        # Single page - return single box
+        page = list(boxes_by_page.keys())[0]
+        line_boxes = boxes_by_page[page]
         line_boxes.sort(key=lambda box: box.get("t", 0))
+        
         top = line_boxes[0].get("t", 0)
         bottom = line_boxes[-1].get("b", 0)
         left = min(box.get("l", 0) for box in line_boxes)
         right = max(box.get("r", 0) for box in line_boxes)
+        
+        return {
+            "l": left,
+            "t": top, 
+            "r": right,
+            "b": bottom
+        }
     else:
-        # Cross-page - use first line's top and last line's bottom
-        first_page = min(boxes_by_page.keys())
-        last_page = max(boxes_by_page.keys())
+        # Multi-page content - return array of boxes (one per page)
+        # This prevents coordinate confusion between pages
+        boxes_array = []
+        for page in sorted(boxes_by_page.keys()):
+            page_boxes = boxes_by_page[page]
+            page_boxes.sort(key=lambda box: box.get("t", 0))
+            
+            top = page_boxes[0].get("t", 0)
+            bottom = page_boxes[-1].get("b", 0)
+            left = min(box.get("l", 0) for box in page_boxes)
+            right = max(box.get("r", 0) for box in page_boxes)
+            
+            boxes_array.append({
+                "l": left,
+                "t": top,
+                "r": right,
+                "b": bottom,
+                "page": page
+            })
         
-        # Top from first page's first line
-        first_page_boxes = sorted(boxes_by_page[first_page], key=lambda x: x[0].get("t", 0))
-        top = first_page_boxes[0][0].get("t", 0)
-        
-        # Bottom from last page's last line  
-        last_page_boxes = sorted(boxes_by_page[last_page], key=lambda x: x[0].get("t", 0))
-        bottom = last_page_boxes[-1][0].get("b", 0)
-        
-        # Left and right from all boxes
-        all_boxes = [box for box, _ in sum(boxes_by_page.values(), [])]
-        left = min(box.get("l", 0) for box in all_boxes)
-        right = max(box.get("r", 0) for box in all_boxes)
-    
-    return {
-        "l": left,
-        "t": top, 
-        "r": right,
-        "b": bottom
-    }
+        return boxes_array
 
 
 def pdf_lines_for_match(structured):

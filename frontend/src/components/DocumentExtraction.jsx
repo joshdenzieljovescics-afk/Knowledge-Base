@@ -13,6 +13,8 @@ import rehypeRaw from 'rehype-raw';
 import StarterKit from '@tiptap/starter-kit'
 import TurndownService from 'turndown';
 import { gfm } from 'turndown-plugin-gfm';
+import { Upload, File as FileIcon, X, FileText, CheckCircle2, History, Database, Trash2, FileCode, Filter, ArrowUpDown } from 'lucide-react';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import '../css/DocumentExtraction.css';
@@ -37,6 +39,32 @@ turndownService.addRule("lineBreaks", {
   replacement: () => "\n",
 });
 
+const ActionButton = ({ icon: Icon, children, className = '', ...props }) => (
+  <div style={{ position: 'relative', display: 'inline-block' }}>
+    <button className={`main-card-btn ${className}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px', fontSize: '1.15rem', fontWeight: 800 }} {...props}>
+      <Icon size={20} />
+    </button>
+    <span style={{ 
+      position: 'absolute', 
+      top: '100%', 
+      left: '50%', 
+      transform: 'translateX(-50%)', 
+      marginTop: '8px',
+      padding: '6px 12px', 
+      background: '#26326e', 
+      color: 'white', 
+      borderRadius: '6px', 
+      fontSize: '0.85rem', 
+      fontWeight: 600,
+      whiteSpace: 'nowrap',
+      opacity: 0,
+      pointerEvents: 'none',
+      transition: 'opacity 0.2s',
+      zIndex: 1000
+    }} className="button-tooltip">{children}</span>
+  </div>
+);
+
 
 
 const TiptapEditor = ({ content, onChange }) => {
@@ -59,6 +87,7 @@ const TiptapEditor = ({ content, onChange }) => {
 
 function DocumentExtraction() {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
   const [jsonOutput, setJsonOutput] = useState(null);
   const [chunkedOutput, setChunkedOutput] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +109,105 @@ function DocumentExtraction() {
   const [highlightBox, setHighlightBox] = useState(null);
   const [showUpload, setShowUpload] = useState(false);
   const [isUploadingToKB, setIsUploadingToKB] = useState(false);
+  const [uploadHistory, setUploadHistory] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showParsedModal, setShowParsedModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('upload_date');
+  const [sortOrder, setSortOrder] = useState('desc');
+  const [showSortMenu, setShowSortMenu] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false);
+  const [duplicateInfo, setDuplicateInfo] = useState(null);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const [historyError, setHistoryError] = useState('');
+  const [totalDocuments, setTotalDocuments] = useState(0);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(null);
+  const [isUploadedToKB, setIsUploadedToKB] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [documentToDelete, setDocumentToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
+  // Fetch upload history from API when modal opens
+  useEffect(() => {
+    if (showHistory) {
+      fetchUploadHistory();
+    }
+  }, [showHistory, currentPage, sortBy, sortOrder]);
+
+  // Close sort menu when clicking outside
+  const fetchUploadHistory = async () => {
+    setIsLoadingHistory(true);
+    setHistoryError('');
+    
+    try {
+      const offset = (currentPage - 1) * itemsPerPage;
+      const orderDir = sortOrder.toUpperCase();
+      
+      const response = await axios.get(
+        'http://127.0.0.1:8009/kb/list-kb',
+        {
+          params: {
+            limit: itemsPerPage,
+            offset: offset,
+            order_by: sortBy,
+            order_dir: orderDir
+          }
+        }
+      );
+      
+      if (response.data.success) {
+        setUploadHistory(response.data.documents);
+        setTotalDocuments(response.data.total_count);
+      }
+    } catch (err) {
+      console.error('Error fetching upload history:', err);
+      setHistoryError('Failed to load upload history');
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  };
+
+  // Close sort menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showSortMenu && !event.target.closest('.de-sort-btn') && !event.target.closest('.sort-dropdown-menu')) {
+        setShowSortMenu(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSortMenu]);
+
+  // Client-side search filter (API handles sorting and pagination)
+  const getFilteredHistory = () => {
+    if (!searchQuery.trim()) {
+      return uploadHistory;
+    }
+    
+    return uploadHistory.filter(item =>
+      item.file_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.uploaded_by?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  // Get paginated data (API handles pagination)
+  const getPaginatedHistory = () => {
+    const filtered = getFilteredHistory();
+    return {
+      items: filtered,
+      totalPages: Math.ceil(totalDocuments / itemsPerPage),
+      totalItems: totalDocuments
+    };
+  };
+
+  // Reset to page 1 when search or sort changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, sortBy, sortOrder]);
 
   // --- UPLOAD to Knowledge Base ---
   const handleUploadToKB = async () => {
@@ -93,14 +220,33 @@ function DocumentExtraction() {
   setError('');
 
   try {
-      const response = await axios.post('http://127.0.0.1:8009/upload-to-kb', {
+      // DEBUG: Log what we're sending
+      console.log('[DEBUG] Uploading to KB with data:', {
+        chunks_count: chunkedOutput.chunks?.length,
+        has_document_metadata: !!chunkedOutput.document_metadata,
+        source_filename: selectedFile?.name,
+        content_hash: chunkedOutput.content_hash,
+        file_size_bytes: chunkedOutput.file_size_bytes
+      });
+      
+      const response = await axios.post('http://127.0.0.1:8009/kb/upload-to-kb', {
         chunks: chunkedOutput.chunks,
         document_metadata: chunkedOutput.document_metadata,
-        source_filename: selectedFile?.name || 'unknown.pdf'
+        source_filename: selectedFile?.name || 'unknown.pdf',
+        content_hash: chunkedOutput.content_hash,
+        file_size_bytes: chunkedOutput.file_size_bytes
       });
 
       if (response.data.success) {
-        alert('Successfully uploaded to Knowledge Base!');
+        // Show success modal
+        setUploadSuccess({
+          filename: selectedFile?.name,
+          chunks: chunkedOutput.chunks.length,
+          action: response.data.action
+        });
+        setShowSuccessModal(true);
+        // Hide the upload button after successful upload
+        setIsUploadedToKB(true);
       } else {
         throw new Error(response.data.message || 'Upload failed');
       }
@@ -128,17 +274,21 @@ function DocumentExtraction() {
   const scaleY = currentPageInfo.height / currentPageInfo.originalHeight;
 
   return chunkedOutput.chunks
-    .filter(c => c.metadata?.page === pageNumber)
     .flatMap(c => {
+      // Handle multiple boxes (cross-page content)
       if (Array.isArray(c.metadata?.boxes)) {
-        return c.metadata.boxes.map(b => ({
-          left: b.l * scaleX,
-          top: b.t * scaleY,
-          width: (b.r - b.l) * scaleX,
-          height: (b.b - b.t) * scaleY,
-          chunkId: c.id,
-        }));
-      } else if (c.metadata?.box) {
+        return c.metadata.boxes
+          .filter(b => b.page === pageNumber) // Filter boxes by page
+          .map(b => ({
+            left: b.l * scaleX,
+            top: b.t * scaleY,
+            width: (b.r - b.l) * scaleX,
+            height: (b.b - b.t) * scaleY,
+            chunkId: c.id,
+          }));
+      } 
+      // Handle single box (same-page content)
+      else if (c.metadata?.box && c.metadata?.page === pageNumber) {
         const b = c.metadata.box;
         return [{
           left: b.l * scaleX,
@@ -181,49 +331,118 @@ function DocumentExtraction() {
     const file = event.target.files[0];
     if (file && file.type === 'application/pdf') {
       setSelectedFile(file);
-      setPdfPreviewFile(file);
+      // Do NOT set pdfPreviewFile here; only set after Continue is clicked
       setJsonOutput(null);
       setChunkedOutput(null);
       setError('');
+      setIsUploadedToKB(false); // Reset upload state for new file
     } else {
       setError('Please select a valid PDF file.');
     }
   };
 
   // Handle document parsing (now returns fully processed chunks)
-  const handleParse = async () => {
-    if (!selectedFile) {
-      setError('Please select a PDF file first.');
-      return;
-    }
-    const formData = new FormData();
-    formData.append('file', selectedFile);
+ const handleParse = async () => {
+  if (!selectedFile) {
+    setError('Please select a PDF file first.');
+    return;
+  }
+  
+  const formData = new FormData();
+  formData.append('file', selectedFile); 
 
-    setIsLoading(true);
-    setError('');
-    setJsonOutput(null);
-    setChunkedOutput(null); // Reset chunked output
+  setIsLoading(true);
+  setError('');
+  setJsonOutput(null);
+  setChunkedOutput(null);
+  setIsUploadedToKB(false); // Reset upload state for new parsing
 
-    try {
-      const response = await axios.post('http://127.0.0.1:8009/parse-pdf', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      // The new endpoint returns the final anchored chunks directly
-      setChunkedOutput(response.data); // ✅ This is the key change
-      // Optionally, if you still need the intermediate `jsonOutput` for debugging or other features:
-      // setJsonOutput({ simplified: response.data.simplified, structured: response.data.structured });
-    } catch (err) {
-      if (err.response) {
-        setError(`Error ${err.response.status}: ${err.response.data.error || 'Server error'}`);
-      } else if (err.request) {
-        setError('Network Error: Could not connect to the server. Is it running?');
-      } else {
-        setError(`Unexpected error: ${err.message}`);
+  try {
+    // Local Flask development (port 8009)
+    const response = await axios.post(
+      'http://127.0.0.1:8009/pdf/parse-pdf',
+      formData,
+      {
+        headers: { 
+          'Content-Type': 'multipart/form-data'
+        },
       }
-    } finally {
-      setIsLoading(false);
+    );  
+    setChunkedOutput(response.data);
+    
+  } catch (err) {
+    if (err.response?.status === 409) {
+      // Duplicate detected
+      const detail = err.response.data.detail;
+      setDuplicateInfo(detail);
+      setShowDuplicateModal(true);
+      setError(''); // Clear error since we're showing modal
+    } else if (err.response?.status === 401) {
+      setError('Authentication failed. Please log in again.');
+    } else if (err.response) {
+      setError(`Error ${err.response.status}: ${err.response.data.error || 'Server error'}`);
+    } else if (err.request) {
+      setError('Network Error: Could not connect to the server.');
+    } else {
+      setError(`Unexpected error: ${err.message}`);
     }
-  };
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+//  const handleParse = async () => {
+//   if (!selectedFile) {
+//     setError('Please select a PDF file first.');
+//     return;
+//   }
+  
+//   const formData = new FormData();
+//   formData.append('pdf_file', selectedFile); // Changed from 'file' to 'pdf_file'
+
+//   setIsLoading(true);
+//   setError('');
+//   setJsonOutput(null);
+//   setChunkedOutput(null);
+
+//   try {
+//     // Get JWT token
+//     const token = localStorage.getItem('access_token'); // Or however you store it
+    
+//     if (!token) {
+//       setError('Authentication required. Please log in.');
+//       return;
+//     }
+
+//     // Call your Django backend instead of Flask
+//     const response = await axios.post(
+//       'http://safexpressops-alb-366822214.ap-southeast-1.elb.amazonaws.com/api/upload-pdf/',
+//       formData,
+//       {
+//         headers: { 
+//           'Content-Type': 'multipart/form-data',
+//           'Authorization': `Bearer ${token}` // Add authentication
+//         },
+//       }
+//     );
+    
+//     // Your Django endpoint returns the Lambda response
+//     setChunkedOutput(response.data);
+    
+//   } catch (err) {
+//     if (err.response?.status === 401) {
+//       setError('Authentication failed. Please log in again.');
+//     } else if (err.response) {
+//       setError(`Error ${err.response.status}: ${err.response.data.error || 'Server error'}`);
+//     } else if (err.request) {
+//       setError('Network Error: Could not connect to the server.');
+//     } else {
+//       setError(`Unexpected error: ${err.message}`);
+//     }
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };
 
   // Handle PDF document load success
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -267,37 +486,46 @@ function DocumentExtraction() {
     const chunk = chunkedOutput?.chunks.find(c => c.id === selectedChunkId);
     if (!chunk) return;
 
+    // Handle cross-page chunks (multiple boxes)
+    if (Array.isArray(chunk.metadata?.boxes)) {
+      // For cross-page chunks, create highlight data for each page
+      const multiPageHighlight = {
+        isMultiPage: true,
+        chunkId: selectedChunkId,
+        pages: chunk.metadata.boxes.map(box => box.page)
+      };
+      setHighlightBox(multiPageHighlight);
+      
+      // Scroll to the first page
+      const firstPage = chunk.metadata.boxes[0]?.page || chunk.metadata?.page;
+      if (firstPage && pageRefs.current[firstPage - 1]) {
+        pageRefs.current[firstPage - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    // Handle single-page chunks (single box)
     const pageNumber = chunk.metadata?.page;
     const currentPageInfo = pageDimensions[pageNumber];
 
-    // Calculate the highlight box coordinates (logic moved from old handleMouseEnter)
-    if (pageNumber && currentPageInfo) {
+    if (pageNumber && currentPageInfo && chunk.metadata?.box) {
       const scaleX = currentPageInfo.width / currentPageInfo.originalWidth;
       const scaleY = currentPageInfo.height / currentPageInfo.originalHeight;
-      let scaledBoxes = [];
-
-      if (Array.isArray(chunk.metadata?.boxes)) {
-        scaledBoxes = chunk.metadata.boxes.map(b => ({
-          left: b.l * scaleX,
-          top: b.t * scaleY,
-          width: (b.r - b.l) * scaleX,
-          height: (b.b - b.t) * scaleY,
-        }));
-      } else if (chunk.metadata?.box) {
-        const b = chunk.metadata.box;
-        scaledBoxes.push({
-          left: b.l * scaleX,
-          top: b.t * scaleY,
-          width: (b.r - b.l) * scaleX,
-          height: (b.b - b.t) * scaleY,
-        });
+      const b = chunk.metadata.box;
+      
+      const scaledBox = {
+        left: b.l * scaleX,
+        top: b.t * scaleY,
+        width: (b.r - b.l) * scaleX,
+        height: (b.b - b.t) * scaleY,
+      };
+      
+      setHighlightBox({ page: pageNumber, boxes: [scaledBox], chunkId: selectedChunkId });
+      
+      // Scroll the PDF page into view
+      if (pageRefs.current[pageNumber - 1]) {
+        pageRefs.current[pageNumber - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
-      setHighlightBox({ page: pageNumber, boxes: scaledBoxes });
-    }
-
-    // Scroll the PDF page into view
-    if (pageNumber && pageRefs.current[pageNumber - 1]) {
-      pageRefs.current[pageNumber - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [selectedChunkId, chunkedOutput, pageDimensions]); // Dependencies for the effect
 
@@ -336,68 +564,188 @@ function DocumentExtraction() {
     setEditText("");
   };
 
+  // Handle delete from upload history
+  const handleDeleteHistory = async (docId) => {
+    const doc = uploadHistory.find(item => item.doc_id === docId);
+    setDocumentToDelete({ docId, fileName: doc?.file_name || 'Unknown Document' });
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!documentToDelete) return;
+    
+    setIsDeleting(true);
+    try {
+      await axios.delete(`http://127.0.0.1:8009/kb/delete/${documentToDelete.docId}`);
+      // Refresh history
+      await fetchUploadHistory();
+      // Close modal
+      setShowDeleteModal(false);
+      setDocumentToDelete(null);
+    } catch (err) {
+      console.error('Error deleting document:', err);
+      alert('Failed to delete document: ' + (err.response?.data?.detail || err.message));
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const cancelDelete = () => {
+    if (!isDeleting) {
+      setShowDeleteModal(false);
+      setDocumentToDelete(null);
+    }
+  };
+
   return (
-    <div className="doc-extraction-page">
-    <div className="container">
-      <h1>PDF Grounding Tool</h1>
-      <p>Upload a PDF to see its content split into "chunks" with their locations highlighted.</p>
-
-      {/* Step 1: Show buttons first */}
-      {!showUpload && (
-        <div className="initial-buttons">
-          <button onClick={() => setShowUpload(true)}>Upload a PDF</button>
-          {/* You can add more buttons here in the future, e.g. “Import from KB” */}
-        </div>
-      )}
-
-      {/* Step 2: Show upload box only when "Upload a PDF" is clicked AND no file has been selected yet */}
-      {showUpload && !selectedFile && (
-        <div className="upload-section">
-          <div
-            className={`upload-box ${dragActive ? "drag-active" : ""}`}
-            onDragEnter={handleDrag}
-            onDragOver={handleDrag}
-            onDragLeave={handleDrag}
-            onDrop={handleDrop}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#7da4f7" viewBox="0 0 24 24">
-              <path d="M12 16v-8m0 0l-4 4m4-4l4 4m6 4v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2"/>
-            </svg>
-            <p>Select your file or drag and drop</p>
-            <small>PDF files accepted</small>
-
-            <label className="browse-btn">
-              Browse
-              <input type="file" accept=".pdf" hidden onChange={handleFileChange} />
-            </label>
+    <div className="documentextraction-page">
+      <div className="documentextraction-container">
+        <header className="documentextraction-header-row">
+          <div>
+            <h1 className="documentextraction-header-title">Document Extraction</h1>
+            <p className="documentextraction-header-subtitle">Upload a PDF to see its content split into chunks with their locations highlighted.</p>
           </div>
-        </div>
-      )}
-
-      {/* Show action buttons once a file is selected */}
-      {selectedFile && (
-        <div className="upload-actions">
-          <button onClick={handleParse} disabled={isLoading}>
-            {isLoading ? "Uploading..." : "Upload"}
-          </button>
-          {/* Add the new Upload to Knowledge Base button */}
-          {chunkedOutput && (
-            <button 
-              onClick={handleUploadToKB} 
-              disabled={isUploadingToKB}
-              style={{ marginLeft: '10px' }}
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <ActionButton
+              icon={History}
+              className="de-history-btn"
+              onClick={() => setShowHistory(true)}
             >
-              {isUploadingToKB ? "Uploading to KB..." : "Upload to Knowledge Base"}
-            </button>
-          )}
-        </div>
-      )}
+              Processing History ({totalDocuments})
+            </ActionButton>
+            {chunkedOutput?.chunks?.length > 0 && !isUploadedToKB && (
+              <ActionButton
+                icon={Database}
+                className="de-kb-btn"
+                onClick={handleUploadToKB}
+                disabled={isUploadingToKB}
+              >
+                {isUploadingToKB ? 'Uploading...' : 'Upload to Knowledge Base'}
+              </ActionButton>
+            )}
+            {showPreview && (
+              <>
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => {
+                    handleFileChange(e);
+                    setShowPreview(false);
+                    setPdfPreviewFile(null);
+                    setChunkedOutput(null);
+                    setJsonOutput(null);
+                    setIsUploadedToKB(false); // Reset upload state
+                  }}
+                  style={{ display: 'none' }}
+                  id="new-pdf-file-input"
+                />
+                <ActionButton
+                  icon={Upload}
+                  className="de-upload-btn"
+                  onClick={() => document.getElementById('new-pdf-file-input').click()}
+                >
+                  Upload New PDF
+                </ActionButton>
+              </>
+            )}
+          </div>
+        </header>
 
-      <div className="main-content-area">
-        {/* PDF Preview Column */}
-        <div className="pdf-preview-container">
-          <h2>PDF Preview</h2>
-          <div className="pdf-document-wrapper">
+        {/* PDF Upload Card - Only show when NOT previewing */}
+        {!showPreview && (
+          <div className="de-card-container">
+            <div className="kb-card">
+              <div className="kb-card-header">
+                <h3>
+                  <Upload size={20} />
+                  Document Extraction
+                </h3>
+                <span className="kb-card-badge source">Document Selection</span>
+              </div>
+              <div className="kb-card-body">
+                {!selectedFile ? (
+                  <div className="kb-card-empty">
+                    <FileIcon size={48} className="kb-empty-icon" />
+                    <p>No document selected</p>
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      onChange={handleFileChange}
+                      style={{ display: 'none' }}
+                      id="pdf-file-input"
+                    />
+                    <button
+                      className="kb-card-button primary"
+                      onClick={() => document.getElementById('pdf-file-input').click()}
+                    >
+                      <Upload size={18} />
+                      Browse Files
+                    </button>
+                    <span className="kb-file-formats">PDF documents only</span>
+                  </div>
+                ) : (
+                  <div className="kb-card-content">
+                    <div className="kb-file-display">
+                      <FileText size={40} className="kb-file-icon-large" />
+                      <div className="kb-file-details">
+                        <div className="kb-file-name-large">{selectedFile.name}</div>
+                        <div className="kb-file-size">{(selectedFile.size / 1024).toFixed(2)} KB</div>
+                      </div>
+                    </div>
+                    <div className="kb-card-actions">
+                      <button
+                        className="kb-card-button secondary"
+                        onClick={() => { 
+                          setSelectedFile(null); 
+                          setPdfPreviewFile(null); 
+                          setShowPreview(false); 
+                          setChunkedOutput(null);
+                          setJsonOutput(null);
+                        }}
+                      >
+                        <X size={18} />
+                        Clear Selection
+                      </button>
+                      <button
+                        className="kb-card-button primary"
+                        onClick={() => { 
+                          setShowUpload(false); 
+                          setShowPreview(true); 
+                          setPdfPreviewFile(selectedFile); 
+                        }}
+                      >
+                        <CheckCircle2 size={18} />
+                        Preview & Process
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+    {showPreview && selectedFile && (
+      <>
+        {/* PDF Preview Header with Parse Button - Above Card */}
+        {!chunkedOutput && (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+            <h2 style={{ margin: 0 }}>PDF Preview</h2>
+            <ActionButton
+              icon={FileCode}
+              className="de-parse-btn"
+              onClick={handleParse}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Processing...' : 'Parse PDF'}
+            </ActionButton>
+          </div>
+        )}
+        
+        <div className="main-content-area" style={{ minHeight: '800px', alignItems: 'stretch' }}>
+          {/* PDF Preview Column */}
+          <div className="pdf-preview-container">
+          <div className="pdf-document-wrapper" style={{ flex: 1, overflow: 'auto' }}>
             {pdfPreviewFile ? (
               <Document file={pdfPreviewFile} onLoadSuccess={onDocumentLoadSuccess}>
                 {Array(numPages)
@@ -408,31 +756,35 @@ function DocumentExtraction() {
                     ref={(el) => (pageRefs.current[index] = el)}
                     className="pdf-page-container"
                   >
-                    <Page pageNumber={index + 1} width={600} onRenderSuccess={onPageRenderSuccess} />
+                    <div style={{ position: 'relative', display: 'inline-block' }}>
+                      <Page pageNumber={index + 1} width={600} onRenderSuccess={onPageRenderSuccess} />
+                      
+                      {/* Overlay for highlight boxes positioned over the page */}
+                      <div className="highlight-box-overlay">
+                        {getAllBoxesForPage(index + 1).map((b, i) => {
+                          // For multi-page chunks, check if this chunk ID matches the selected one
+                          const isSelected = highlightBox?.isMultiPage 
+                            ? b.chunkId === highlightBox.chunkId
+                            : highlightBox && highlightBox.chunkId === b.chunkId;
 
-                  {/* Always draw all boxes for this page */}
-                  {getAllBoxesForPage(index + 1).map((b, i) => {
-                    const isHovered = highlightBox && highlightBox.page === index + 1 && 
-                                      highlightBox.boxes?.some(hb =>
-                                        Math.abs(hb.left - b.left) < 1 &&
-                                        Math.abs(hb.top - b.top) < 1
-                                      );
-
-                    return (
-                      <div
-                        key={`highlight_${index}_${i}`}
-                        className={`highlight-box ${isHovered ? 'hovered' : ''}`}
-                        style={{
-                          left: `${b.left}px`,
-                          top: `${b.top}px`,
-                          width: `${b.width}px`,
-                          height: `${b.height}px`,
-                        }}
-                      />
-                    );
-                  })}
- 
-                </div>
+                          return (
+                            <div
+                              key={`highlight_${index}_${i}`}
+                              className={`highlight-box ${isSelected ? 'hovered' : ''}`}
+                              style={{
+                                position: 'absolute',
+                                left: `${b.left}px`,
+                                top: `${b.top}px`,
+                                width: `${b.width}px`,
+                                height: `${b.height}px`,
+                                pointerEvents: 'none',
+                              }}
+                            />
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
               ))}
             </Document>
             ) : (
@@ -441,76 +793,68 @@ function DocumentExtraction() {
           </div>
         </div>
 
-        {/* Parsed Output Column (with toggle) */}
+        {/* Parsed Content Column */}
         <div className="parsed-output-container">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-            <h2>Parse</h2>
+            <h2>Parsed Content</h2>
             {chunkedOutput?.chunks?.length > 0 && (
               <div style={{ display: 'flex', gap: 8 }}>
-                <button
+                <ActionButton
+                  icon={FileText}
+                  className={chunkView === 'markdown' ? 'de-view-btn active' : 'de-view-btn'}
                   onClick={() => setChunkView('markdown')}
-                  className={chunkView === 'markdown' ? 'active-tab' : ''}
                 >
                   Markdown
-                </button>
-                <button
+                </ActionButton>
+                <ActionButton
+                  icon={FileCode}
+                  className={chunkView === 'json' ? 'de-view-btn active' : 'de-view-btn'}
                   onClick={() => setChunkView('json')}
-                  className={chunkView === 'json' ? 'active-tab' : ''}
                 >
                   JSON
-                </button>
+                </ActionButton>
               </div>
             )}
           </div>
-
-
           <div className="content-container">
             {isLoading && <p className="placeholder">Processing...</p>}
-            {!isLoading && !jsonOutput && !chunkedOutput && (
+            {!isLoading && !chunkedOutput && (
               <p className="placeholder">Parsed content will appear here.</p>
             )}
 
             {chunkView === 'markdown' && chunkedOutput?.chunks?.map((chunk, index) => (
-            <div
-              key={`chunk_text_${index}`}
-              onClick={() => handleChunkClick(chunk)}
-              className={`markdown-chunk ${chunk.id === selectedChunkId ? 'selected' : ''}`}
-            >
+              <div
+                key={`chunk_text_${index}`}
+                onClick={() => handleChunkClick(chunk)}
+                className={`markdown-chunk ${chunk.id === selectedChunkId ? 'selected' : ''}`}
+              >
                 {editingChunkIndex === index ? (
                   <div className="chunk-editor">
                     <TiptapEditor
-                      content={editText} // keep as HTML
-                      onChange={(html) => setEditText(html)} // do NOT turndown tables
+                      content={editText}
+                      onChange={(html) => setEditText(html)}
                     />
-
-
-
                     <div className="edit-controls">
                       <button className="edit-button save" onClick={() => handleSave(index)}>Save</button>
                       <button className="edit-button cancel" onClick={handleCancel}>Cancel</button>
                     </div>
                   </div>
                 ) : (
-                  // --- DISPLAY VIEW (Corrected) ---
                   <>
                     <div className="chunk-header">
                       <strong>Page {chunk.metadata?.page || 'N/A'}</strong>
                       <span className="chunk-type">{chunk.metadata?.type}</span>
-                      
-                      {/* Restored Metadata */}
                       {chunk.metadata?.level && (
                         <span className="heading-level">H{chunk.metadata.level}</span>
                       )}
                       {chunk.metadata?.section && (
                         <span className="chunk-section">{chunk.metadata.section}</span>
                       )}
-
                       {Array.isArray(chunk.metadata?.tags) && chunk.metadata.tags.length > 0 && (
                         <span style={{ fontSize: 12, color: '#6aa84f' }}>
                           {chunk.metadata.tags.join(', ')}
                         </span>
                       )}
-
                       <div className="chunk-actions">
                         <button className="edit-button" onClick={() => handleEdit(index)}>Edit</button>
                       </div>
@@ -518,31 +862,430 @@ function DocumentExtraction() {
                     <ReactMarkdown rehypePlugins={[rehypeRaw]}>
                       {chunk.text}
                     </ReactMarkdown>
-
                   </>
                 )}
               </div>
             ))}
 
             {chunkView === 'json' && chunkedOutput?.chunks?.map((chunk, index) => {
-            const safeString = JSON.stringify(chunk, null, 2);
-            return (
-              <pre
-                key={`json_chunk_${index}`}
-                onClick={() => handleChunkClick(chunk)}
-                className={`json-chunk ${chunk.id === selectedChunkId ? 'selected' : ''}`}
-              >
+              const safeString = JSON.stringify(chunk, null, 2);
+              return (
+                <pre
+                  key={`json_chunk_${index}`}
+                  onClick={() => handleChunkClick(chunk)}
+                  className={`json-chunk ${chunk.id === selectedChunkId ? 'selected' : ''}`}
+                >
                   <code>{safeString}</code>
                 </pre>
               );
             })}
-
-
-
-
+          </div>
           </div>
         </div>
-      </div>
+      </>
+    )}
+
+      {/* Parsed Content Modal */}
+      {showParsedModal && (
+        <div className="modal-backdrop" onClick={() => setShowParsedModal(false)}>
+          <div
+            className="parsed-content-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="parsed-modal-header">
+              <h2>Parsed Content</h2>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                {chunkedOutput?.chunks?.length > 0 && (
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <ActionButton
+                      icon={FileText}
+                      className={chunkView === 'markdown' ? 'de-view-btn active' : 'de-view-btn'}
+                      onClick={() => setChunkView('markdown')}
+                    >
+                      Markdown View
+                    </ActionButton>
+                    <ActionButton
+                      icon={FileCode}
+                      className={chunkView === 'json' ? 'de-view-btn active' : 'de-view-btn'}
+                      onClick={() => setChunkView('json')}
+                    >
+                      JSON View
+                    </ActionButton>
+                  </div>
+                )}
+                <button
+                  onClick={() => setShowParsedModal(false)}
+                  className="close-btn"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+            <div className="parsed-modal-body">
+              {isLoading && <p className="placeholder">Processing...</p>}
+              {!isLoading && !chunkedOutput && (
+                <p className="placeholder">No parsed content available.</p>
+              )}
+
+              {chunkView === 'markdown' && chunkedOutput?.chunks?.map((chunk, index) => (
+                <div
+                  key={`chunk_text_${index}`}
+                  onClick={() => handleChunkClick(chunk)}
+                  className={`markdown-chunk ${chunk.id === selectedChunkId ? 'selected' : ''}`}
+                >
+                  {editingChunkIndex === index ? (
+                    <div className="chunk-editor">
+                      <TiptapEditor
+                        content={editText}
+                        onChange={(html) => setEditText(html)}
+                      />
+                      <div className="edit-controls">
+                        <button className="edit-button save" onClick={() => handleSave(index)}>Save</button>
+                        <button className="edit-button cancel" onClick={handleCancel}>Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="chunk-header">
+                        <strong>Page {chunk.metadata?.page || 'N/A'}</strong>
+                        <span className="chunk-type">{chunk.metadata?.type}</span>
+                        {chunk.metadata?.level && (
+                          <span className="heading-level">H{chunk.metadata.level}</span>
+                        )}
+                        {chunk.metadata?.section && (
+                          <span className="chunk-section">{chunk.metadata.section}</span>
+                        )}
+                        {Array.isArray(chunk.metadata?.tags) && chunk.metadata.tags.length > 0 && (
+                          <span style={{ fontSize: 12, color: '#6aa84f' }}>
+                            {chunk.metadata.tags.join(', ')}
+                          </span>
+                        )}
+                        <div className="chunk-actions">
+                          <button className="edit-button" onClick={() => handleEdit(index)}>Edit</button>
+                        </div>
+                      </div>
+                      <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+                        {chunk.text}
+                      </ReactMarkdown>
+                    </>
+                  )}
+                </div>
+              ))}
+
+              {chunkView === 'json' && chunkedOutput?.chunks?.map((chunk, index) => {
+                const safeString = JSON.stringify(chunk, null, 2);
+                return (
+                  <pre
+                    key={`json_chunk_${index}`}
+                    onClick={() => handleChunkClick(chunk)}
+                    className={`json-chunk ${chunk.id === selectedChunkId ? 'selected' : ''}`}
+                  >
+                    <code>{safeString}</code>
+                  </pre>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Duplicate Detection Modal */}
+      {showDuplicateModal && duplicateInfo && (
+        <div className="modal-backdrop" onClick={() => setShowDuplicateModal(false)}>
+          <div
+            className="duplicate-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="duplicate-modal-header">
+              <h2>⚠️ Duplicate Document Detected</h2>
+              <button
+                onClick={() => setShowDuplicateModal(false)}
+                className="close-btn"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="duplicate-modal-body">
+              <div className="duplicate-message">
+                <p className="duplicate-main-message">{duplicateInfo.message}</p>
+                {duplicateInfo.existing_doc && (
+                  <div className="duplicate-details">
+                    <h3>Existing Document Details:</h3>
+                    <table className="duplicate-info-table">
+                      <tbody>
+                        <tr>
+                          <td><strong>File Name:</strong></td>
+                          <td>{duplicateInfo.existing_doc.file_name}</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Upload Date:</strong></td>
+                          <td>{duplicateInfo.existing_doc.upload_date}</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Chunks:</strong></td>
+                          <td>{duplicateInfo.existing_doc.chunks}</td>
+                        </tr>
+                        <tr>
+                          <td><strong>File Size:</strong></td>
+                          <td>{(duplicateInfo.existing_doc.file_size_bytes / 1024).toFixed(2)} KB</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+                {duplicateInfo.cost_saved && (
+                  <div className="duplicate-cost-saved">
+                    <p>💰 <strong>Cost Optimization:</strong> {duplicateInfo.cost_saved}</p>
+                  </div>
+                )}
+                {duplicateInfo.suggestion && (
+                  <div className="duplicate-suggestion">
+                    <p><strong>Suggestion:</strong> {duplicateInfo.suggestion}</p>
+                  </div>
+                )}
+              </div>
+              <div className="duplicate-actions">
+                <button
+                  className="duplicate-btn secondary"
+                  onClick={() => setShowDuplicateModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="duplicate-btn primary"
+                  onClick={() => {
+                    setShowDuplicateModal(false);
+                    // Could implement force reparse here if needed
+                  }}
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Upload Success Modal */}
+      {showSuccessModal && uploadSuccess && (
+        <div className="modal-backdrop" onClick={() => {
+          setShowSuccessModal(false);
+          setShowHistory(true);
+        }}>
+          <div
+            className="duplicate-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '500px' }}
+          >
+            <div className="duplicate-modal-header" style={{ background: '#4caf50' }}>
+              <h2>✅ Upload Successful</h2>
+              <button
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  setShowHistory(true);
+                }}
+                className="close-btn"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="duplicate-modal-body">
+              <div className="duplicate-message">
+                <p className="duplicate-main-message" style={{ color: '#2e7d32' }}>
+                  Successfully {uploadSuccess.action} document to Knowledge Base!
+                </p>
+                <div className="duplicate-details">
+                  <table className="duplicate-info-table">
+                    <tbody>
+                      <tr>
+                        <td><strong>File Name:</strong></td>
+                        <td>{uploadSuccess.filename}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Chunks Processed:</strong></td>
+                        <td>{uploadSuccess.chunks}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Status:</strong></td>
+                        <td style={{ color: '#4caf50', fontWeight: 'bold' }}>Ready for Search</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className="duplicate-actions">
+                <button
+                  className="duplicate-btn primary"
+                  onClick={() => {
+                    setShowSuccessModal(false);
+                    setShowHistory(true);
+                  }}
+                  style={{ background: '#4caf50' }}
+                >
+                  View Processing History
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Processing History Modal */}
+      {showHistory && (
+        <div className="modal-backdrop" onClick={() => setShowHistory(false)}>
+          <div
+            className="history-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="history-modal-header">
+              <h2>Processing History</h2>
+              <button
+                onClick={() => setShowHistory(false)}
+                className="close-btn"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="history-modal-body">
+              {/* Search and Filter Controls */}
+              <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', alignItems: 'center' }}>
+                <input
+                  type="text"
+                  placeholder="Search by file name or user..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="history-search-input"
+                />
+                <div style={{ position: 'relative' }}>
+                  <ActionButton
+                    icon={ArrowUpDown}
+                    className="de-sort-btn"
+                    onClick={() => setShowSortMenu(!showSortMenu)}
+                  >
+                    Sort & Filter
+                  </ActionButton>
+                  {showSortMenu && (
+                    <div className="sort-dropdown-menu">
+                      <div className="sort-section">
+                        <label>Sort By:</label>
+                        <select
+                          value={sortBy}
+                          onChange={(e) => setSortBy(e.target.value)}
+                          className="sort-select"
+                        >
+                          <option value="upload_date">Date</option>
+                          <option value="file_name">File Name</option>
+                          <option value="chunks">Chunks</option>
+                          <option value="file_size_bytes">File Size</option>
+                        </select>
+                      </div>
+                      <div className="sort-section">
+                        <label>Order:</label>
+                        <button
+                          onClick={() => {
+                            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+                          }}
+                          className="sort-order-btn"
+                        >
+                          {sortOrder === 'asc' ? '↑ Ascending' : '↓ Descending'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {(() => {
+                const paginatedData = getPaginatedHistory();
+                return (
+                  <>
+                    {isLoadingHistory ? (
+                      <p className="placeholder">Loading...</p>
+                    ) : historyError ? (
+                      <p className="error-message">{historyError}</p>
+                    ) : paginatedData.totalItems === 0 ? (
+                      <p className="placeholder">No processing history found.</p>
+                    ) : (
+                      <>
+                        <table className="history-table">
+                          <thead>
+                            <tr>
+                              <th>File Name</th>
+                              <th>Upload Date</th>
+                              <th>File Size</th>
+                              <th>Chunks</th>
+                              <th>Uploaded By</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {paginatedData.items.map((item) => {
+                              // Parse ISO date and format for Philippine time display
+                              const uploadDate = new Date(item.upload_date);
+                              const phTime = uploadDate.toLocaleString('en-PH', {
+                                timeZone: 'Asia/Manila',
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                                hour12: true
+                              });
+                              
+                              return (
+                                <tr key={item.doc_id}>
+                                  <td>{item.file_name}</td>
+                                  <td>{phTime}</td>
+                                  <td>{item.file_size_formatted}</td>
+                                  <td>{item.chunks}</td>
+                                  <td>{item.uploaded_by || 'Unknown User'}</td>
+                                  <td>
+                                    <button
+                                      className="delete-btn"
+                                      onClick={() => handleDeleteHistory(item.doc_id)}
+                                      title="Delete"
+                                    >
+                                      <Trash2 size={16} />
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                        
+                        {/* Pagination Controls */}
+                        {paginatedData.totalPages > 1 && (
+                          <div className="pagination-controls">
+                            <button
+                              className="pagination-btn"
+                              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                              disabled={currentPage === 1}
+                            >
+                              Previous
+                            </button>
+                            <span className="pagination-info">
+                              Page {currentPage} of {paginatedData.totalPages} ({paginatedData.totalItems} total)
+                            </span>
+                            <button
+                              className="pagination-btn"
+                              onClick={() => setCurrentPage(prev => Math.min(paginatedData.totalPages, prev + 1))}
+                              disabled={currentPage === paginatedData.totalPages}
+                            >
+                              Next
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal Viewer */}
       {isViewerOpen && (
@@ -691,6 +1434,15 @@ function DocumentExtraction() {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={cancelDelete}
+        onConfirm={confirmDelete}
+        documentName={documentToDelete?.fileName}
+        isDeleting={isDeleting}
+      />
     </div>
     </div>
   );

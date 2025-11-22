@@ -27,7 +27,8 @@ class ChatService:
         self,
         session_id: str,
         user_message: str,
-        options: Optional[Dict] = None
+        options: Optional[Dict] = None,
+        user_id: Optional[str] = None
     ) -> Dict:
         """
         Main chat processing pipeline
@@ -36,6 +37,7 @@ class ChatService:
             session_id: Chat session ID
             user_message: User's message
             options: Optional settings (max_sources, include_context, document_filter)
+            user_id: User ID from JWT token for access control
         
         Returns:
             Dict with assistant message details
@@ -45,7 +47,22 @@ class ChatService:
         include_context = options.get('include_context', True)
         document_filter = options.get('document_filter', [])
         
-        print(f"[ChatService] Processing message: {user_message}")
+        print("\n" + "="*80)
+        print(f"[ChatService] 🚀 STARTING MESSAGE PROCESSING")
+        print(f"[ChatService] Session ID: {session_id}")
+        print(f"[ChatService] User ID: {user_id}")
+        print(f"[ChatService] User Message: {user_message}")
+        print(f"[ChatService] Options: max_sources={max_sources}, include_context={include_context}")
+        print(f"[ChatService] Document Filter: {document_filter}")
+        print("="*80)
+        
+        # 0. Validate session ownership
+        if user_id:
+            session = self.chat_db.get_session(session_id)
+            if not session:
+                raise Exception("Session not found")
+            if session.get('user_id') != user_id:
+                raise Exception("Access denied - you don't own this session")
         
         # 1. Save user message
         user_msg = self.chat_db.save_message(
@@ -65,42 +82,77 @@ class ChatService:
                 max_messages=10,
                 max_tokens=2000
             )
-            print(f"[ChatService] Retrieved {len(context)} context messages")
+            print(f"\n[ChatService] 📚 CONTEXT RETRIEVAL")
+            print(f"[ChatService] Retrieved {len(context)} context messages from history")
+            for i, ctx_msg in enumerate(context[-3:]):  # Show last 3 for brevity
+                print(f"[ChatService]   Context {i+1}: [{ctx_msg['role']}] {ctx_msg['content'][:100]}...")
         
         # 3. Process query (expand, resolve references)
+        print(f"\n[ChatService] 🔍 QUERY PROCESSING")
+        print(f"[ChatService] Original Query: {user_message}")
         processed_query = self.query_processor.enhance_query(
             query=user_message,
             context=context
         )
-        print(f"[ChatService] Processed query: {processed_query['search_query']}")
+        print(f"[ChatService] Enhanced Query: {processed_query['search_query']}")
+        print(f"[ChatService] Query expanded: {processed_query.get('is_expanded', False)}")
         
         # 4. Search Weaviate knowledge base
         search_filters = None
         if document_filter:
             search_filters = {'document_ids': document_filter}
         
+        print(f"\n[ChatService] 🔎 WEAVIATE SEARCH")
+        print(f"[ChatService] Search Query: {processed_query['search_query']}")
+        print(f"[ChatService] Search Limit: {max_sources * 2}")
+        print(f"[ChatService] Search Filters: {search_filters}")
+        
         search_results = self.search_service.hybrid_search(
             query=processed_query['search_query'],
             limit=max_sources * 2,  # Get more, then rerank
             filters=search_filters
         )
-        print(f"[ChatService] Found {len(search_results)} search results")
+        
+        print(f"[ChatService] ✅ Found {len(search_results)} search results from Weaviate")
+        for i, result in enumerate(search_results[:3]):  # Show first 3
+            print(f"[ChatService]   Result {i+1}:")
+            print(f"[ChatService]     - Document: {result.get('document_name', 'Unknown')}")
+            print(f"[ChatService]     - Page: {result.get('page', 'N/A')}")
+            print(f"[ChatService]     - Score: {result.get('score', 0):.3f}")
+            print(f"[ChatService]     - Text Preview: {result.get('text', '')[:100]}...")
         
         # 5. Rerank results
+        print(f"\n[ChatService] 🎯 RERANKING RESULTS")
+        print(f"[ChatService] Reranking {len(search_results)} results to top {max_sources}")
+        
         top_chunks = self.query_processor.rerank_results(
             query=user_message,
             results=search_results,
             top_k=max_sources
         )
-        print(f"[ChatService] Using top {len(top_chunks)} chunks")
+        
+        print(f"[ChatService] ✅ Selected top {len(top_chunks)} chunks after reranking")
+        for i, chunk in enumerate(top_chunks):
+            print(f"[ChatService]   Chunk {i+1}:")
+            print(f"[ChatService]     - Document: {chunk.get('document_name', 'Unknown')}")
+            print(f"[ChatService]     - Page: {chunk.get('page', 'N/A')}")
+            print(f"[ChatService]     - Rerank Score: {chunk.get('rerank_score', chunk.get('score', 0)):.3f}")
         
         # 6. Generate response with OpenAI
+        print(f"\n[ChatService] 🤖 GENERATING AI RESPONSE")
+        print(f"[ChatService] Using {len(top_chunks)} knowledge chunks")
+        print(f"[ChatService] Context messages: {len(context)}")
+        
         assistant_response = self._generate_response(
             user_message=user_message,
             context=context,
             knowledge_chunks=top_chunks
         )
-        print(f"[ChatService] Generated response ({assistant_response['tokens_used']} tokens)")
+        
+        print(f"[ChatService] ✅ Generated response")
+        print(f"[ChatService] Response Length: {len(assistant_response['content'])} characters")
+        print(f"[ChatService] Tokens Used: {assistant_response['tokens_used']}")
+        print(f"[ChatService] Response Preview: {assistant_response['content'][:200]}...")
         
         # 7. Save assistant message with sources
         sources = self.context_manager.format_sources(top_chunks)
@@ -117,7 +169,17 @@ class ChatService:
                 'search_query': processed_query['search_query']
             }
         )
-        print(f"[ChatService] Saved assistant message: {assistant_msg['message_id']}")
+        
+        print(f"\n[ChatService] 💾 SAVING RESULTS")
+        print(f"[ChatService] Assistant Message ID: {assistant_msg['message_id']}")
+        print(f"[ChatService] Sources Attached: {len(sources)}")
+        print(f"\n[ChatService] ✨ MESSAGE PROCESSING COMPLETE")
+        print(f"[ChatService] Summary:")
+        print(f"[ChatService]   - Chunks Retrieved: {len(search_results)}")
+        print(f"[ChatService]   - Chunks Used: {len(top_chunks)}")
+        print(f"[ChatService]   - Tokens Used: {assistant_response['tokens_used']}")
+        print(f"[ChatService]   - Sources: {len(sources)}")
+        print("="*80 + "\n")
         
         # 8. Update session metadata
         session = self.chat_db.get_session(session_id)
@@ -163,9 +225,19 @@ IMPORTANT RULES:
 4. Be conversational but accurate
 5. Use direct quotes when appropriate
 6. If asked about something not in the documents, politely say so and suggest what topics the documents do cover
+7. Pay attention to the Type field (heading, list, table, image, etc.) to understand the content structure
+8. Consider the Section, Context, and Tags provided with each source for better understanding
 
 Available Document Context:
 {kb_context}
+
+Note: Each source may include:
+- Section: The document section this content belongs to
+- Type: Content type (heading, paragraph, list, table, image, etc.)
+- Context: A brief description of the content's purpose
+- Tags: Keywords categorizing this content
+
+Use all this information to provide comprehensive, well-cited answers.
 """
             }
         ]
@@ -211,10 +283,14 @@ Available Document Context:
         """Create a new chat session"""
         return self.chat_db.create_session(user_id, title)
     
-    def get_session_history(self, session_id: str, limit: Optional[int] = None) -> Dict:
-        """Get session with message history"""
+    def get_session_history(self, session_id: str, limit: Optional[int] = None, user_id: Optional[str] = None) -> Dict:
+        """Get session with message history, enforcing ownership"""
         session = self.chat_db.get_session(session_id)
         if not session:
+            return None
+        
+        # Validate ownership
+        if user_id and session.get('user_id') != user_id:
             return None
         
         messages = self.chat_db.get_session_messages(session_id, limit=limit)
@@ -236,6 +312,14 @@ Available Document Context:
             'has_more': offset + len(sessions) < total
         }
     
-    def delete_session(self, session_id: str) -> bool:
-        """Delete a session"""
+    def delete_session(self, session_id: str, user_id: Optional[str] = None) -> bool:
+        """Delete a session, enforcing ownership"""
+        # Validate ownership before deletion
+        if user_id:
+            session = self.chat_db.get_session(session_id)
+            if not session:
+                return False
+            if session.get('user_id') != user_id:
+                return False
+        
         return self.chat_db.delete_session(session_id)

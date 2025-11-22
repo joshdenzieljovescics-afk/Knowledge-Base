@@ -3,138 +3,285 @@ import os
 import glob
 import uuid
 from datetime import datetime
-from flask import Blueprint, request, jsonify
-from database.operations import insert_document
+from fastapi import APIRouter, HTTPException, status, Header
+from typing import Optional
+from pydantic import BaseModel, Field, field_validator
+from typing import Optional, List, Dict, Any
+from database.operations import insert_document, replace_document, delete_document_and_chunks
+from database.document_db import DocumentDatabase
 from services.weaviate_service import query_weaviate
-from utils.file_utils import generate_kb_filename, save_json
+from middleware.security_middleware import (
+    validate_string_length,
+    sanitize_filename,
+    MAX_QUERY_LENGTH,
+    MAX_FILENAME_LENGTH
+)
+from middleware.jwt_middleware import decode_jwt
 import traceback
 
-kb_bp = Blueprint('kb', __name__)
+kb_router = APIRouter(prefix='/kb', tags=['knowledge-base'])
+
+# Request models with validation
+class UploadToKBRequest(BaseModel):
+    chunks: List[Dict[str, Any]] = Field(..., min_length=1, max_length=10000)
+    document_metadata: Dict[str, Any] = Field(default_factory=dict)
+    source_filename: str = Field(..., min_length=1, max_length=MAX_FILENAME_LENGTH)
+    content_hash: Optional[str] = Field(None, description="SHA256 hash of file content for duplicate detection")
+    file_size_bytes: Optional[int] = Field(None, description="File size in bytes")
+    force_replace: bool = Field(False, description="If true, replace existing document with same filename")
+    
+    @field_validator('source_filename')
+    @classmethod
+    def validate_filename(cls, v):
+        if not v or not v.strip():
+            raise ValueError("Filename cannot be empty")
+        return sanitize_filename(v)
+    
+    @field_validator('chunks')
+    @classmethod
+    def validate_chunks(cls, v):
+        if not v:
+            raise ValueError("At least one chunk is required")
+        if len(v) > 10000:
+            raise ValueError("Maximum 10000 chunks allowed per document")
+        return v
+
+class QueryRequest(BaseModel):
+    query: str = Field(..., min_length=1, max_length=MAX_QUERY_LENGTH)
+    limit: Optional[int] = Field(5, ge=1, le=100)
+    generate_answer: Optional[bool] = True
+    
+    @field_validator('query')
+    @classmethod
+    def validate_query(cls, v):
+        if not v or not v.strip():
+            raise ValueError("Query cannot be empty")
+        return validate_string_length(v.strip(), MAX_QUERY_LENGTH, "query")
 
 
-@kb_bp.route('/upload-to-kb', methods=['POST'])
-def upload_to_kb():
+@kb_router.post('/upload-to-kb')
+async def upload_to_kb(
+    request: UploadToKBRequest,
+    authorization: Optional[str] = Header(None)
+):
     """
-    Upload processed chunks to knowledge base.
+    Upload processed chunks to knowledge base and save metadata to document database.
+    
+    IMPORTANT: Duplicate detection happens in /pdf/parse-pdf endpoint to save parsing costs.
+    This endpoint focuses on uploading pre-validated chunks to Weaviate and tracking in local database.
     
     Expects JSON body with:
-    - chunks: list of chunk objects
+    - chunks: list of chunk objects (required)
     - document_metadata: document metadata dict
-    - source_filename: name of source PDF
+    - source_filename: name of source PDF (required)
+    - content_hash: SHA256 hash (saved to local DB only)
+    - file_size_bytes: file size in bytes (saved to local DB only)
+    - force_replace (optional): if true, replace existing document
     
     Returns success status and document ID.
     """
-    if not request.is_json:
-        return jsonify({"error": "Request must be JSON"}), 400
+    # DEBUG: Log what we received
+    print(f"[DEBUG] Upload request received:")
+    print(f"[DEBUG] - source_filename: {request.source_filename}")
+    print(f"[DEBUG] - content_hash: {request.content_hash}")
+    print(f"[DEBUG] - file_size_bytes: {request.file_size_bytes}")
+    print(f"[DEBUG] - chunks count: {len(request.chunks)}")
+    print(f"[DEBUG] - force_replace: {request.force_replace}")
     
-    data = request.get_json()
-    chunks = data.get('chunks', [])
-    document_metadata = data.get('document_metadata', {})
-    source_filename = data.get('source_filename', 'unknown.pdf')
+    if not request.chunks:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No chunks provided"
+        )
     
-    if not chunks:
-        return jsonify({"error": "No chunks provided"}), 400
+    # Extract user from JWT token or use default
+    uploaded_by = "System User"  # Default user
+    if authorization:
+        try:
+            token = authorization.replace("Bearer ", "")
+            payload = decode_jwt(token)
+            
+            # Extract only the name field from JWT payload
+            uploaded_by = payload.get("name") or "System User"
+            print(f"[DEBUG] Extracted uploaded_by: {uploaded_by}")
+        except Exception as e:
+            print(f"[WARNING] Failed to decode JWT token: {str(e)}")
+            # Use default user
     
     try:
-        # Prepare file metadata for the Document collection
+        doc_db = DocumentDatabase()
+        
+        # Check if document already exists in our database
+        existing_doc = doc_db.check_duplicate_by_filename(request.source_filename)
+        
+        if existing_doc and not request.force_replace:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail={
+                    "error": "duplicate_filename",
+                    "message": f"Document '{request.source_filename}' already exists in database.",
+                    "existing_doc": existing_doc,
+                    "suggestion": "Set force_replace=true to overwrite the existing document."
+                }
+            )
+        
+        # Prepare file metadata for Weaviate Document collection (minimal fields only)
         file_metadata = {
-            "file_name": source_filename,
-            "page_count": document_metadata.get('total_pages', 0) or max(
-                (chunk.get('metadata', {}).get('page', 0) for chunk in chunks), 
+            "file_name": request.source_filename,
+            "page_count": request.document_metadata.get('total_pages', 0) or max(
+                (chunk.get('metadata', {}).get('page', 0) for chunk in request.chunks), 
                 default=0
             )
         }
-        
         # Add chunk_id to each chunk if not present
-        for i, chunk in enumerate(chunks):
+        for i, chunk in enumerate(request.chunks):
             if not chunk.get('id') and not chunk.get('chunk_id'):
                 chunk['chunk_id'] = chunk.get('id', f"chunk-{i}-{str(uuid.uuid4())[:8]}")
             elif chunk.get('id') and not chunk.get('chunk_id'):
                 chunk['chunk_id'] = chunk['id']
         
-        # Use insert_document function to save to Weaviate
-        doc_id = insert_document(file_metadata, chunks)
+        # Replace or insert document in Weaviate
+        if existing_doc and request.force_replace:
+            # Delete from document database first
+            doc_db.delete_document(existing_doc['doc_id'])
+            # Delete from Weaviate
+            weaviate_doc_id = existing_doc.get('doc_id')
+            delete_document_and_chunks(weaviate_doc_id)
+            # Insert new
+            weaviate_doc_id = insert_document(file_metadata, request.chunks)
+            action = "replaced"
+        else:
+            weaviate_doc_id = insert_document(file_metadata, request.chunks)
+            action = "uploaded"
         
-        # Also save to file for backup/debugging
-        kb_filename = generate_kb_filename(source_filename)
-        kb_entry = {
-            "document_metadata": document_metadata,
-            "source_filename": source_filename,
-            "upload_timestamp": datetime.now().isoformat(),
+        # Save to document tracking database
+        doc_id = str(uuid.uuid4())  # Separate ID for our database
+        
+        # Generate a temporary hash if not provided (use doc_id to ensure uniqueness)
+        content_hash = request.content_hash or f"temp-{doc_id}"
+        
+        doc_db.insert_document({
             "doc_id": doc_id,
-            "chunks": chunks
+            "file_name": request.source_filename,
+            "file_size_bytes": request.file_size_bytes or 0,
+            "chunks": len(request.chunks),
+            "uploaded_by": uploaded_by,
+            "content_hash": content_hash,
+            "page_count": file_metadata["page_count"],
+            "weaviate_doc_id": weaviate_doc_id,
+            "metadata": request.document_metadata
+        })
+        
+        print(f"[INFO] Successfully {action} {len(request.chunks)} chunks to knowledge base")
+        print(f"[INFO] Document saved to database: {doc_id}")
+        print(f"[INFO] Weaviate doc_id: {weaviate_doc_id}")
+        print(f"[INFO] Uploaded by: {uploaded_by or 'anonymous'}")
+        
+        return {
+            "success": True, 
+            "message": f"Successfully {action} {len(request.chunks)} chunks to knowledge base",
+            "doc_id": doc_id,
+            "weaviate_doc_id": weaviate_doc_id,
+            "action": action
         }
         
-        save_json(kb_entry, kb_filename)
-        
-        print(f"[INFO] Successfully uploaded {len(chunks)} chunks to knowledge base with doc_id: {doc_id}")
-        
-        return jsonify({
-            "success": True, 
-            "message": f"Successfully uploaded {len(chunks)} chunks to knowledge base",
-            "doc_id": doc_id,
-            "filename": kb_filename
-        }), 200
-        
+    except HTTPException:
+        # Re-raise HTTP exceptions (like 409 Conflict)
+        raise
     except Exception as e:
         print(f"[ERROR] Failed to upload to knowledge base: {str(e)}")
+        print(f"[ERROR] Request data - filename: {request.source_filename}, chunks: {len(request.chunks)}, content_hash: {request.content_hash}, file_size: {request.file_size_bytes}")
         traceback.print_exc()
-        return jsonify({
-            "success": False, 
-            "error": f"Internal server error: {str(e)}"
-        }), 500
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Internal server error: {str(e)}"
+        )
 
 
-@kb_bp.route('/list-kb', methods=['GET'])
-def list_kb_files():
+@kb_router.get('/list-kb')
+async def list_kb_files(
+    limit: int = 100,
+    offset: int = 0,
+    uploaded_by: Optional[str] = None,
+    order_by: str = "upload_date",
+    order_dir: str = "DESC",
+    authorization: Optional[str] = Header(None)
+):
     """
-    List all knowledge base files.
+    List all knowledge base files from document database.
     
-    Returns list of uploaded KB files with metadata.
+    Query params:
+    - limit: Maximum number of results (default: 100)
+    - offset: Number of results to skip for pagination (default: 0)
+    - uploaded_by: Filter by user (optional)
+    - order_by: Field to sort by (default: upload_date)
+    - order_dir: Sort direction ASC/DESC (default: DESC)
+    
+    Returns list of uploaded documents with:
+    - file_name: Original filename
+    - upload_date: When file was uploaded
+    - file_size_bytes: File size in bytes
+    - chunks: Number of chunks created
+    - uploaded_by: User who uploaded the file
     """
     try:
-        # Find all files matching the kb_*.json pattern
-        kb_files = glob.glob("kb_*.json")
-        # Sort by creation time (newest first)
-        kb_files.sort(key=os.path.getmtime, reverse=True)
+        doc_db = DocumentDatabase()
         
-        # Create a list of file info
-        file_list = []
-        for filepath in kb_files:
-            filename = os.path.basename(filepath)
-            # Extract timestamp and original filename from the kb_filename
-            # Example: kb_20240615_143022_sample.json
-            parts = filename.replace('kb_', '').rsplit('_', 2)
-            if len(parts) >= 3:
-                date_str = parts[0]
-                time_str = parts[1]
-                orig_filename = '_'.join(parts[2:]).replace('.json', '')
-                upload_time = f"{date_str[:4]}-{date_str[4:6]}-{date_str[6:8]} {time_str[:2]}:{time_str[2:4]}:{time_str[4:6]}"
+        # Get documents from database
+        documents = doc_db.list_documents(
+            limit=limit,
+            offset=offset,
+            uploaded_by=uploaded_by,
+            order_by=order_by,
+            order_dir=order_dir
+        )
+        
+        # Get total count for pagination
+        total_count = doc_db.get_document_count(uploaded_by=uploaded_by)
+        
+        # Format response with human-readable file sizes
+        formatted_docs = []
+        for doc in documents:
+            # Convert bytes to readable format
+            size_bytes = doc["file_size_bytes"]
+            if size_bytes < 1024:
+                size_str = f"{size_bytes} B"
+            elif size_bytes < 1024 * 1024:
+                size_str = f"{size_bytes / 1024:.2f} KB"
             else:
-                upload_time = "Unknown"
-                orig_filename = filename.replace('kb_', '').replace('.json', '')
-
-            file_list.append({
-                "filename": filename,
-                "original_filename": orig_filename,
-                "upload_time": upload_time,
-                "size": os.path.getsize(filepath)
+                size_str = f"{size_bytes / (1024 * 1024):.2f} MB"
+            
+            formatted_docs.append({
+                "doc_id": doc["doc_id"],
+                "file_name": doc["file_name"],
+                "upload_date": doc["upload_date"],
+                "file_size_bytes": doc["file_size_bytes"],
+                "file_size_formatted": size_str,
+                "chunks": doc["chunks"],
+                "uploaded_by": doc["uploaded_by"] or "anonymous",
+                "page_count": doc.get("page_count")
             })
-
-        return jsonify({
+        
+        return {
             "success": True,
-            "files": file_list
-        }), 200
+            "total_count": total_count,
+            "count": len(formatted_docs),
+            "offset": offset,
+            "limit": limit,
+            "documents": formatted_docs
+        }
 
     except Exception as e:
-        return jsonify({
-            "success": False,
-            "error": f"Internal server error: {str(e)}"
-        }), 500
+        print(f"[ERROR] Failed to list documents: {str(e)}")
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Internal server error: {str(e)}"
+        )
 
 
-@kb_bp.route('/query', methods=['POST'])
-def query_knowledge_base():
+@kb_router.post('/query')
+async def query_knowledge_base(request: QueryRequest):
     """
     Query the knowledge base with a question.
     
@@ -148,41 +295,93 @@ def query_knowledge_base():
     - answer: AI-generated answer (if generate_answer=True)
     - metadata: query metadata
     """
-    if not request.is_json:
-        return jsonify({"error": "Request must be JSON"}), 400
-    
-    data = request.get_json()
-    query_text = data.get('query')
-    limit = data.get('limit', 5)
-    generate_answer = data.get('generate_answer', True)
-    
-    if not query_text:
-        return jsonify({"error": "Query text is required"}), 400
+    if not request.query:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Query text is required"
+        )
     
     try:
         # Query the knowledge base
         result = query_weaviate(
-            query_text=query_text,
-            limit=limit,
-            generate_answer=generate_answer
+            query_text=request.query,
+            limit=request.limit,
+            generate_answer=request.generate_answer
         )
         
-        return jsonify({
+        return {
             "success": True,
-            "query": query_text,
+            "query": request.query,
             "results": result.get('results', []),
             "answer": result.get('answer'),
             "metadata": {
                 "result_count": len(result.get('results', [])),
                 "generated_at": datetime.now().isoformat(),
-                "limit": limit
+                "limit": request.limit
             }
-        }), 200
+        }
         
     except Exception as e:
         print(f"[ERROR] Query failed: {str(e)}")
         traceback.print_exc()
-        return jsonify({
-            "success": False,
-            "error": f"Query failed: {str(e)}"
-        }), 500
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Query failed: {str(e)}"
+        )
+
+@kb_router.delete('/delete/{doc_id}')
+async def delete_document(
+    doc_id: str,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Delete a document from the knowledge base and local database.
+    
+    Args:
+        doc_id: Document ID to delete
+    
+    Returns:
+        Success message and deleted document info
+    """
+    try:
+        doc_db = DocumentDatabase()
+        
+        # Get document info before deleting
+        doc_info = doc_db.get_document(doc_id)
+        
+        if not doc_info:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Document with ID '{doc_id}' not found"
+            )
+        
+        # Delete from Weaviate
+        weaviate_doc_id = doc_info.get('weaviate_doc_id')
+        if weaviate_doc_id:
+            delete_document_and_chunks(weaviate_doc_id)
+        
+        # Delete from local database
+        doc_db.delete_document(doc_id)
+        
+        print(f"[INFO] Successfully deleted document: {doc_id}")
+        print(f"[INFO] File name: {doc_info['file_name']}")
+        
+        return {
+            "success": True,
+            "message": f"Successfully deleted document '{doc_info['file_name']}'",
+            "deleted_doc": {
+                "doc_id": doc_id,
+                "file_name": doc_info['file_name'],
+                "chunks": doc_info['chunks']
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[ERROR] Failed to delete document: {str(e)}")
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Internal server error: {str(e)}"
+        )

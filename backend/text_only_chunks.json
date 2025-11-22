@@ -1,128 +1,349 @@
 {
   "chunks": [
     {
-      "text": "Josh Denziel S. Joves",
+      "text": "SAFEXPRESS LOGISTICS INC.",
       "metadata": {
         "type": "heading",
-        "section": "Contact Information",
-        "context": "Name of the individual",
+        "section": "Title",
+        "context": "Company name and document title.",
         "tags": [
-          "contact",
-          "personal"
+          "title",
+          "company"
         ],
         "row_index": null,
         "continues": false,
         "is_page_break": false,
-        "siblings": [],
+        "siblings": [
+          "HEALTH, SAFETY & ENVIRONMENT (HSE) MANUAL"
+        ],
         "page": 1
       }
     },
     {
-      "text": "Denz.joves@gmail.com | https://www.linkedin.com/in/josh-denziel-joves-824769394/ | 09499973474 | https://github.com/Jdenziieel/denz-portfolio",
+      "text": "HEALTH, SAFETY & ENVIRONMENT (HSE) MANUAL",
+      "metadata": {
+        "type": "heading",
+        "section": "Title",
+        "context": "Document title indicating focus on health, safety, and environment.",
+        "tags": [
+          "title",
+          "manual"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [
+          "SAFEXPRESS LOGISTICS INC."
+        ],
+        "page": 1
+      }
+    },
+    {
+      "text": "SECTION 1: HSE POLICY & COMMITMENT",
+      "metadata": {
+        "type": "heading",
+        "section": "1",
+        "context": "Introduction to the company's HSE policy and commitment.",
+        "tags": [
+          "section",
+          "policy"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [
+          "1.1 HSE Mission Statement",
+          "1.2 Management Responsibilities",
+          "1.3 Employee Responsibilities"
+        ],
+        "page": 1
+      }
+    },
+    {
+      "text": "1.1 HSE Mission Statement\n\nSAFEXPRESS LOGISTICS INC. is committed to providing a safe, healthy, and environmentally responsible workplace for all employees, contractors, and visitors. Our goal is Zero Accidents and Injuries. We integrate Safety as the primary KPI in every operational decision, ensuring compliance with all Philippine laws and international standards for logistics and warehousing.",
       "metadata": {
         "type": "paragraph",
-        "section": "Contact Information",
-        "context": "Contact details including email, LinkedIn, phone number, and GitHub portfolio",
+        "section": "1.1",
+        "context": "Company's mission statement regarding health, safety, and environment.",
         "tags": [
-          "contact",
-          "email",
-          "LinkedIn",
-          "GitHub"
+          "mission",
+          "commitment"
         ],
         "row_index": null,
         "continues": false,
         "is_page_break": false,
-        "siblings": [],
-        "page": 1
-      }
-    },
-    {
-      "text": "Career Objective: A graduating student committed to learning industry best practices, including end-to-end development processes, client requirement analysis, and technology-driven problem solving. Seeks a role that cultivates technical depth, leadership capability, and eager hands-on experience while supporting initiatives involving artificial intelligence and modern application architectures. Aims to build a strong foundation in solution design and system architecture as part of a long-term career in the technology field.",
-      "metadata": {
-        "type": "paragraph",
-        "section": "Career Objective",
-        "context": "Statement of career goals and aspirations",
-        "tags": [
-          "career",
-          "objective",
-          "technology"
+        "siblings": [
+          "1.2 Management Responsibilities",
+          "1.3 Employee Responsibilities"
         ],
-        "row_index": null,
-        "continues": false,
-        "is_page_break": false,
-        "siblings": [],
         "page": 1
       }
     },
     {
-      "text": "Education: University of Santo Tomas - BS Information and Technology - August 2022 - June 2026 University of Santo Tomas - AB in Economics  - August 2018 - June 2022",
-      "metadata": {
-        "type": "paragraph",
-        "section": "Education",
-        "context": "Educational background and degrees obtained",
-        "tags": [
-          "education",
-          "university",
-          "degrees"
-        ],
-        "row_index": null,
-        "continues": false,
-        "is_page_break": false,
-        "siblings": [],
-        "page": 1
-      }
-    },
-    {
-      "text": "Certification: CompTIA IT Fundamentals (ITF+) Certification",
-      "metadata": {
-        "type": "paragraph",
-        "section": "Certification",
-        "context": "Certification obtained in IT fundamentals",
-        "tags": [
-          "certification",
-          "IT"
-        ],
-        "row_index": null,
-        "continues": false,
-        "is_page_break": false,
-        "siblings": [],
-        "page": 1
-      }
-    },
-    {
-      "text": "Technical Skills: Java, C++, JavaScript, PHP, MySQL, Kotlin, Firebase, C#, ASP.NET, AngularJs, React, Express.js, Node.js, MongoDB, Python, Django, FastAPI, Laravel, HTML, CSS, Bootstrap, Tailwind CSS",
+      "text": "1.2 Management Responsibilities\n\nManagement is responsible for:\n\n\u25cf Providing necessary Personal Protective Equipment (PPE) and ensuring its proper use.\n\n\u25cf Conducting regular safety audits and risk assessments across all sites (warehouses, yards, and fleet operations).\n\n\u25cf Implementing corrective actions for all reported safety deficiencies and hazards.",
       "metadata": {
         "type": "list",
-        "section": "Technical Skills",
-        "context": "List of technical skills and programming languages",
+        "section": "1.2",
+        "context": "Responsibilities of management in ensuring safety.",
         "tags": [
-          "skills",
-          "technical",
-          "programming"
+          "management",
+          "responsibilities"
         ],
         "row_index": null,
         "continues": false,
         "is_page_break": false,
-        "siblings": [],
+        "siblings": [
+          "1.1 HSE Mission Statement",
+          "1.3 Employee Responsibilities"
+        ],
         "page": 1
       }
     },
     {
-      "text": "Achievements/Responsibilities: - Served as Project Manager for a bakeshop attendance and salary computation web application (MERN stack), leading end-to-end project execution from client consultation to delivery, gathering and validating requirements, contributing to system architecture and business logic, evaluating technical approaches, resolving design issues, managing tasks via Trello, coordinating stakeholder communication, preparing SPMP/SRS/SDD documentation, and performing comprehensive scenario-based manual testing to ensure system quality and alignment with project standards. - Led the design and development of an agentic AI system for a logistics company web application, integrating LLM-powered knowledge-base querying, an AI assistant capable of emulating real assistant workflows, and intelligent data mapping with automated data entry. Built core AI workflows using Python, React, LangChain, LangGraph, and OpenAI LLM/embedding models, with agent services deployed independently as microservices on AWS as part of an ongoing Capstone Project.",
+      "text": "1.3 Employee Responsibilities\n\nEvery employee is responsible for:\n\n\u25cf Adhering strictly to all safety rules, procedures, and Work Instructions (WI).\n\n\u25cf Wearing the required PPE for their assigned tasks and work areas.\n\n\u25cf Identifying and reporting all potential hazards, near-misses, and unsafe conditions immediately to their direct supervisor or the HSE Officer.\n\n\u25cf Participating actively in all safety training and drills.",
       "metadata": {
         "type": "list",
-        "section": "Achievements/Responsibilities",
-        "context": "Description of key projects and roles undertaken",
+        "section": "1.3",
+        "context": "Responsibilities of employees in maintaining safety.",
         "tags": [
-          "achievements",
-          "responsibilities",
-          "projects"
+          "employee",
+          "responsibilities"
+        ],
+        "row_index": null,
+        "continues": true,
+        "is_page_break": true,
+        "siblings": [
+          "1.1 HSE Mission Statement",
+          "1.2 Management Responsibilities"
+        ],
+        "page": 1
+      }
+    },
+    {
+      "text": "SECTION 2: WAREHOUSE AND MATERIALS HANDLING SAFETY",
+      "metadata": {
+        "type": "heading",
+        "section": "2",
+        "context": "Introduction to safety measures in warehouse and materials handling.",
+        "tags": [
+          "section",
+          "safety"
         ],
         "row_index": null,
         "continues": false,
         "is_page_break": false,
-        "siblings": [],
-        "page": 1
+        "siblings": [
+          "2.1 Personal Protective Equipment (PPE)",
+          "2.2 Forklift and Material Handling Equipment (MHE) Operation",
+          "2.3 Storage and Racking Safety"
+        ],
+        "page": 2
+      }
+    },
+    {
+      "text": "2.1 Personal Protective Equipment (PPE)\n\nMandatory PPE required in all warehouse and yard areas:\n\n\u25cf Safety Vests: High visibility vests required at all times.\n\n\u25cf Safety Footwear: Steel-toed boots required for all workers involved in cargo handling and near heavy machinery.\n\n\u25cf Gloves: Appropriate gloves for handling cargo (anti-slip, cut-resistant, thermal for cold storage areas).",
+      "metadata": {
+        "type": "list",
+        "section": "2.1",
+        "context": "Details on mandatory PPE in warehouse areas.",
+        "tags": [
+          "PPE",
+          "safety"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [
+          "2.2 Forklift and Material Handling Equipment (MHE) Operation",
+          "2.3 Storage and Racking Safety"
+        ],
+        "page": 2
+      }
+    },
+    {
+      "text": "2.2 Forklift and Material Handling Equipment (MHE) Operation\n\n\u25cf Only certified and authorized personnel are permitted to operate forklifts and other MHE.\n\n\u25cf Maximum speed limits within the warehouse must be strictly observed.\n\n\u25cf Pedestrian right-of-way must be maintained; pedestrians must use designated walkways.\n\n\u25cf Forklifts must be inspected prior to every shift (Pre-Operation Check).",
+      "metadata": {
+        "type": "list",
+        "section": "2.2",
+        "context": "Guidelines for operating forklifts and MHE.",
+        "tags": [
+          "forklift",
+          "MHE",
+          "operation"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [
+          "2.1 Personal Protective Equipment (PPE)",
+          "2.3 Storage and Racking Safety"
+        ],
+        "page": 2
+      }
+    },
+    {
+      "text": "2.3 Storage and Racking Safety\n\n\u25cf Never exceed the documented maximum load capacity of the racking system.\n\n\u25cf Clearance must be maintained around fire exits, fire fighting equipment, and electrical panels.\n\n\u25cf Pallets must be stable, properly wrapped, and the load must not extend beyond the edges of the pallet.",
+      "metadata": {
+        "type": "list",
+        "section": "2.3",
+        "context": "Safety measures for storage and racking.",
+        "tags": [
+          "storage",
+          "racking",
+          "safety"
+        ],
+        "row_index": null,
+        "continues": true,
+        "is_page_break": true,
+        "siblings": [
+          "2.1 Personal Protective Equipment (PPE)",
+          "2.2 Forklift and Material Handling Equipment (MHE) Operation"
+        ],
+        "page": 2
+      }
+    },
+    {
+      "text": "SECTION 3: TRANSPORTATION & FLEET SAFETY",
+      "metadata": {
+        "type": "heading",
+        "section": "3",
+        "context": "Introduction to safety measures for transportation and fleet.",
+        "tags": [
+          "section",
+          "transportation",
+          "fleet"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [
+          "3.1 Driver Fitness and Vehicle Condition",
+          "3.2 Fatigue Management"
+        ],
+        "page": 3
+      }
+    },
+    {
+      "text": "3.1 Driver Fitness and Vehicle Condition\n\n\u25cf All drivers must possess a valid professional driver's license and undergo mandatory refresher training every two years.\n\n\u25cf Drivers must perform a Daily Vehicle Inspection Report (DVIR) before operating any company vehicle. Any defects must be reported and corrected before departure.\n\n\u25cf No use of mobile phones or electronic devices while the vehicle is in motion.",
+      "metadata": {
+        "type": "list",
+        "section": "3.1",
+        "context": "Requirements for driver fitness and vehicle condition.",
+        "tags": [
+          "driver",
+          "vehicle",
+          "safety"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [
+          "3.2 Fatigue Management"
+        ],
+        "page": 3
+      }
+    },
+    {
+      "text": "3.2 Fatigue Management\n\n\u25cf Drivers must adhere strictly to mandated driving hours and rest periods to prevent fatigue-related accidents.\n\n\u25cf Drivers must report any physical signs of excessive fatigue immediately and pull over safely.",
+      "metadata": {
+        "type": "list",
+        "section": "3.2",
+        "context": "Guidelines for managing driver fatigue.",
+        "tags": [
+          "fatigue",
+          "management"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [
+          "3.1 Driver Fitness and Vehicle Condition"
+        ],
+        "page": 3
+      }
+    },
+    {
+      "text": "SECTION 4: EMERGENCY RESPONSE & REPORTING",
+      "metadata": {
+        "type": "heading",
+        "section": "4",
+        "context": "Introduction to emergency response and reporting procedures.",
+        "tags": [
+          "section",
+          "emergency",
+          "response"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [
+          "4.1 Accident and Incident Reporting",
+          "4.2 Fire and Emergency Evacuation",
+          "4.3 First Aid"
+        ],
+        "page": 3
+      }
+    },
+    {
+      "text": "4.1 Accident and Incident Reporting (Refer to Incident/Accident Report Forms)\n\n\u25cf All injuries, illnesses, accidents, property damage, and near-misses (events that could have caused harm) must be reported immediately to the supervisor and HSE Officer.\n\n\u25cf An investigation must be conducted for every incident to determine the root cause and implement preventative measures.",
+      "metadata": {
+        "type": "list",
+        "section": "4.1",
+        "context": "Procedures for reporting accidents and incidents.",
+        "tags": [
+          "accident",
+          "incident",
+          "reporting"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": true,
+        "siblings": [
+          "4.2 Fire and Emergency Evacuation",
+          "4.3 First Aid"
+        ],
+        "page": 3
+      }
+    },
+    {
+      "text": "4.2 Fire and Emergency Evacuation\n\n\u25cf All employees must be familiar with the Site Evacuation Plan, assembly points, and the location of fire extinguishers.\n\n\u25cf Fire Drills must be conducted at least annually.\n\n\u25cf In the event of a fire, the priority is to sound the alarm, evacuate, and only attempt to fight the fire if trained to do so and if the fire is small and contained.",
+      "metadata": {
+        "type": "list",
+        "section": "4.2",
+        "context": "Guidelines for fire and emergency evacuation.",
+        "tags": [
+          "fire",
+          "evacuation",
+          "emergency"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [
+          "4.1 Accident and Incident Reporting",
+          "4.3 First Aid"
+        ],
+        "page": 4
+      }
+    },
+    {
+      "text": "4.3 First Aid\n\n\u25cf First aid kits are maintained in designated, easily accessible areas (e.g., Office, Dispatch Center, Warehouse Office).\n\n\u25cf A list of certified First Aiders for each shift must be posted publicly.",
+      "metadata": {
+        "type": "list",
+        "section": "4.3",
+        "context": "Information on first aid provisions and personnel.",
+        "tags": [
+          "first aid",
+          "safety"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [
+          "4.1 Accident and Incident Reporting",
+          "4.2 Fire and Emergency Evacuation"
+        ],
+        "page": 4
       }
     }
   ]
