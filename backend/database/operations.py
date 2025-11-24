@@ -28,6 +28,8 @@ def insert_document(file_metadata: dict, chunks: list, doc_id: str = None):
                 "text": c.get("text"),
                 "type": meta.get("type", "text"),
                 "section": meta.get("section", ""),
+                "section_title": meta.get("section_title", ""),
+                "parent_section": meta.get("parent_section", ""),
                 "context": meta.get("context", ""),
                 "tags": meta.get("tags", []),
                 "created_at": meta.get("created_at", ""),

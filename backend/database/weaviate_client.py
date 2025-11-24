@@ -83,6 +83,8 @@ def ensure_collections_exist():
                     Property(name="text", data_type=DataType.TEXT),
                     Property(name="type", data_type=DataType.TEXT),
                     Property(name="section", data_type=DataType.TEXT),
+                    Property(name="section_title", data_type=DataType.TEXT),
+                    Property(name="parent_section", data_type=DataType.TEXT),
                     Property(name="context", data_type=DataType.TEXT),
                     Property(name="tags", data_type=DataType.TEXT_ARRAY),
                     Property(name="page", data_type=DataType.NUMBER),

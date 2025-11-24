@@ -143,7 +143,6 @@ function ChatInterface() {
           session_id: currentSessionId,
           message: input,
           options: {
-            max_sources: 5,
             include_context: true
           }
         })
@@ -309,48 +308,6 @@ function ChatInterface() {
                     <div className="message-content">
                       {msg.content}
                     </div>
-                    
-                    {/* Show sources for assistant messages */}
-                    {msg.role === 'assistant' && msg.sources && msg.sources.length > 0 && (
-                      <div className="message-sources">
-                        <div className="sources-label">📚 Sources:</div>
-                        <div className="sources-list">
-                          {msg.sources.map((source, sidx) => (
-                            <div key={sidx} className="source-item">
-                              <div className="source-header">
-                                <span className="source-doc">{source.document_name}</span>
-                                <span className="source-page">Page {source.page}</span>
-                              </div>
-                              
-                              {/* Display section if available */}
-                              {source.section && (
-                                <div className="source-section">
-                                  📑 Section: {source.section}
-                                </div>
-                              )}
-                              
-                              {/* Display context if available */}
-                              {source.context && (
-                                <div className="source-context">
-                                  ℹ️ {source.context}
-                                </div>
-                              )}
-                              
-                              {/* Display tags if available */}
-                              {source.tags && source.tags.length > 0 && (
-                                <div className="source-tags">
-                                  🏷️ {source.tags.join(', ')}
-                                </div>
-                              )}
-                              
-                              <div className="source-score">
-                                Relevance: {(source.relevance_score * 100).toFixed(0)}%
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
 
                     <div className="message-time">
                       {new Date(msg.timestamp).toLocaleTimeString([], { 

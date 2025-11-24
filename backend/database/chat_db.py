@@ -77,6 +77,26 @@ class ChatDatabase:
             'message_count': 0
         }
     
+    def update_session_title(self, session_id: str, title: str) -> bool:
+        """Update session title"""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            
+            cursor.execute("""
+                UPDATE sessions SET title = ?, updated_at = ?
+                WHERE session_id = ?
+            """, (title, datetime.utcnow().isoformat(), session_id))
+            
+            conn.commit()
+            affected = cursor.rowcount
+            conn.close()
+            
+            return affected > 0
+        except Exception as e:
+            print(f"Error updating session title: {e}")
+            return False
+    
     def save_message(
         self,
         session_id: str,

@@ -104,12 +104,12 @@ class ChatService:
         
         print(f"\n[ChatService] 🔎 WEAVIATE SEARCH")
         print(f"[ChatService] Search Query: {processed_query['search_query']}")
-        print(f"[ChatService] Search Limit: {max_sources * 2}")
+        print(f"[ChatService] Search Limit: 50")
         print(f"[ChatService] Search Filters: {search_filters}")
         
         search_results = self.search_service.hybrid_search(
             query=processed_query['search_query'],
-            limit=max_sources * 2,  # Get more, then rerank
+            limit=50,  # Retrieve 50 chunks for comprehensive coverage
             filters=search_filters
         )
         
@@ -123,12 +123,12 @@ class ChatService:
         
         # 5. Rerank results
         print(f"\n[ChatService] 🎯 RERANKING RESULTS")
-        print(f"[ChatService] Reranking {len(search_results)} results to top {max_sources}")
+        print(f"[ChatService] Reranking {len(search_results)} results to top 15")
         
         top_chunks = self.query_processor.rerank_results(
             query=user_message,
             results=search_results,
-            top_k=max_sources
+            top_k=15  # Use top 15 chunks after reranking for better coverage
         )
         
         print(f"[ChatService] ✅ Selected top {len(top_chunks)} chunks after reranking")
@@ -154,14 +154,12 @@ class ChatService:
         print(f"[ChatService] Tokens Used: {assistant_response['tokens_used']}")
         print(f"[ChatService] Response Preview: {assistant_response['content'][:200]}...")
         
-        # 7. Save assistant message with sources
-        sources = self.context_manager.format_sources(top_chunks)
-        
+        # 7. Save assistant message WITHOUT sources (sources removed for cleaner UI)
         assistant_msg = self.chat_db.save_message(
             session_id=session_id,
             role="assistant",
             content=assistant_response['content'],
-            sources=sources,
+            sources=None,  # No longer sending sources to frontend
             metadata={
                 'tokens_used': assistant_response['tokens_used'],
                 'chunks_retrieved': len(search_results),
@@ -172,13 +170,11 @@ class ChatService:
         
         print(f"\n[ChatService] 💾 SAVING RESULTS")
         print(f"[ChatService] Assistant Message ID: {assistant_msg['message_id']}")
-        print(f"[ChatService] Sources Attached: {len(sources)}")
         print(f"\n[ChatService] ✨ MESSAGE PROCESSING COMPLETE")
         print(f"[ChatService] Summary:")
         print(f"[ChatService]   - Chunks Retrieved: {len(search_results)}")
         print(f"[ChatService]   - Chunks Used: {len(top_chunks)}")
         print(f"[ChatService]   - Tokens Used: {assistant_response['tokens_used']}")
-        print(f"[ChatService]   - Sources: {len(sources)}")
         print("="*80 + "\n")
         
         # 8. Update session metadata
@@ -228,6 +224,15 @@ IMPORTANT RULES:
 7. Pay attention to the Type field (heading, list, table, image, etc.) to understand the content structure
 8. Consider the Section, Context, and Tags provided with each source for better understanding
 
+⚠️ CRITICAL: READ ALL PROVIDED SOURCES
+- You will receive multiple document excerpts below (Source 1, Source 2, etc.)
+- Each source has been pre-filtered for relevance, so READ THEM ALL CAREFULLY
+- DO NOT only focus on Source 1 or high-scored sources
+- Lower-numbered sources might be section headers, while later sources contain the detailed content
+- SYNTHESIZE information from ALL sources to provide a complete answer
+- If Source 1 is a heading/intro and Sources 2-5 have the details, USE THE DETAILS
+- When a user asks about a section, look for both the section introduction AND its detailed content across all sources
+
 Available Document Context:
 {kb_context}
 
@@ -237,7 +242,7 @@ Note: Each source may include:
 - Context: A brief description of the content's purpose
 - Tags: Keywords categorizing this content
 
-Use all this information to provide comprehensive, well-cited answers.
+Use all this information to provide comprehensive, well-cited answers that synthesize ALL provided sources.
 """
             }
         ]
