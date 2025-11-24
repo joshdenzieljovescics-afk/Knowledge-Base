@@ -4,7 +4,7 @@ import re
 import uuid
 from datetime import datetime
 from services.openai_service import get_openai_client
-from models.schemas import JSON_SCHEMA
+from models.schemas import JSON_SCHEMA, ENHANCED_CHUNKING_INSTRUCTIONS
 from utils.file_utils import save_json
 from config import Config
 
@@ -19,29 +19,57 @@ def process_text_only(simplified_view):
     image_pat = re.compile(r"\[IMAGE\s+page=(\d+)\s+l=([\d.]+)\s+t=([\d.]+)\s+r=([\d.]+)\s+b=([\d.]+)\]")
     clean_text = image_pat.sub("[IMAGE_PLACEHOLDER]", simplified_view)
     
-    # Text-only prompt focused on structure and content
-    text_prompt = f"""You are a PDF text analyzer that outputs structured JSON.
-                        Your task is to:
-                        1. Analyze the text content and identify its logical structure.
-                        2. Split it into **meaningful text chunks** - paragraphs, headings, lists, tables.
-                        3. Ignore [IMAGE_PLACEHOLDER] markers - they will be processed separately.
+    # Enhanced text-only prompt with strict instructions
+    text_prompt = f"""You are an expert PDF document analyzer that creates structured, searchable chunks.
 
-                        **Chunking Guidelines:**
-                        - Focus on textual content organization
-                        - Group related text elements (headers with descriptions, list items together)
-                        - Identify document sections and hierarchies
-                        - Keep table text structure intact
-                        - Create fewer, more meaningful chunks rather than line-by-line splits
+**YOUR MISSION:**
+Transform unstructured document text into perfectly structured, searchable JSON chunks that enable precise information retrieval.
 
-                        **Output Schema:**
-                        {JSON_SCHEMA}
+**CORE PRINCIPLES:**
+1. **Preserve Document Hierarchy**: Maintain section relationships (parent-child)
+2. **Rich Metadata**: Every chunk must have complete, accurate metadata
+3. **Search-Friendly**: Tags and context must enable keyword AND semantic search
+4. **Consistency**: Apply the same standards across ALL document types
 
-                        **Text Processing Rules:**
-                        - Strip formatting markers (*bold*, _italic_, <s=XX>) from output
-                        - Preserve original line breaks and spacing
-                        - Mark chunks that are likely headers, paragraphs, lists, or tables
-                        - Use context to describe the role of each text chunk
-                        """
+**OUTPUT SCHEMA:**
+{JSON_SCHEMA}
+
+{ENHANCED_CHUNKING_INSTRUCTIONS}
+
+**PROCESSING WORKFLOW:**
+
+Step 1: Identify Document Structure
+- Locate all section headings (SECTION 1, 1.1, Chapter 1, etc.)
+- Map parent-child relationships (3.1 is child of 3)
+- Identify content types (lists, tables, paragraphs)
+
+Step 2: Create Meaningful Chunks
+- Group related content (heading + description, list items together)
+- Keep tables intact (don't split rows across chunks)
+- Preserve context (subsection content includes parent section info)
+
+Step 3: Enrich Metadata
+- Extract ALL relevant keywords for tags (5-7 per chunk)
+- Write descriptive context (what information does this contain?)
+- Fill section, section_title, parent_section consistently
+
+Step 4: Quality Check
+- Every subsection (3.1) MUST have parent_section="3"
+- Tags include both specific terms AND parent section topics
+- Context describes content, not just restates the title
+- Type matches actual content structure
+
+**IMPORTANT REMINDERS:**
+- Ignore [IMAGE_PLACEHOLDER] markers (processed separately)
+- Strip formatting markers (*bold*, _italic_, <s=XX>)
+- Preserve line breaks and list structure in text field
+- Max one sentence for context (15 words or less)
+
+**QUALITY STANDARDS:**
+✅ Good chunk: Complete metadata, clear hierarchy, searchable tags
+❌ Bad chunk: Missing parent_section, vague context, sparse tags
+
+Begin processing. Output valid JSON only."""
 
     messages = [
         {"role": "system", "content": text_prompt},

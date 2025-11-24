@@ -2,2652 +2,592 @@
   {
     "id": "p1-ln-0",
     "type": "text",
-    "text": "SAFEXPRESS LOGISTICS INC.",
+    "text": "Standard Operating Procedure (SOP) for Goods",
     "box": {
       "l": 72.0,
-      "t": 75.44775490404288,
-      "r": 415.661274051084,
-      "b": 98.44775440404294
+      "t": 74.54834048154305,
+      "r": 544.426421871084,
+      "b": 91.548339981543
     },
     "indent": 72.0,
     "line_breaks_before": 0,
     "line_breaks_after": 1,
     "words": [
       {
-        "text": "SAFEXPRESS LOGISTICS INC.",
+        "text": "Standard",
         "box": {
           "l": 72.0,
-          "t": 75.44775490404288,
-          "r": 415.661274051084,
-          "b": 98.44775440404294
+          "t": 74.54834048154305,
+          "r": 150.36701912108398,
+          "b": 91.548339981543
         },
-        "font_size": 23.0,
+        "font_size": 17.0,
         "bold": true,
-        "italic": false
+        "italic": true
+      },
+      {
+        "text": "Operating",
+        "box": {
+          "l": 166.86484875,
+          "t": 74.54834048154305,
+          "r": 251.83625687108398,
+          "b": 91.548339981543
+        },
+        "font_size": 17.0,
+        "bold": true,
+        "italic": true
+      },
+      {
+        "text": "Procedure",
+        "box": {
+          "l": 268.33408499999996,
+          "t": 74.54834048154305,
+          "r": 357.105499371084,
+          "b": 91.548339981543
+        },
+        "font_size": 17.0,
+        "bold": true,
+        "italic": true
+      },
+      {
+        "text": "(SOP)",
+        "box": {
+          "l": 373.60332,
+          "t": 74.54834048154305,
+          "r": 425.527916871084,
+          "b": 91.548339981543
+        },
+        "font_size": 17.0,
+        "bold": true,
+        "italic": true
+      },
+      {
+        "text": "for",
+        "box": {
+          "l": 442.02576,
+          "t": 74.54834048154305,
+          "r": 469.39959437108394,
+          "b": 91.548339981543
+        },
+        "font_size": 17.0,
+        "bold": true,
+        "italic": true
+      },
+      {
+        "text": "Goods",
+        "box": {
+          "l": 485.89746,
+          "t": 74.54834048154305,
+          "r": 544.426421871084,
+          "b": 91.548339981543
+        },
+        "font_size": 17.0,
+        "bold": true,
+        "italic": true
       }
     ],
     "page": 1,
-    "top": 75.44775490404288,
+    "top": 74.54834048154305,
     "page_width": 612,
     "page_height": 792
   },
   {
     "id": "p1-ln-1",
     "type": "text",
-    "text": "HEALTH, SAFETY & ENVIRONMENT (HSE) MANUAL",
+    "text": "Receiving",
     "box": {
       "l": 72.0,
-      "t": 133.4438484815431,
-      "r": 492.7101733745801,
-      "b": 150.44384798154306
+      "t": 97.02893123154297,
+      "r": 156.996296121084,
+      "b": 114.02893073154291
     },
     "indent": 72.0,
     "line_breaks_before": 1,
     "line_breaks_after": 1,
     "words": [
       {
-        "text": "HEALTH, SAFETY & ENVIRONMENT (HSE) MANUAL",
+        "text": "Receiving",
         "box": {
           "l": 72.0,
-          "t": 133.4438484815431,
-          "r": 492.7101733745801,
-          "b": 150.44384798154306
+          "t": 97.02893123154297,
+          "r": 156.996296121084,
+          "b": 114.02893073154291
         },
         "font_size": 17.0,
         "bold": true,
-        "italic": false
+        "italic": true
       }
     ],
     "page": 1,
-    "top": 133.4438484815431,
+    "top": 97.02893123154297,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p1-ln-2",
+    "type": "text",
+    "text": "This procedure ensures that all incoming goods are handled efficiently, accurately, and safely,",
+    "box": {
+      "l": 72.0,
+      "t": 122.61010735547848,
+      "r": 542.540347399458,
+      "b": 133.61010760547845
+    },
+    "indent": 72.0,
+    "line_breaks_before": 1,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "This procedure ensures that all incoming goods are handled efficiently, accurately, and safely,",
+        "box": {
+          "l": 72.0,
+          "t": 122.61010735547848,
+          "r": 542.540347399458,
+          "b": 133.61010760547845
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      }
+    ],
+    "page": 1,
+    "top": 122.61010735547848,
     "page_width": 612,
     "page_height": 792
   },
   {
     "id": "p1-ln-3",
     "type": "text",
-    "text": "SECTION 1: HSE POLICY & COMMITMENT",
+    "text": "adhering to the Quality Policy and preventing stock reconciliation errors.",
     "box": {
       "l": 72.0,
-      "t": 213.3374004815431,
-      "r": 418.466891871084,
-      "b": 230.33739998154306
+      "t": 137.15637175547852,
+      "r": 539.992565749458,
+      "b": 148.1563720054785
     },
     "indent": 72.0,
-    "line_breaks_before": 1,
+    "line_breaks_before": 0,
     "line_breaks_after": 1,
     "words": [
       {
-        "text": "SECTION 1: HSE POLICY & COMMITMENT",
+        "text": "adhering",
         "box": {
           "l": 72.0,
-          "t": 213.3374004815431,
-          "r": 418.466891871084,
-          "b": 230.33739998154306
+          "t": 137.15637175547852,
+          "r": 117.838733899458,
+          "b": 148.1563720054785
         },
-        "font_size": 17.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 1,
-    "top": 213.3374004815431,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-4",
-    "type": "text",
-    "text": "1.1 HSE Mission Statement",
-    "box": {
-      "l": 72.0,
-      "t": 255.8344695609569,
-      "r": 242.441659028916,
-      "b": 268.83447006095696
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
       {
-        "text": "1.1 HSE Mission Statement",
+        "text": "to",
         "box": {
-          "l": 72.0,
-          "t": 255.8344695609569,
-          "r": 242.441659028916,
-          "b": 268.83447006095696
+          "l": 131.33656274999998,
+          "t": 137.15637175547852,
+          "r": 143.560028149458,
+          "b": 148.1563720054785
         },
-        "font_size": 13.0,
-        "bold": true,
-        "italic": false
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "the",
+        "box": {
+          "l": 157.05785774999998,
+          "t": 137.15637175547852,
+          "r": 175.394653399458,
+          "b": 148.1563720054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "Quality",
+        "box": {
+          "l": 188.892483,
+          "t": 137.15637175547852,
+          "r": 226.159672399458,
+          "b": 148.1563720054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "Policy",
+        "box": {
+          "l": 239.6574975,
+          "t": 137.15637175547852,
+          "r": 272.03510989945806,
+          "b": 148.1563720054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "and",
+        "box": {
+          "l": 285.5329275,
+          "t": 137.15637175547852,
+          "r": 306.929062399458,
+          "b": 148.1563720054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "preventing",
+        "box": {
+          "l": 319.6769025,
+          "t": 137.15637175547852,
+          "r": 374.06570989945806,
+          "b": 148.1563720054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "stock",
+        "box": {
+          "l": 386.81354999999996,
+          "t": 137.15637175547852,
+          "r": 415.52529739945805,
+          "b": 148.1563720054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "reconciliation",
+        "box": {
+          "l": 428.273115,
+          "t": 137.15637175547852,
+          "r": 495.484342399458,
+          "b": 148.1563720054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "errors.",
+        "box": {
+          "l": 508.23220499999996,
+          "t": 137.15637175547852,
+          "r": 539.992565749458,
+          "b": 148.1563720054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
       }
     ],
     "page": 1,
-    "top": 255.8344695609569,
+    "top": 137.15637175547852,
     "page_width": 612,
     "page_height": 792
   },
   {
     "id": "p1-ln-5",
     "type": "text",
-    "text": "SAFEXPRESS LOGISTICS INC. is committed to providing a safe, healthy, and environmentally",
+    "text": "1.0 Purpose",
     "box": {
       "l": 72.0,
-      "t": 289.43212535547855,
-      "r": 537.940462399458,
-      "b": 300.4321256054786
+      "t": 178.54870956095692,
+      "r": 149.28601827891603,
+      "b": 191.54871006095698
     },
     "indent": 72.0,
     "line_breaks_before": 1,
     "line_breaks_after": 1,
     "words": [
       {
-        "text": "SAFEXPRESS LOGISTICS INC. is committed to providing a safe, healthy, and environmentally",
+        "text": "1.0 Purpose",
         "box": {
           "l": 72.0,
-          "t": 289.43212535547855,
-          "r": 537.940462399458,
-          "b": 300.4321256054786
+          "t": 178.54870956095692,
+          "r": 149.28601827891603,
+          "b": 191.54871006095698
         },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
+        "font_size": 13.0,
+        "bold": true,
+        "italic": true
       }
     ],
     "page": 1,
-    "top": 289.43212535547855,
+    "top": 178.54870956095692,
     "page_width": 612,
     "page_height": 792
   },
   {
     "id": "p1-ln-6",
     "type": "text",
-    "text": "responsible workplace for all employees, contractors, and visitors. Our goal is Zero Accidents",
+    "text": "To establish a uniform and controlled process for the receipt, inspection, and recording of all",
     "box": {
       "l": 72.0,
-      "t": 314.7299772554785,
-      "r": 533.861879899458,
-      "b": 325.72997750547853
+      "t": 199.43994535547847,
+      "r": 542.307112399458,
+      "b": 210.43994560547844
     },
     "indent": 72.0,
     "line_breaks_before": 1,
-    "line_breaks_after": 1,
+    "line_breaks_after": 0,
     "words": [
       {
-        "text": "responsible workplace for all employees, contractors, and visitors. Our goal is Zero Accidents",
+        "text": "To establish a uniform and controlled process for the receipt, inspection, and recording of all",
         "box": {
           "l": 72.0,
-          "t": 314.7299772554785,
-          "r": 533.861879899458,
-          "b": 325.72997750547853
+          "t": 199.43994535547847,
+          "r": 542.307112399458,
+          "b": 210.43994560547844
         },
         "font_size": 11.0,
-        "bold": true,
-        "italic": false
+        "bold": false,
+        "italic": true
       }
     ],
     "page": 1,
-    "top": 314.7299772554785,
+    "top": 199.43994535547847,
     "page_width": 612,
     "page_height": 792
   },
   {
     "id": "p1-ln-7",
     "type": "text",
-    "text": "and Injuries. We integrate Safety as the primary KPI in every operational decision, ensuring",
+    "text": "incoming cargo and materials, ensuring compliance with client instructions and minimizing",
     "box": {
       "l": 72.0,
-      "t": 340.02782825547854,
-      "r": 527.592802399458,
-      "b": 351.02782850547857
+      "t": 213.9862097554785,
+      "r": 542.6436148994579,
+      "b": 224.98621000547848
     },
     "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
     "words": [
       {
-        "text": "and Injuries. We integrate Safety as the primary KPI in every operational decision, ensuring",
+        "text": "incoming cargo and materials, ensuring compliance with client instructions and minimizing",
         "box": {
           "l": 72.0,
-          "t": 340.02782825547854,
-          "r": 527.592802399458,
-          "b": 351.02782850547857
+          "t": 213.9862097554785,
+          "r": 542.6436148994579,
+          "b": 224.98621000547848
         },
         "font_size": 11.0,
-        "bold": true,
-        "italic": false
+        "bold": false,
+        "italic": true
       }
     ],
     "page": 1,
-    "top": 340.02782825547854,
+    "top": 213.9862097554785,
     "page_width": 612,
     "page_height": 792
   },
   {
     "id": "p1-ln-8",
     "type": "text",
-    "text": "compliance with all Philippine laws and international standards for logistics and warehousing.",
+    "text": "discrepancies.",
     "box": {
       "l": 72.0,
-      "t": 365.3256800054785,
-      "r": 526.599959899458,
-      "b": 376.3256802554785
+      "t": 228.53247475547846,
+      "r": 145.319202649458,
+      "b": 239.53247500547843
     },
     "indent": 72.0,
-    "line_breaks_before": 1,
+    "line_breaks_before": 0,
     "line_breaks_after": 1,
     "words": [
       {
-        "text": "compliance with all Philippine laws and international standards for logistics and warehousing.",
+        "text": "discrepancies.",
         "box": {
           "l": 72.0,
-          "t": 365.3256800054785,
-          "r": 526.599959899458,
-          "b": 376.3256802554785
+          "t": 228.53247475547846,
+          "r": 145.319202649458,
+          "b": 239.53247500547843
         },
         "font_size": 11.0,
         "bold": false,
-        "italic": false
+        "italic": true
       }
     ],
     "page": 1,
-    "top": 365.3256800054785,
+    "top": 228.53247475547846,
     "page_width": 612,
     "page_height": 792
   },
   {
     "id": "p1-ln-9",
     "type": "text",
-    "text": "1.2 Management Responsibilities",
+    "text": "2.0 Procedure Steps",
     "box": {
       "l": 72.0,
-      "t": 402.923339560957,
-      "r": 279.99585402891597,
-      "b": 415.923340060957
+      "t": 255.37853956095694,
+      "r": 200.57239527891602,
+      "b": 268.378540060957
     },
     "indent": 72.0,
     "line_breaks_before": 1,
     "line_breaks_after": 1,
     "words": [
       {
-        "text": "1.2 Management Responsibilities",
+        "text": "2.0 Procedure Steps",
         "box": {
           "l": 72.0,
-          "t": 402.923339560957,
-          "r": 279.99585402891597,
-          "b": 415.923340060957
+          "t": 255.37853956095694,
+          "r": 200.57239527891602,
+          "b": 268.378540060957
         },
         "font_size": 13.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 1,
-    "top": 402.923339560957,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-10",
-    "type": "text",
-    "text": "Management is responsible for:",
-    "box": {
-      "l": 72.0,
-      "t": 436.52099535547853,
-      "r": 228.415417399458,
-      "b": 447.52099560547856
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "Management is responsible for:",
-        "box": {
-          "l": 72.0,
-          "t": 436.52099535547853,
-          "r": 228.415417399458,
-          "b": 447.52099560547856
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 1,
-    "top": 436.52099535547853,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-11",
-    "type": "text",
-    "text": "\u25cf Providing necessary Personal Protective Equipment (PPE) and ensuring its proper",
-    "box": {
-      "l": 90.0,
-      "t": 473.8188453554785,
-      "r": 523.429582399458,
-      "b": 484.81884560547854
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 473.8188453554785,
-          "r": 99.69547662445801,
-          "b": 484.81884560547854
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Providing necessary Personal Protective Equipment (PPE) and ensuring its proper",
-        "box": {
-          "l": 108.0,
-          "t": 473.8188453554785,
-          "r": 523.429582399458,
-          "b": 484.81884560547854
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 1,
-    "top": 473.8188453554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-12",
-    "type": "text",
-    "text": "use.",
-    "box": {
-      "l": 108.0,
-      "t": 499.11669725547847,
-      "r": 131.832889399458,
-      "b": 510.1166975054785
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "use.",
-        "box": {
-          "l": 108.0,
-          "t": 499.11669725547847,
-          "r": 131.832889399458,
-          "b": 510.1166975054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 1,
-    "top": 499.11669725547847,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-13",
-    "type": "text",
-    "text": "\u25cf Conducting regular safety audits and risk assessments across all sites (warehouses,",
-    "box": {
-      "l": 90.0,
-      "t": 524.4145553554786,
-      "r": 521.620822399458,
-      "b": 535.4145556054785
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 524.4145553554786,
-          "r": 99.69547662445801,
-          "b": 535.4145556054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Conducting regular safety audits and risk assessments across all sites (warehouses,",
-        "box": {
-          "l": 108.0,
-          "t": 524.4145553554786,
-          "r": 521.620822399458,
-          "b": 535.4145556054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 1,
-    "top": 524.4145553554786,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-14",
-    "type": "text",
-    "text": "yards, and fleet operations).",
-    "box": {
-      "l": 108.0,
-      "t": 549.7124072554785,
-      "r": 247.315267399458,
-      "b": 560.7124075054785
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "yards, and fleet operations).",
-        "box": {
-          "l": 108.0,
-          "t": 549.7124072554785,
-          "r": 247.315267399458,
-          "b": 560.7124075054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 1,
-    "top": 549.7124072554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-15",
-    "type": "text",
-    "text": "\u25cf Implementing corrective actions for all reported safety deficiencies and hazards.",
-    "box": {
-      "l": 90.0,
-      "t": 575.0102553554784,
-      "r": 499.02990739945807,
-      "b": 586.0102556054785
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 575.0102553554784,
-          "r": 99.69547662445801,
-          "b": 586.0102556054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Implementing corrective actions for all reported safety deficiencies and hazards.",
-        "box": {
-          "l": 108.0,
-          "t": 575.0102553554784,
-          "r": 499.02990739945807,
-          "b": 586.0102556054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 1,
-    "top": 575.0102553554784,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-16",
-    "type": "text",
-    "text": "1.3 Employee Responsibilities",
-    "box": {
-      "l": 72.0,
-      "t": 612.6079095609571,
-      "r": 261.954889028916,
-      "b": 625.607910060957
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "1.3 Employee Responsibilities",
-        "box": {
-          "l": 72.0,
-          "t": 612.6079095609571,
-          "r": 261.954889028916,
-          "b": 625.607910060957
-        },
-        "font_size": 13.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 1,
-    "top": 612.6079095609571,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-17",
-    "type": "text",
-    "text": "Every employee is responsible for:",
-    "box": {
-      "l": 72.0,
-      "t": 646.2055653554785,
-      "r": 243.068084899458,
-      "b": 657.2055656054786
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "Every employee is responsible for:",
-        "box": {
-          "l": 72.0,
-          "t": 646.2055653554785,
-          "r": 243.068084899458,
-          "b": 657.2055656054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 1,
-    "top": 646.2055653554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-18",
-    "type": "text",
-    "text": "\u25cf Adhering strictly to all safety rules, procedures, and Work Instructions (WI).",
-    "box": {
-      "l": 90.0,
-      "t": 683.5034153554785,
-      "r": 474.95217739945804,
-      "b": 694.5034156054786
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 683.5034153554785,
-          "r": 99.69547662445801,
-          "b": 694.5034156054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Adhering strictly to all safety rules, procedures, and Work Instructions (WI).",
-        "box": {
-          "l": 108.0,
-          "t": 683.5034153554785,
-          "r": 474.95217739945804,
-          "b": 694.5034156054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 1,
-    "top": 683.5034153554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-19",
-    "type": "text",
-    "text": "\u25cf Wearing the required PPE for their assigned tasks and work areas.",
-    "box": {
-      "l": 90.0,
-      "t": 708.8012653554784,
-      "r": 435.899857399458,
-      "b": 719.8012656054785
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 0,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 708.8012653554784,
-          "r": 99.69547662445801,
-          "b": 719.8012656054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Wearing the required PPE for their assigned tasks and work areas.",
-        "box": {
-          "l": 108.0,
-          "t": 708.8012653554784,
-          "r": 435.899857399458,
-          "b": 719.8012656054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 1,
-    "top": 708.8012653554784,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-0",
-    "type": "text",
-    "text": "\u25cf Identifying and reporting all potential hazards, near-misses, and unsafe conditions",
-    "box": {
-      "l": 90.0,
-      "t": 73.64892535547847,
-      "r": 508.84664989945804,
-      "b": 84.64892560547844
-    },
-    "indent": 90.0,
-    "line_breaks_before": 0,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 73.64892535547847,
-          "r": 99.69547662445801,
-          "b": 84.64892560547844
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Identifying and reporting all potential hazards, near-misses, and unsafe conditions",
-        "box": {
-          "l": 108.0,
-          "t": 73.64892535547847,
-          "r": 508.84664989945804,
-          "b": 84.64892560547844
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 73.64892535547847,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-1",
-    "type": "text",
-    "text": "immediately to their direct supervisor or the HSE Officer.",
-    "box": {
-      "l": 108.0,
-      "t": 98.94677725547854,
-      "r": 384.53991739945803,
-      "b": 109.94677750547851
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "immediately to their direct supervisor or the HSE Officer.",
-        "box": {
-          "l": 108.0,
-          "t": 98.94677725547854,
-          "r": 384.53991739945803,
-          "b": 109.94677750547851
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 98.94677725547854,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-2",
-    "type": "text",
-    "text": "\u25cf Participating actively in all safety training and drills.",
-    "box": {
-      "l": 90.0,
-      "t": 124.24462835547843,
-      "r": 358.498454899458,
-      "b": 135.2446286054784
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 124.24462835547843,
-          "r": 99.69547662445801,
-          "b": 135.2446286054784
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Participating actively in all safety training and drills.",
-        "box": {
-          "l": 108.0,
-          "t": 124.24462835547843,
-          "r": 358.498454899458,
-          "b": 135.2446286054784
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 124.24462835547843,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-4",
-    "type": "text",
-    "text": "SECTION 2: WAREHOUSE AND MATERIALS HANDLING",
-    "box": {
-      "l": 72.0,
-      "t": 187.73975048154307,
-      "r": 526.7081293710839,
-      "b": 204.739749981543
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "SECTION 2: WAREHOUSE AND MATERIALS HANDLING",
-        "box": {
-          "l": 72.0,
-          "t": 187.73975048154307,
-          "r": 526.7081293710839,
-          "b": 204.739749981543
-        },
-        "font_size": 17.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 187.73975048154307,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-5",
-    "type": "text",
-    "text": "SAFETY",
-    "box": {
-      "l": 72.0,
-      "t": 226.83643073154303,
-      "r": 143.75433737108398,
-      "b": 243.83643023154298
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "SAFETY",
-        "box": {
-          "l": 72.0,
-          "t": 226.83643073154303,
-          "r": 143.75433737108398,
-          "b": 243.83643023154298
-        },
-        "font_size": 17.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 226.83643073154303,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-6",
-    "type": "text",
-    "text": "2.1 Personal Protective Equipment (PPE)",
-    "box": {
-      "l": 72.0,
-      "t": 269.33349956095697,
-      "r": 327.665126528916,
-      "b": 282.333500060957
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "2.1 Personal Protective Equipment (PPE)",
-        "box": {
-          "l": 72.0,
-          "t": 269.33349956095697,
-          "r": 327.665126528916,
-          "b": 282.333500060957
-        },
-        "font_size": 13.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 269.33349956095697,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-7",
-    "type": "text",
-    "text": "Mandatory PPE required in all warehouse and yard areas:",
-    "box": {
-      "l": 72.0,
-      "t": 302.93115535547855,
-      "r": 357.34820239945805,
-      "b": 313.9311556054786
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "Mandatory PPE required in all warehouse and yard areas:",
-        "box": {
-          "l": 72.0,
-          "t": 302.93115535547855,
-          "r": 357.34820239945805,
-          "b": 313.9311556054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 302.93115535547855,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-8",
-    "type": "text",
-    "text": "\u25cf Safety Vests: High visibility vests required at all times.",
-    "box": {
-      "l": 90.0,
-      "t": 340.22900535547853,
-      "r": 376.805819899458,
-      "b": 351.22900560547856
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 340.22900535547853,
-          "r": 99.69547662445801,
-          "b": 351.22900560547856
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Safety Vests: High visibility vests required at all times.",
-        "box": {
-          "l": 108.0,
-          "t": 340.22900535547853,
-          "r": 376.805819899458,
-          "b": 351.22900560547856
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 340.22900535547853,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-9",
-    "type": "text",
-    "text": "\u25cf Safety Footwear: Steel-toed boots required for all workers involved in cargo handling",
-    "box": {
-      "l": 90.0,
-      "t": 365.5268553554785,
-      "r": 527.739472399458,
-      "b": 376.52685560547854
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 365.5268553554785,
-          "r": 99.69547662445801,
-          "b": 376.52685560547854
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Safety Footwear: Steel-toed boots required for all workers involved in cargo handling",
-        "box": {
-          "l": 108.0,
-          "t": 365.5268553554785,
-          "r": 527.739472399458,
-          "b": 376.52685560547854
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 365.5268553554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-10",
-    "type": "text",
-    "text": "and near heavy machinery.",
-    "box": {
-      "l": 108.0,
-      "t": 390.8247072554785,
-      "r": 242.83300489945802,
-      "b": 401.8247075054785
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "and near heavy machinery.",
-        "box": {
-          "l": 108.0,
-          "t": 390.8247072554785,
-          "r": 242.83300489945802,
-          "b": 401.8247075054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 390.8247072554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-11",
-    "type": "text",
-    "text": "\u25cf Gloves: Appropriate gloves for handling cargo (anti-slip, cut-resistant, thermal for cold",
-    "box": {
-      "l": 90.0,
-      "t": 416.12255535547854,
-      "r": 529.5643948994581,
-      "b": 427.12255560547857
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 416.12255535547854,
-          "r": 99.69547662445801,
-          "b": 427.12255560547857
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Gloves: Appropriate gloves for handling cargo (anti-slip, cut-resistant, thermal for cold",
-        "box": {
-          "l": 108.0,
-          "t": 416.12255535547854,
-          "r": 529.5643948994581,
-          "b": 427.12255560547857
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 416.12255535547854,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-12",
-    "type": "text",
-    "text": "storage areas).",
-    "box": {
-      "l": 108.0,
-      "t": 441.4204072554785,
-      "r": 184.985054149458,
-      "b": 452.4204075054785
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "storage areas).",
-        "box": {
-          "l": 108.0,
-          "t": 441.4204072554785,
-          "r": 184.985054149458,
-          "b": 452.4204075054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 441.4204072554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-13",
-    "type": "text",
-    "text": "2.2 Forklift and Material Handling Equipment (MHE) Operation",
-    "box": {
-      "l": 72.0,
-      "t": 479.01806956095703,
-      "r": 456.858341528916,
-      "b": 492.01807006095703
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "2.2 Forklift and Material Handling Equipment (MHE) Operation",
-        "box": {
-          "l": 72.0,
-          "t": 479.01806956095703,
-          "r": 456.858341528916,
-          "b": 492.01807006095703
-        },
-        "font_size": 13.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 479.01806956095703,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-14",
-    "type": "text",
-    "text": "\u25cf Only certified and authorized personnel are permitted to operate forklifts and other",
-    "box": {
-      "l": 90.0,
-      "t": 512.6157253554785,
-      "r": 524.0199598994581,
-      "b": 523.6157256054785
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 512.6157253554785,
-          "r": 99.69547662445801,
-          "b": 523.6157256054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Only certified and authorized personnel are permitted to operate forklifts and other",
-        "box": {
-          "l": 108.0,
-          "t": 512.6157253554785,
-          "r": 524.0199598994581,
-          "b": 523.6157256054785
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 512.6157253554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-15",
-    "type": "text",
-    "text": "MHE.",
-    "box": {
-      "l": 108.0,
-      "t": 537.9135772554785,
-      "r": 138.536621149458,
-      "b": 548.9135775054785
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "MHE.",
-        "box": {
-          "l": 108.0,
-          "t": 537.9135772554785,
-          "r": 138.536621149458,
-          "b": 548.9135775054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 537.9135772554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-16",
-    "type": "text",
-    "text": "\u25cf Maximum speed limits within the warehouse must be strictly observed.",
-    "box": {
-      "l": 90.0,
-      "t": 563.2114253554785,
-      "r": 453.77838739945804,
-      "b": 574.2114256054786
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 563.2114253554785,
-          "r": 99.69547662445801,
-          "b": 574.2114256054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Maximum speed limits within the warehouse must be strictly observed.",
-        "box": {
-          "l": 108.0,
-          "t": 563.2114253554785,
-          "r": 453.77838739945804,
-          "b": 574.2114256054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 563.2114253554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-17",
-    "type": "text",
-    "text": "\u25cf Pedestrian right-of-way must be maintained; pedestrians must use designated",
-    "box": {
-      "l": 90.0,
-      "t": 588.5092753554786,
-      "r": 499.620329899458,
-      "b": 599.5092756054786
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 588.5092753554786,
-          "r": 99.69547662445801,
-          "b": 599.5092756054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Pedestrian right-of-way must be maintained; pedestrians must use designated",
-        "box": {
-          "l": 108.0,
-          "t": 588.5092753554786,
-          "r": 499.620329899458,
-          "b": 599.5092756054786
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 588.5092753554786,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-18",
-    "type": "text",
-    "text": "walkways.",
-    "box": {
-      "l": 108.0,
-      "t": 613.8071272554786,
-      "r": 161.143600399458,
-      "b": 624.8071275054785
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "walkways.",
-        "box": {
-          "l": 108.0,
-          "t": 613.8071272554786,
-          "r": 161.143600399458,
-          "b": 624.8071275054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 613.8071272554786,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-19",
-    "type": "text",
-    "text": "\u25cf Forklifts must be inspected prior to every shift (Pre-Operation Check).",
-    "box": {
-      "l": 90.0,
-      "t": 639.1049753554785,
-      "r": 454.975282399458,
-      "b": 650.1049756054786
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 639.1049753554785,
-          "r": 99.69547662445801,
-          "b": 650.1049756054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Forklifts must be inspected prior to every shift (Pre-Operation Check).",
-        "box": {
-          "l": 108.0,
-          "t": 639.1049753554785,
-          "r": 454.975282399458,
-          "b": 650.1049756054786
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 639.1049753554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-20",
-    "type": "text",
-    "text": "2.3 Storage and Racking Safety",
-    "box": {
-      "l": 72.0,
-      "t": 676.7026395609571,
-      "r": 269.176339028916,
-      "b": 689.702640060957
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 0,
-    "words": [
-      {
-        "text": "2.3 Storage and Racking Safety",
-        "box": {
-          "l": 72.0,
-          "t": 676.7026395609571,
-          "r": 269.176339028916,
-          "b": 689.702640060957
-        },
-        "font_size": 13.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 2,
-    "top": 676.7026395609571,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-0",
-    "type": "text",
-    "text": "\u25cf Never exceed the documented maximum load capacity of the racking system.",
-    "box": {
-      "l": 90.0,
-      "t": 73.64892535547847,
-      "r": 497.80081489945803,
-      "b": 84.64892560547844
-    },
-    "indent": 90.0,
-    "line_breaks_before": 0,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 73.64892535547847,
-          "r": 99.69547662445801,
-          "b": 84.64892560547844
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Never exceed the documented maximum load capacity of the racking system.",
-        "box": {
-          "l": 108.0,
-          "t": 73.64892535547847,
-          "r": 497.80081489945803,
-          "b": 84.64892560547844
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 73.64892535547847,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-1",
-    "type": "text",
-    "text": "\u25cf Clearance must be maintained around fire exits, fire fighting equipment, and electrical",
-    "box": {
-      "l": 90.0,
-      "t": 98.9467773554785,
-      "r": 526.5425998994581,
-      "b": 109.94677760547847
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 98.9467773554785,
-          "r": 99.69547662445801,
-          "b": 109.94677760547847
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Clearance must be maintained around fire exits, fire fighting equipment, and electrical",
-        "box": {
-          "l": 108.0,
-          "t": 98.9467773554785,
-          "r": 526.5425998994581,
-          "b": 109.94677760547847
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 98.9467773554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-2",
-    "type": "text",
-    "text": "panels.",
-    "box": {
-      "l": 108.0,
-      "t": 124.24462925547857,
-      "r": 146.501663149458,
-      "b": 135.24462950547854
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "panels.",
-        "box": {
-          "l": 108.0,
-          "t": 124.24462925547857,
-          "r": 146.501663149458,
-          "b": 135.24462950547854
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 124.24462925547857,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-3",
-    "type": "text",
-    "text": "\u25cf Pallets must be stable, properly wrapped, and the load must not extend beyond the",
-    "box": {
-      "l": 90.0,
-      "t": 149.54248035547846,
-      "r": 514.965389899458,
-      "b": 160.54248060547843
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 149.54248035547846,
-          "r": 99.69547662445801,
-          "b": 160.54248060547843
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Pallets must be stable, properly wrapped, and the load must not extend beyond the",
-        "box": {
-          "l": 108.0,
-          "t": 149.54248035547846,
-          "r": 514.965389899458,
-          "b": 160.54248060547843
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 149.54248035547846,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-4",
-    "type": "text",
-    "text": "edges of the pallet.",
-    "box": {
-      "l": 108.0,
-      "t": 174.84033225547853,
-      "r": 203.947650649458,
-      "b": 185.8403325054785
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "edges of the pallet.",
-        "box": {
-          "l": 108.0,
-          "t": 174.84033225547853,
-          "r": 203.947650649458,
-          "b": 185.8403325054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 174.84033225547853,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-6",
-    "type": "text",
-    "text": "SECTION 3: TRANSPORTATION & FLEET SAFETY",
-    "box": {
-      "l": 72.0,
-      "t": 238.33545048154303,
-      "r": 480.13708187108404,
-      "b": 255.33544998154298
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "SECTION 3: TRANSPORTATION & FLEET SAFETY",
-        "box": {
-          "l": 72.0,
-          "t": 238.33545048154303,
-          "r": 480.13708187108404,
-          "b": 255.33544998154298
-        },
-        "font_size": 17.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 238.33545048154303,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-7",
-    "type": "text",
-    "text": "3.1 Driver Fitness and Vehicle Condition",
-    "box": {
-      "l": 72.0,
-      "t": 280.832519560957,
-      "r": 323.32447152891604,
-      "b": 293.832520060957
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "3.1 Driver Fitness and Vehicle Condition",
-        "box": {
-          "l": 72.0,
-          "t": 280.832519560957,
-          "r": 323.32447152891604,
-          "b": 293.832520060957
-        },
-        "font_size": 13.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 280.832519560957,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-8",
-    "type": "text",
-    "text": "\u25cf All drivers must possess a valid professional driver's license and undergo mandatory",
-    "box": {
-      "l": 90.0,
-      "t": 314.4301753554785,
-      "r": 521.894512399458,
-      "b": 325.43017560547855
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 314.4301753554785,
-          "r": 99.69547662445801,
-          "b": 325.43017560547855
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "All drivers must possess a valid professional driver's license and undergo mandatory",
-        "box": {
-          "l": 108.0,
-          "t": 314.4301753554785,
-          "r": 521.894512399458,
-          "b": 325.43017560547855
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 314.4301753554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-9",
-    "type": "text",
-    "text": "refresher training every two years.",
-    "box": {
-      "l": 108.0,
-      "t": 339.7280272554785,
-      "r": 277.22711239945806,
-      "b": 350.7280275054785
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "refresher training every two years.",
-        "box": {
-          "l": 108.0,
-          "t": 339.7280272554785,
-          "r": 277.22711239945806,
-          "b": 350.7280275054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 339.7280272554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-10",
-    "type": "text",
-    "text": "\u25cf Drivers must perform a Daily Vehicle Inspection Report (DVIR) before operating any",
-    "box": {
-      "l": 90.0,
-      "t": 365.02587535547855,
-      "r": 530.116777399458,
-      "b": 376.0258756054786
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 365.02587535547855,
-          "r": 99.69547662445801,
-          "b": 376.0258756054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Drivers must perform a Daily Vehicle Inspection Report (DVIR) before operating any",
-        "box": {
-          "l": 108.0,
-          "t": 365.02587535547855,
-          "r": 530.116777399458,
-          "b": 376.0258756054786
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 365.02587535547855,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-11",
-    "type": "text",
-    "text": "company vehicle. Any defects must be reported and corrected before departure.",
-    "box": {
-      "l": 108.0,
-      "t": 390.3237272554785,
-      "r": 500.27511739945805,
-      "b": 401.32372750547853
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "company vehicle. Any defects must be reported and corrected before departure.",
-        "box": {
-          "l": 108.0,
-          "t": 390.3237272554785,
-          "r": 500.27511739945805,
-          "b": 401.32372750547853
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 390.3237272554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-12",
-    "type": "text",
-    "text": "\u25cf No use of mobile phones or electronic devices while the vehicle is in motion.",
-    "box": {
-      "l": 90.0,
-      "t": 415.62158535547854,
-      "r": 499.57739239945806,
-      "b": 426.6215856054786
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 415.62158535547854,
-          "r": 99.69547662445801,
-          "b": 426.6215856054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "No use of mobile phones or electronic devices while the vehicle is in motion.",
-        "box": {
-          "l": 108.0,
-          "t": 415.62158535547854,
-          "r": 499.57739239945806,
-          "b": 426.6215856054786
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 415.62158535547854,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-13",
-    "type": "text",
-    "text": "3.2 Fatigue Management",
-    "box": {
-      "l": 72.0,
-      "t": 453.2192395609571,
-      "r": 226.54556652891603,
-      "b": 466.2192400609571
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "3.2 Fatigue Management",
-        "box": {
-          "l": 72.0,
-          "t": 453.2192395609571,
-          "r": 226.54556652891603,
-          "b": 466.2192400609571
-        },
-        "font_size": 13.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 453.2192395609571,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-14",
-    "type": "text",
-    "text": "\u25cf Drivers must adhere strictly to mandated driving hours and rest periods to prevent",
-    "box": {
-      "l": 90.0,
-      "t": 486.81689535547855,
-      "r": 508.181152399458,
-      "b": 497.8168956054786
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 486.81689535547855,
-          "r": 99.69547662445801,
-          "b": 497.8168956054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Drivers must adhere strictly to mandated driving hours and rest periods to prevent",
-        "box": {
-          "l": 108.0,
-          "t": 486.81689535547855,
-          "r": 508.181152399458,
-          "b": 497.8168956054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 486.81689535547855,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-15",
-    "type": "text",
-    "text": "fatigue-related accidents.",
-    "box": {
-      "l": 108.0,
-      "t": 512.1147472554785,
-      "r": 233.875597399458,
-      "b": 523.1147475054786
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "fatigue-related accidents.",
-        "box": {
-          "l": 108.0,
-          "t": 512.1147472554785,
-          "r": 233.875597399458,
-          "b": 523.1147475054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 512.1147472554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-16",
-    "type": "text",
-    "text": "\u25cf Drivers must report any physical signs of excessive fatigue immediately and pull over",
-    "box": {
-      "l": 90.0,
-      "t": 537.4125953554785,
-      "r": 524.052187399458,
-      "b": 548.4125956054786
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 537.4125953554785,
-          "r": 99.69547662445801,
-          "b": 548.4125956054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Drivers must report any physical signs of excessive fatigue immediately and pull over",
-        "box": {
-          "l": 108.0,
-          "t": 537.4125953554785,
-          "r": 524.052187399458,
-          "b": 548.4125956054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 537.4125953554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-17",
-    "type": "text",
-    "text": "safely.",
-    "box": {
-      "l": 108.0,
-      "t": 562.7104472554786,
-      "r": 142.008667399458,
-      "b": 573.7104475054786
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "safely.",
-        "box": {
-          "l": 108.0,
-          "t": 562.7104472554786,
-          "r": 142.008667399458,
-          "b": 573.7104475054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 562.7104472554786,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-19",
-    "type": "text",
-    "text": "SECTION 4: EMERGENCY RESPONSE & REPORTING",
-    "box": {
-      "l": 72.0,
-      "t": 626.205570481543,
-      "r": 508.198594371084,
-      "b": 643.205569981543
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "SECTION 4: EMERGENCY RESPONSE & REPORTING",
-        "box": {
-          "l": 72.0,
-          "t": 626.205570481543,
-          "r": 508.198594371084,
-          "b": 643.205569981543
-        },
-        "font_size": 17.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 626.205570481543,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-20",
-    "type": "text",
-    "text": "4.1 Accident and Incident Reporting (Refer to Incident/Accident Report",
-    "box": {
-      "l": 72.0,
-      "t": 668.7026395609571,
-      "r": 511.74913152891605,
-      "b": 681.702640060957
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "4.1 Accident and Incident Reporting (Refer to Incident/Accident Report",
-        "box": {
-          "l": 72.0,
-          "t": 668.7026395609571,
-          "r": 511.74913152891605,
-          "b": 681.702640060957
-        },
-        "font_size": 13.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 668.7026395609571,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p3-ln-21",
-    "type": "text",
-    "text": "Forms)",
-    "box": {
-      "l": 72.0,
-      "t": 698.600100160957,
-      "r": 119.65768827891601,
-      "b": 711.6001006609571
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 0,
-    "words": [
-      {
-        "text": "Forms)",
-        "box": {
-          "l": 72.0,
-          "t": 698.600100160957,
-          "r": 119.65768827891601,
-          "b": 711.6001006609571
-        },
-        "font_size": 13.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 3,
-    "top": 698.600100160957,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p4-ln-0",
-    "type": "text",
-    "text": "\u25cf All injuries, illnesses, accidents, property damage, and near-misses (events that could",
-    "box": {
-      "l": 90.0,
-      "t": 73.64892535547847,
-      "r": 532.6505398994581,
-      "b": 84.64892560547844
-    },
-    "indent": 90.0,
-    "line_breaks_before": 0,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 73.64892535547847,
-          "r": 99.69547662445801,
-          "b": 84.64892560547844
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "All injuries, illnesses, accidents, property damage, and near-misses (events that could",
-        "box": {
-          "l": 108.0,
-          "t": 73.64892535547847,
-          "r": 532.6505398994581,
-          "b": 84.64892560547844
-        },
-        "font_size": 11.0,
         "bold": true,
         "italic": true
       }
     ],
-    "page": 4,
-    "top": 73.64892535547847,
+    "page": 1,
+    "top": 255.37853956095694,
     "page_width": 612,
     "page_height": 792
   },
   {
-    "id": "p4-ln-1",
-    "type": "text",
-    "text": "have caused harm) must be reported immediately to the supervisor and HSE Officer.",
-    "box": {
-      "l": 108.0,
-      "t": 98.94677725547854,
-      "r": 522.033494899458,
-      "b": 109.94677750547851
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "have caused harm) must be reported immediately to the supervisor and HSE Officer.",
-        "box": {
-          "l": 108.0,
-          "t": 98.94677725547854,
-          "r": 522.033494899458,
-          "b": 109.94677750547851
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
+    "id": "p1-tbl-0",
+    "type": "table",
+    "table": [
+      [
+        "Step",
+        "Action",
+        "Responsibility",
+        "Quality/Safety Check"
+      ],
+      [
+        "2.1",
+        "Vehicle/Cargo\nCheck-in",
+        "Gate Guard /\nReceiving Clerk",
+        "Verify the transporter's details against the\nexpected Delivery Order (DO) or Advanced\nShipping Notice (ASN). Check the vehicle\nfor signs of tampering or damage before\ndocking."
+      ],
+      [
+        "2.2",
+        "Unloading\nPreparation",
+        "Receiving\nSupervisor",
+        "Clear the staging area. Ensure all required\nPersonal Protective Equipment (PPE) is\nworn by the unloading team (safety vest,\nhard hat, steel-toed boots)."
+      ],
+      [
+        "2.3",
+        "Unloading and\nTally",
+        "Warehouse\nOperator",
+        "Unload cargo carefully. Perform a\npreliminary count (tally) against the\naccompanying shipper's Bill of Lading\n(BOL)."
+      ],
+      [
+        "2.4",
+        "Initial Quality\nInspection",
+        "Receiving Clerk",
+        "Mandatory Check: Inspect every\npallet/carton for visible damage (crushing,\nwetness, torn seals). If damage is found,"
+      ]
     ],
-    "page": 4,
-    "top": 98.94677725547854,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p4-ln-2",
-    "type": "text",
-    "text": "\u25cf An investigation must be conducted for every incident to determine the root cause and",
     "box": {
-      "l": 90.0,
-      "t": 124.24462835547843,
-      "r": 533.879639899458,
-      "b": 135.2446286054784
+      "l": 72.5000000175,
+      "t": 274.50000039024997,
+      "r": 540.5000175,
+      "b": 715.5000025
     },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 124.24462835547843,
-          "r": 99.69547662445801,
-          "b": 135.2446286054784
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "An investigation must be conducted for every incident to determine the root cause and",
-        "box": {
-          "l": 108.0,
-          "t": 124.24462835547843,
-          "r": 533.879639899458,
-          "b": 135.2446286054784
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 4,
-    "top": 124.24462835547843,
+    "page": 1,
+    "top": 274.50000039024997,
     "page_width": 612,
     "page_height": 792
   },
   {
-    "id": "p4-ln-3",
-    "type": "text",
-    "text": "implement preventative measures.",
+    "id": "p2-tbl-0",
+    "type": "table",
+    "table": [
+      [
+        "",
+        "",
+        "",
+        "document it immediately on the BOL and\ntake photo evidence."
+      ],
+      [
+        "2.5",
+        "WMS Receiving &\nValidation",
+        "Receiving Clerk",
+        "Using the handheld scanner, scan the\nshipment reference/BOL number. Enter the\nverified quantity into the Warehouse\nManagement System (WMS). The WMS\ngenerates a System Receiving Report."
+      ],
+      [
+        "2.6",
+        "Discrepancy\nResolution",
+        "Receiving\nSupervisor",
+        "If there is a quantity mismatch or damage,\nthe clerk must immediately notify the client\nor relevant internal department. No stock\nis put away until the discrepancy is\nacknowledged."
+      ],
+      [
+        "2.7",
+        "Put-Away &\nLocation\nAssignment",
+        "Warehouse\nOperator",
+        "Move the verified and received stock to its\nassigned bin or storage area (Ambient,\nCold, or Temperature-Controlled). Scan the\nitem and the storage location to confirm\nplacement in the WMS."
+      ],
+      [
+        "2.8",
+        "Document Filing",
+        "Receiving Clerk",
+        "Attach the signed BOL, the System\nReceiving Report, and any Discrepancy\nReports. File documents for record-keeping\nand reconciliation."
+      ]
+    ],
     "box": {
-      "l": 108.0,
-      "t": 149.5424802554785,
-      "r": 279.068084899458,
-      "b": 160.54248050547847
+      "l": 72.5000000175,
+      "t": 72.50000001750004,
+      "r": 540.5000175,
+      "b": 553.5
     },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "implement preventative measures.",
-        "box": {
-          "l": 108.0,
-          "t": 149.5424802554785,
-          "r": 279.068084899458,
-          "b": 160.54248050547847
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 4,
-    "top": 149.5424802554785,
+    "page": 2,
+    "top": 72.50000001750004,
     "page_width": 612,
     "page_height": 792
   },
   {
-    "id": "p4-ln-4",
+    "id": "p2-ln-23",
     "type": "text",
-    "text": "4.2 Fire and Emergency Evacuation",
+    "text": "3.0 Control Checklists (Receiving/Dispatch Checklist)",
     "box": {
       "l": 72.0,
-      "t": 187.14013956095698,
-      "r": 294.464186528916,
-      "b": 200.14014006095704
+      "t": 598.802369560957,
+      "r": 405.66084402891596,
+      "b": 611.8023700609571
     },
     "indent": 72.0,
     "line_breaks_before": 1,
     "line_breaks_after": 1,
     "words": [
       {
-        "text": "4.2 Fire and Emergency Evacuation",
+        "text": "3.0 Control Checklists (Receiving/Dispatch Checklist)",
         "box": {
           "l": 72.0,
-          "t": 187.14013956095698,
-          "r": 294.464186528916,
-          "b": 200.14014006095704
+          "t": 598.802369560957,
+          "r": 405.66084402891596,
+          "b": 611.8023700609571
         },
         "font_size": 13.0,
         "bold": true,
-        "italic": false
+        "italic": true
       }
     ],
-    "page": 4,
-    "top": 187.14013956095698,
+    "page": 2,
+    "top": 598.802369560957,
     "page_width": 612,
     "page_height": 792
   },
   {
-    "id": "p4-ln-5",
+    "id": "p2-ln-24",
     "type": "text",
-    "text": "\u25cf All employees must be familiar with the Site Evacuation Plan, assembly points, and the",
+    "text": "\u25cf [ ] ASN/DO verified against physical shipment.",
     "box": {
       "l": 90.0,
-      "t": 220.7377953554785,
-      "r": 539.9339323994581,
-      "b": 231.73779560547848
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 220.7377953554785,
-          "r": 99.69547662445801,
-          "b": 231.73779560547848
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "All employees must be familiar with the Site Evacuation Plan, assembly points, and the",
-        "box": {
-          "l": 108.0,
-          "t": 220.7377953554785,
-          "r": 539.9339323994581,
-          "b": 231.73779560547848
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 4,
-    "top": 220.7377953554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p4-ln-6",
-    "type": "text",
-    "text": "location of fire extinguishers.",
-    "box": {
-      "l": 108.0,
-      "t": 246.03564725547858,
-      "r": 250.363882399458,
-      "b": 257.03564750547855
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "location of fire extinguishers.",
-        "box": {
-          "l": 108.0,
-          "t": 246.03564725547858,
-          "r": 250.363882399458,
-          "b": 257.03564750547855
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 4,
-    "top": 246.03564725547858,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p4-ln-7",
-    "type": "text",
-    "text": "\u25cf Fire Drills must be conducted at least annually.",
-    "box": {
-      "l": 90.0,
-      "t": 271.3334953554786,
-      "r": 342.428219899458,
-      "b": 282.33349560547856
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 271.3334953554786,
-          "r": 99.69547662445801,
-          "b": 282.33349560547856
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "Fire Drills must be conducted at least annually.",
-        "box": {
-          "l": 108.0,
-          "t": 271.3334953554786,
-          "r": 342.428219899458,
-          "b": 282.33349560547856
-        },
-        "font_size": 11.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 4,
-    "top": 271.3334953554786,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p4-ln-8",
-    "type": "text",
-    "text": "\u25cf In the event of a fire, the priority is to sound the alarm, evacuate, and only attempt to",
-    "box": {
-      "l": 90.0,
-      "t": 296.6313453554785,
-      "r": 521.051864899458,
-      "b": 307.63134560547854
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 296.6313453554785,
-          "r": 99.69547662445801,
-          "b": 307.63134560547854
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "In the event of a fire, the priority is to sound the alarm, evacuate, and only attempt to",
-        "box": {
-          "l": 108.0,
-          "t": 296.6313453554785,
-          "r": 521.051864899458,
-          "b": 307.63134560547854
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 4,
-    "top": 296.6313453554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p4-ln-9",
-    "type": "text",
-    "text": "fight the fire if trained to do so and if the fire is small and contained.",
-    "box": {
-      "l": 108.0,
-      "t": 321.92919725547847,
-      "r": 437.343779899458,
-      "b": 332.9291975054785
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "fight the fire if trained to do so and if the fire is small and contained.",
-        "box": {
-          "l": 108.0,
-          "t": 321.92919725547847,
-          "r": 437.343779899458,
-          "b": 332.9291975054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 4,
-    "top": 321.92919725547847,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p4-ln-10",
-    "type": "text",
-    "text": "4.3 First Aid",
-    "box": {
-      "l": 72.0,
-      "t": 359.526859560957,
-      "r": 149.99675352891603,
-      "b": 372.526860060957
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "4.3 First Aid",
-        "box": {
-          "l": 72.0,
-          "t": 359.526859560957,
-          "r": 149.99675352891603,
-          "b": 372.526860060957
-        },
-        "font_size": 13.0,
-        "bold": true,
-        "italic": false
-      }
-    ],
-    "page": 4,
-    "top": 359.526859560957,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p4-ln-11",
-    "type": "text",
-    "text": "\u25cf First aid kits are maintained in designated, easily accessible areas (e.g., Office, Dispatch",
-    "box": {
-      "l": 90.0,
-      "t": 393.12451535547854,
-      "r": 541.586917399458,
-      "b": 404.12451560547856
-    },
-    "indent": 90.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 393.12451535547854,
-          "r": 99.69547662445801,
-          "b": 404.12451560547856
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      },
-      {
-        "text": "First aid kits are maintained in designated, easily accessible areas (e.g., Office, Dispatch",
-        "box": {
-          "l": 108.0,
-          "t": 393.12451535547854,
-          "r": 541.586917399458,
-          "b": 404.12451560547856
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 4,
-    "top": 393.12451535547854,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p4-ln-12",
-    "type": "text",
-    "text": "Center, Warehouse Office).",
-    "box": {
-      "l": 108.0,
-      "t": 418.4223672554785,
-      "r": 243.632452399458,
-      "b": 429.4223675054785
-    },
-    "indent": 108.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "Center, Warehouse Office).",
-        "box": {
-          "l": 108.0,
-          "t": 418.4223672554785,
-          "r": 243.632452399458,
-          "b": 429.4223675054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": false
-      }
-    ],
-    "page": 4,
-    "top": 418.4223672554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p4-ln-13",
-    "type": "text",
-    "text": "\u25cf A list of certified First Aiders for each shift must be posted publicly.",
-    "box": {
-      "l": 90.0,
-      "t": 443.7202153554785,
-      "r": 438.92654239945807,
-      "b": 454.72021560547853
+      "t": 619.6936053554784,
+      "r": 335.88073489945805,
+      "b": 630.6936056054785
     },
     "indent": 90.0,
     "line_breaks_before": 1,
@@ -2657,29 +597,249 @@
         "text": "\u25cf",
         "box": {
           "l": 90.0,
-          "t": 443.7202153554785,
+          "t": 619.6936053554784,
           "r": 99.69547662445801,
-          "b": 454.72021560547853
+          "b": 630.6936056054785
         },
         "font_size": 11.0,
         "bold": false,
-        "italic": false
+        "italic": true
       },
       {
-        "text": "A list of certified First Aiders for each shift must be posted publicly.",
+        "text": "[ ] ASN/DO verified against physical shipment.",
         "box": {
           "l": 108.0,
-          "t": 443.7202153554785,
-          "r": 438.92654239945807,
-          "b": 454.72021560547853
+          "t": 619.6936053554784,
+          "r": 335.88073489945805,
+          "b": 630.6936056054785
         },
         "font_size": 11.0,
-        "bold": true,
-        "italic": false
+        "bold": false,
+        "italic": true
       }
     ],
-    "page": 4,
-    "top": 443.7202153554785,
+    "page": 2,
+    "top": 619.6936053554784,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p2-ln-25",
+    "type": "text",
+    "text": "\u25cf [ ] Total Piece Count verified (Tally vs. BOL).",
+    "box": {
+      "l": 90.0,
+      "t": 634.2398653554785,
+      "r": 325.90153489945806,
+      "b": 645.2398656054786
+    },
+    "indent": 90.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "\u25cf",
+        "box": {
+          "l": 90.0,
+          "t": 634.2398653554785,
+          "r": 99.69547662445801,
+          "b": 645.2398656054786
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "[ ] Total Piece Count verified (Tally vs. BOL).",
+        "box": {
+          "l": 108.0,
+          "t": 634.2398653554785,
+          "r": 325.90153489945806,
+          "b": 645.2398656054786
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      }
+    ],
+    "page": 2,
+    "top": 634.2398653554785,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p2-ln-26",
+    "type": "text",
+    "text": "\u25cf [ ] Cargo inspected for damage (Pass/Fail).",
+    "box": {
+      "l": 90.0,
+      "t": 648.7861353554786,
+      "r": 320.610839899458,
+      "b": 659.7861356054785
+    },
+    "indent": 90.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "\u25cf",
+        "box": {
+          "l": 90.0,
+          "t": 648.7861353554786,
+          "r": 99.69547662445801,
+          "b": 659.7861356054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "[ ] Cargo inspected for damage (Pass/Fail).",
+        "box": {
+          "l": 108.0,
+          "t": 648.7861353554786,
+          "r": 320.610839899458,
+          "b": 659.7861356054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      }
+    ],
+    "page": 2,
+    "top": 648.7861353554786,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p2-ln-27",
+    "type": "text",
+    "text": "\u25cf [ ] WMS entry completed and System Receiving Report generated.",
+    "box": {
+      "l": 90.0,
+      "t": 663.3323953554786,
+      "r": 435.47596489945806,
+      "b": 674.3323956054786
+    },
+    "indent": 90.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "\u25cf",
+        "box": {
+          "l": 90.0,
+          "t": 663.3323953554786,
+          "r": 99.69547662445801,
+          "b": 674.3323956054786
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "[ ] WMS entry completed and System Receiving Report generated.",
+        "box": {
+          "l": 108.0,
+          "t": 663.3323953554786,
+          "r": 435.47596489945806,
+          "b": 674.3323956054786
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      }
+    ],
+    "page": 2,
+    "top": 663.3323953554786,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p2-ln-28",
+    "type": "text",
+    "text": "\u25cf [ ] Discrepancy logged and resolution confirmed (if applicable).",
+    "box": {
+      "l": 90.0,
+      "t": 677.8786653554785,
+      "r": 414.720689899458,
+      "b": 688.8786656054785
+    },
+    "indent": 90.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "\u25cf",
+        "box": {
+          "l": 90.0,
+          "t": 677.8786653554785,
+          "r": 99.69547662445801,
+          "b": 688.8786656054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "[ ] Discrepancy logged and resolution confirmed (if applicable).",
+        "box": {
+          "l": 108.0,
+          "t": 677.8786653554785,
+          "r": 414.720689899458,
+          "b": 688.8786656054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      }
+    ],
+    "page": 2,
+    "top": 677.8786653554785,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p2-ln-29",
+    "type": "text",
+    "text": "\u25cf [ ] Final put-away scan confirmed in WMS.",
+    "box": {
+      "l": 90.0,
+      "t": 692.4249253554784,
+      "r": 316.923509899458,
+      "b": 703.4249256054785
+    },
+    "indent": 90.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "\u25cf",
+        "box": {
+          "l": 90.0,
+          "t": 692.4249253554784,
+          "r": 99.69547662445801,
+          "b": 703.4249256054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "[ ] Final put-away scan confirmed in WMS.",
+        "box": {
+          "l": 108.0,
+          "t": 692.4249253554784,
+          "r": 316.923509899458,
+          "b": 703.4249256054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      }
+    ],
+    "page": 2,
+    "top": 692.4249253554784,
     "page_width": 612,
     "page_height": 792
   }

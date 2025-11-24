@@ -1,6 +1,8 @@
 # services/weaviate_search_service.py
 from typing import List, Dict, Optional
 import weaviate
+import json
+from datetime import datetime
 from database.weaviate_client import get_weaviate_client
 
 class WeaviateSearchService:
@@ -11,7 +13,7 @@ class WeaviateSearchService:
     def hybrid_search(
         self,
         query: str,
-        limit: int = 10,
+        limit: int = 30,
         filters: Optional[Dict] = None
     ) -> List[Dict]:
         """
@@ -75,6 +77,8 @@ class WeaviateSearchService:
                         "type",  # Changed from chunk_type
                         "page",
                         "section",
+                        "section_title",
+                        "parent_section",
                         "context",
                         "tags"
                     ],
@@ -106,6 +110,8 @@ class WeaviateSearchService:
                     'document_name': document_name,
                     'page': obj.properties.get('page'),
                     'section': obj.properties.get('section', ''),
+                    'section_title': obj.properties.get('section_title', ''),
+                    'parent_section': obj.properties.get('parent_section', ''),
                     'context': obj.properties.get('context', ''),
                     'tags': obj.properties.get('tags', []),
                     'score': obj.metadata.score if hasattr(obj.metadata, 'score') else 0.5,
@@ -126,6 +132,9 @@ class WeaviateSearchService:
             if results:
                 print(f"[WeaviateSearch] Top result: {results[0].get('document_name')} (score: {results[0].get('score'):.3f})")
             
+            # Save results to JSON file for inspection
+            self._save_search_results_to_json(query, results, "hybrid")
+            
             return results
             
         except Exception as e:
@@ -137,7 +146,7 @@ class WeaviateSearchService:
     def semantic_search(
         self,
         query: str,
-        limit: int = 10,
+        limit: int = 30,
         filters: Optional[Dict] = None
     ) -> List[Dict]:
         """
@@ -161,7 +170,7 @@ class WeaviateSearchService:
                 where=where_filter,
                 return_metadata=["distance"],
                 return_properties=[
-                    "chunk_id", "text", "type", "page", "section", "context", "tags"
+                    "chunk_id", "text", "type", "page", "section", "section_title", "parent_section", "context", "tags"
                 ],
                 return_references=[
                     weaviate.classes.query.QueryReference(
@@ -194,6 +203,8 @@ class WeaviateSearchService:
                     'document_name': document_name,
                     'page': obj.properties.get('page'),
                     'section': obj.properties.get('section', ''),
+                    'section_title': obj.properties.get('section_title', ''),
+                    'parent_section': obj.properties.get('parent_section', ''),
                     'context': obj.properties.get('context', ''),
                     'tags': obj.properties.get('tags', []),
                     'score': score
@@ -219,7 +230,7 @@ class WeaviateSearchService:
                     "valueText": chunk_id
                 },
                 limit=1,
-                return_properties=["chunk_id", "text", "type", "page", "section", "context", "tags"],
+                return_properties=["chunk_id", "text", "type", "page", "section", "section_title", "parent_section", "context", "tags"],
                 return_references=[
                     weaviate.classes.query.QueryReference(
                         link_on="ofDocument",
@@ -248,12 +259,47 @@ class WeaviateSearchService:
                     'document_name': document_name,
                     'page': obj.properties.get('page'),
                     'section': obj.properties.get('section', ''),
+                    'section_title': obj.properties.get('section_title', ''),
+                    'parent_section': obj.properties.get('parent_section', ''),
                     'context': obj.properties.get('context', ''),
                     'tags': obj.properties.get('tags', [])
                 }
             
             return None
-            
+        
         except Exception as e:
             print(f"Error getting chunk by ID: {e}")
             return None
+    
+    def _save_search_results_to_json(self, query: str, results: List[Dict], search_type: str):
+        """
+        Save search results to a JSON file for debugging and inspection
+        
+        Args:
+            query: The search query
+            results: List of search results
+            search_type: Type of search (hybrid, semantic, etc.)
+        """
+        try:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"weaviate_search_results_{timestamp}.json"
+            
+            # Prepare data to save
+            output_data = {
+                "metadata": {
+                    "timestamp": datetime.now().isoformat(),
+                    "query": query,
+                    "search_type": search_type,
+                    "total_results": len(results)
+                },
+                "results": results
+            }
+            
+            # Save to backend directory
+            with open(filename, 'w', encoding='utf-8') as f:
+                json.dump(output_data, f, indent=2, ensure_ascii=False)
+            
+            print(f"[WeaviateSearch] 💾 Search results saved to: {filename}")
+            
+        except Exception as e:
+            print(f"[WeaviateSearch] ⚠️ Failed to save search results to JSON: {e}")

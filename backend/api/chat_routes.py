@@ -52,6 +52,16 @@ class SendMessageRequest(BaseModel):
             raise ValueError("Session ID cannot be empty")
         return v.strip()
 
+class UpdateSessionTitleRequest(BaseModel):
+    title: str = Field(..., min_length=1, max_length=MAX_SESSION_TITLE_LENGTH)
+    
+    @field_validator('title')
+    @classmethod
+    def validate_title(cls, v):
+        if not v or not v.strip():
+            raise ValueError("Title cannot be empty")
+        return validate_string_length(v.strip(), MAX_SESSION_TITLE_LENGTH, "title")
+
 @chat_router.post('/session/new')
 async def create_session(
     request: CreateSessionRequest,
@@ -226,6 +236,54 @@ async def get_session(
         raise
     except Exception as e:
         print(f"Error getting session: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+@chat_router.patch('/session/{session_id}/title')
+async def update_session_title(
+    session_id: str,
+    request: UpdateSessionTitleRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update session title"""
+    try:
+        user_id = current_user.get("sub") or current_user.get("user_id")
+        
+        # Validate ownership
+        session = chat_service.chat_db.get_session(session_id)
+        if not session:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Session not found"
+            )
+        if session.get('user_id') != user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied - you don't own this session"
+            )
+        
+        # Update title
+        success = chat_service.chat_db.update_session_title(session_id, request.title)
+        
+        if not success:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to update session title"
+            )
+        
+        return {
+            'success': True,
+            'message': 'Session title updated successfully',
+            'title': request.title
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error updating session title: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)

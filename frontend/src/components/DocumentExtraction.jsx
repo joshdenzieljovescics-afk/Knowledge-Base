@@ -15,6 +15,7 @@ import TurndownService from 'turndown';
 import { gfm } from 'turndown-plugin-gfm';
 import { Upload, File as FileIcon, X, FileText, CheckCircle2, History, Database, Trash2, FileCode, Filter, ArrowUpDown } from 'lucide-react';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
+import { ACCESS_TOKEN } from '../token';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import '../css/DocumentExtraction.css';
@@ -229,12 +230,25 @@ function DocumentExtraction() {
         file_size_bytes: chunkedOutput.file_size_bytes
       });
       
+      // Get the access token
+      const token = localStorage.getItem(ACCESS_TOKEN);
+      
+      if (!token) {
+        setError('Authentication required. Please log in.');
+        return;
+      }
+      
       const response = await axios.post('http://127.0.0.1:8009/kb/upload-to-kb', {
         chunks: chunkedOutput.chunks,
         document_metadata: chunkedOutput.document_metadata,
         source_filename: selectedFile?.name || 'unknown.pdf',
         content_hash: chunkedOutput.content_hash,
         file_size_bytes: chunkedOutput.file_size_bytes
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (response.data.success) {

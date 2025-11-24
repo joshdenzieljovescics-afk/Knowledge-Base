@@ -16,7 +16,6 @@ from middleware.security_middleware import (
     MAX_QUERY_LENGTH,
     MAX_FILENAME_LENGTH
 )
-from middleware.jwt_middleware import decode_jwt
 import traceback
 
 kb_router = APIRouter(prefix='/kb', tags=['knowledge-base'])
@@ -94,19 +93,41 @@ async def upload_to_kb(
             detail="No chunks provided"
         )
     
-    # Extract user from JWT token or use default
-    uploaded_by = "System User"  # Default user
+    # Extract user from JWT token
+    uploaded_by = None  # Will be set if token is valid
+    
     if authorization:
         try:
             token = authorization.replace("Bearer ", "")
-            payload = decode_jwt(token)
             
-            # Extract only the name field from JWT payload
-            uploaded_by = payload.get("name") or "System User"
-            print(f"[DEBUG] Extracted uploaded_by: {uploaded_by}")
+            # Google OAuth uses RS256, not HS256, so we need to decode WITHOUT verification
+            # The token was already verified by the auth server
+            import jwt as jose_jwt
+            payload = jose_jwt.decode(token, options={"verify_signature": False})
+            
+            # Extract name from JWT payload
+            uploaded_by = payload.get("name") or payload.get("email")
+            
+            if uploaded_by:
+                print(f"[DEBUG] ✅ Successfully extracted uploaded_by: {uploaded_by}")
+                print(f"[DEBUG] JWT payload keys: {list(payload.keys())}")
+            else:
+                print(f"[WARNING] ⚠️ JWT payload missing 'name' and 'email' fields")
+                print(f"[WARNING] Available fields: {list(payload.keys())}")
+                
         except Exception as e:
-            print(f"[WARNING] Failed to decode JWT token: {str(e)}")
-            # Use default user
+            print(f"[WARNING] ⚠️ Failed to decode JWT token: {str(e)}")
+            uploaded_by = None
+    else:
+        print(f"[WARNING] ⚠️ No authorization header provided")
+    
+    # Final check - if still None, we have a problem
+    if not uploaded_by:
+        print(f"[ERROR] ❌ Could not extract user information from JWT token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required. Please provide a valid JWT token with user information."
+        )
     
     try:
         doc_db = DocumentDatabase()

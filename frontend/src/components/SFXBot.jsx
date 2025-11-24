@@ -5,8 +5,13 @@ import {
   Sparkles, 
   User,
   Bot,
-  X
+  X,
+  Edit2,
+  Check,
+  XCircle
 } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { ACCESS_TOKEN } from "../token";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import "../css/DynamicMappingChat.css";
@@ -23,6 +28,8 @@ function SFXBot() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [threadToDelete, setThreadToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [editingThreadId, setEditingThreadId] = useState(null);
+  const [editingTitle, setEditingTitle] = useState("");
   const [tokenUsage, setTokenUsage] = useState({
     session_tokens: 0,
     session_cost: 0,
@@ -143,7 +150,7 @@ function SFXBot() {
           'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`
         },
         body: JSON.stringify({
-          title: `Chat ${threads.length + 1}`
+          // Don't pass title - let backend auto-generate from first message
         })
       });
 
@@ -230,6 +237,65 @@ function SFXBot() {
     setDeleteModalOpen(true);
   };
 
+  const handleEditClick = (e, thread) => {
+    e.stopPropagation();
+    setEditingThreadId(thread.session_id);
+    setEditingTitle(thread.title);
+  };
+
+  const handleCancelEdit = (e) => {
+    e?.stopPropagation();
+    setEditingThreadId(null);
+    setEditingTitle("");
+  };
+
+  const handleSaveTitle = async (e, sessionId) => {
+    e?.stopPropagation();
+    
+    if (!editingTitle.trim()) {
+      handleCancelEdit();
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/chat/session/${sessionId}/title`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`
+        },
+        body: JSON.stringify({ title: editingTitle.trim() })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          // Update thread in local state
+          setThreads(prev => prev.map(t => 
+            t.session_id === sessionId ? { ...t, title: data.title } : t
+          ));
+          setEditingThreadId(null);
+          setEditingTitle("");
+        }
+      } else {
+        console.error('Failed to update title');
+        handleCancelEdit();
+      }
+    } catch (error) {
+      console.error('Error updating title:', error);
+      handleCancelEdit();
+    }
+  };
+
+  const handleTitleKeyDown = (e, sessionId) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSaveTitle(e, sessionId);
+    } else if (e.key === 'Escape') {
+      handleCancelEdit();
+    }
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -303,7 +369,6 @@ function SFXBot() {
           session_id: activeThreadId,
           message: userMessage.content,
           options: {
-            max_sources: 5,
             include_context: true
           }
         }),
@@ -405,20 +470,65 @@ function SFXBot() {
                   <div
                     key={thread.session_id}
                     className={`thread-item ${activeThreadId === thread.session_id ? 'active' : ''}`}
-                    onClick={() => switchThread(thread.session_id)}
+                    onClick={() => editingThreadId !== thread.session_id && switchThread(thread.session_id)}
                   >
                     <div className="thread-info">
-                      <div className="thread-title">{thread.title}</div>
-                      <div className="thread-date">
-                        {new Date(thread.created_at).toLocaleDateString()}
-                      </div>
+                      {editingThreadId === thread.session_id ? (
+                        <div className="thread-title-edit">
+                          <input
+                            type="text"
+                            value={editingTitle}
+                            onChange={(e) => setEditingTitle(e.target.value)}
+                            onKeyDown={(e) => handleTitleKeyDown(e, thread.session_id)}
+                            onClick={(e) => e.stopPropagation()}
+                            autoFocus
+                            maxLength={200}
+                            className="thread-title-input"
+                          />
+                          <div className="thread-edit-actions">
+                            <button
+                              className="thread-edit-save"
+                              onClick={(e) => handleSaveTitle(e, thread.session_id)}
+                              title="Save"
+                            >
+                              <Check size={14} />
+                            </button>
+                            <button
+                              className="thread-edit-cancel"
+                              onClick={(e) => handleCancelEdit(e)}
+                              title="Cancel"
+                            >
+                              <XCircle size={14} />
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="thread-title">{thread.title}</div>
+                          <div className="thread-date">
+                            {new Date(thread.created_at).toLocaleDateString()}
+                          </div>
+                        </>
+                      )}
                     </div>
-                    <button
-                      className="thread-delete-btn"
-                      onClick={(e) => handleDeleteClick(e, thread)}
-                    >
-                      <X size={16} />
-                    </button>
+                    {editingThreadId !== thread.session_id && (
+                      <div className="thread-actions">
+                        <button
+                          className="thread-edit-btn"
+                          onClick={(e) => handleEditClick(e, thread)}
+                          title="Edit title"
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button
+                          className="thread-delete-btn"
+                          onClick={(e) => handleDeleteClick(e, thread)}
+                          title="Delete thread"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))
               )}
@@ -464,51 +574,11 @@ function SFXBot() {
                         )}
                       </div>
                       <div className="message-content">
-                        <div className="message-text">{msg.content}</div>
-                        {msg.sources && msg.sources.length > 0 && (
-                          <div className="message-sources">
-                            <strong>Sources:</strong>
-                            <ul>
-                              {msg.sources.map((source, idx) => (
-                                <li key={idx}>
-                                  <div className="source-header">
-                                    <strong>{source.document_name}</strong> (Page {source.page})
-                                    {source.relevance_score && (
-                                      <span style={{ marginLeft: '8px', color: '#666', fontSize: '0.9em' }}>
-                                        - Relevance: {(source.relevance_score * 100).toFixed(0)}%
-                                      </span>
-                                    )}
-                                  </div>
-                                  {source.chunk_type && source.chunk_type !== 'text' && source.chunk_type !== 'paragraph' && (
-                                    <div className="source-type">
-                                      {source.chunk_type === 'heading' && '📌'}
-                                      {source.chunk_type === 'list' && '📋'}
-                                      {source.chunk_type === 'table' && '📊'}
-                                      {source.chunk_type === 'image' && '🖼️'}
-                                      {!['heading', 'list', 'table', 'image'].includes(source.chunk_type) && '📄'}
-                                      {' '}Type: {source.chunk_type}
-                                    </div>
-                                  )}
-                                  {source.section && (
-                                    <div className="source-section">
-                                      📑 Section: {source.section}
-                                    </div>
-                                  )}
-                                  {source.context && (
-                                    <div className="source-context">
-                                      ℹ️ {source.context}
-                                    </div>
-                                  )}
-                                  {source.tags && source.tags.length > 0 && (
-                                    <div className="source-tags">
-                                      🏷️ {source.tags.join(', ')}
-                                    </div>
-                                  )}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
+                        <div className="message-text">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {msg.content}
+                          </ReactMarkdown>
+                        </div>
                       </div>
                     </div>
                   ))}
