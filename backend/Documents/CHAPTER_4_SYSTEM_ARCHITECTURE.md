@@ -342,10 +342,10 @@ User          Frontend       PDF Routes     PDF Service    Chunking Svc   Doc DB
  │                │               │              │  duplicate                │          │          │
  │                │               │              │                           │          │          │
  │                │               │              │<──No duplicate────────────┤          │          │
- │                │               │              │                           │          │          │
+ │                │               │              │              │            │          │          │
  │                │               │              │─Extract text/tables──────>│          │          │
- │                │               │              │  & images                 │          │          │
- │                │               │              │                           │          │          │
+ │                │               │              │  & images   │             │          │          │
+ │                │               │              │             │             │          │          │
  │                │               │              │─Process text───────────────────────────────────>│
  │                │               │              │  (1st pass)                          │          │
  │                │               │              │                                      │          │
@@ -355,17 +355,17 @@ User          Frontend       PDF Routes     PDF Service    Chunking Svc   Doc DB
  │                │               │              │  (2nd pass)                          │          │
  │                │               │              │                                      │          │
  │                │               │              │<──Image descriptions────────────────────────────┤
- │                │               │              │                                      │          │
- │                │               │              │─Merge chunks─────────────>│          │          │
- │                │               │              │                           │          │          │
- │                │               │<──Chunks + metadata──────────────────────┤          │          │
+ │                │               │              │               │                      │          │
+ │                │               │              │─Merge chunks─>│           │          │          │
+ │                │               │              │               │           │          │          │
+ │                │               │<──Chunks + metadata──────────┤           │          │          │
  │                │               │                                          │          │          │
  │                │<──200 OK──────┤                                          │          │          │
  │                │  chunks[]     │                                          │          │          │
  │                │               │                                          │          │          │
  │<─Display chunks┤               │                                          │          │          │
  │                │               │                                          │          │          │
- │─Click "Upload──>│               │                                         │          │          │
+ │─Click "Upload─>│               │                                          │          │          │
  │  to KB"        │               │                                          │          │          │
  │                │               │                                          │          │          │
  │                │─POST /kb/──────────────────────────────────>│            │          │          │
@@ -404,12 +404,12 @@ User       Frontend    Chat Routes   Chat Svc   Query Proc  Weaviate Srch  Conte
  │             │            │            │                        │             │          │         │        │
  │             │            │            │<──Recent messages──────────────────────── ──────┤         │        │
  │             │            │            │                        │             │          │         │        │
- │             │            │            │─Process query──────────>│            │             │          │         │        │
+ │             │            │            │─Process query─────────>│            │             │          │         │        │
  │             │            │            │                        │            │             │          │         │        │
  │             │            │            │                        │─Expand query─────────────────────────────────>│
- │             │            │            │                        │  with context│             │          │         │        │
+ │             │            │            │                        │  with context│           │          │         │        │
  │             │            │            │                        │            │             │          │         │        │
- │             │            │            │                        │<──Enhanced query─────────────────────────────┤
+ │             │            │            │                        │<──Enhanced query────────────────────────│─────┤
  │             │            │            │                        │            │             │          │         │        │
  │             │            │            │<──Processed query──────┤            │             │          │         │        │
  │             │            │            │                        │            │             │          │         │        │
@@ -421,13 +421,13 @@ User       Frontend    Chat Routes   Chat Svc   Query Proc  Weaviate Srch  Conte
  │             │            │            │                        │            │             │          │         │        │
  │             │            │            │                        │            │─Rerank───────────────────────────────────>│
  │             │            │            │                        │            │             │          │         │        │
- │             │            │            │                        │            │<──Scores─────────────────────────────────┤
+ │             │            │            │                        │            │<──Scores──────────────────────────────────┤
  │             │            │            │                        │            │             │          │         │        │
- │             │            │            │<──Top chunks───────────────────────┤             │          │         │        │
+ │             │            │            │<──Top chunks────────────────────────┤             │          │         │        │
  │             │            │            │                        │            │             │          │         │        │
- │             │            │            │─Build KB context───────────────────────────────>│          │         │        │
+ │             │            │            │─Build KB context─────────────────────────────────>│          │         │        │
  │             │            │            │                        │            │             │          │         │        │
- │             │            │            │<──Formatted context────────────────────────────┤          │         │        │
+ │             │            │            │<──Formatted context───────────────────────────────┤          │         │        │
  │             │            │            │                        │            │             │          │         │        │
  │             │            │            │─Generate response──────────────────────────────────────────────────────────────>│
  │             │            │            │  (system prompt +                   │             │          │         │        │
@@ -437,15 +437,15 @@ User       Frontend    Chat Routes   Chat Svc   Query Proc  Weaviate Srch  Conte
  │             │            │            │                        │            │             │          │         │        │
  │             │            │            │<──AI response with citations───────────────────────────────────────────────────┤
  │             │            │            │                        │            │             │          │         │        │
- │             │            │            │─Save assistant msg─────────────────────────────────────────>│         │        │
+ │             │            │            │─Save assistant msg──────────────────────── ─────────────────>│         │        │
  │             │            │            │  with sources          │            │             │          │         │        │
  │             │            │            │                        │            │             │          │         │        │
- │             │            │            │─Update session─────────────────────────────────────────────>│         │        │
+ │             │            │            │─Update session───────────────────────────────── ────────────>│         │        │
  │             │            │            │  title (if 1st msg)    │            │             │          │         │        │
  │             │            │            │                        │            │             │          │         │        │
- │             │            │            │─Track tokens───────────────────────────────────────────────>│         │        │
+ │             │            │            │─Track tokens───────────────────────── ──────────────────────>│         │        │
  │             │            │            │                        │            │             │          │         │        │
- │             │            │<──Response with sources────────────┤            │             │          │         │        │
+ │             │            │<──Response with sources───────── ───┤            │             │          │         │        │
  │             │            │            │                        │            │             │          │         │        │
  │             │<──200 OK with message───┤                        │            │             │          │         │        │
  │             │            │                                     │            │             │          │         │        │
@@ -458,12 +458,12 @@ User       Frontend    Chat Routes   Chat Svc   Query Proc  Weaviate Srch  Conte
 ```
 User       Frontend    Chat Routes    Chat Service    Chat DB
  │             │            │               │            │
- │─Create new──>│            │               │            │
+ │─Create new─>│            │               │            │
  │  session    │            │               │            │
  │             │            │               │            │
- │             │─POST /chat/session/new─────>│            │
+ │             │─POST /chat/session/new────>│            │
  │             │            │               │            │
- │             │            │               │─Create─────>│
+ │             │            │               │─Create────>│
  │             │            │               │  session   │
  │             │            │               │  (UUID)    │
  │             │            │               │            │
