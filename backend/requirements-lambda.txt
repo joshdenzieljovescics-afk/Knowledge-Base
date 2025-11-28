@@ -1,0 +1,12 @@
+# ===========================================
+# AWS Lambda Dependencies
+# ===========================================
+
+# Include base dependencies
+-r requirements-base.txt
+
+# Include PDF processing
+-r requirements-pdf.txt
+
+# AWS Lambda ASGI Adapter
+mangum>=0.17.0
