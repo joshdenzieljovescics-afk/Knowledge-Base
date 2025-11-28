@@ -1,0 +1,20 @@
+# ===========================================
+# PDF Processing Dependencies
+# ===========================================
+
+# PDF Extraction & Parsing
+pdfplumber==0.11.7
+pdfminer.six==20250506
+PyMuPDF==1.26.4
+pypdfium2==4.30.0
+
+# Image Processing
+pillow==11.3.0
+
+# Excel Support (for table exports)
+openpyxl==3.1.5
+et_xmlfile==2.0.0
+
+# Template Engine (for PDF generation)
+Jinja2==3.1.6
+MarkupSafe==3.0.2
