@@ -15,7 +15,7 @@ import TurndownService from 'turndown';
 import { gfm } from 'turndown-plugin-gfm';
 import { Upload, File as FileIcon, X, FileText, CheckCircle2, History, Database, Trash2, FileCode, Filter, ArrowUpDown } from 'lucide-react';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
-import { ACCESS_TOKEN } from '../token';
+import { ACCESS_TOKEN, saveDocumentToStorage, loadDocumentFromStorage, clearDocumentStorage } from '../token';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import '../css/DocumentExtraction.css';
@@ -121,6 +121,11 @@ function DocumentExtraction() {
   const itemsPerPage = 10;
   const [showDuplicateModal, setShowDuplicateModal] = useState(false);
   const [duplicateInfo, setDuplicateInfo] = useState(null);
+  const [showOverrideConfirm, setShowOverrideConfirm] = useState(false);
+  const [forceReplaceMode, setForceReplaceMode] = useState(false); // Track if we're overriding
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [versionHistoryData, setVersionHistoryData] = useState(null);
+  const [isLoadingVersions, setIsLoadingVersions] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [historyError, setHistoryError] = useState('');
   const [totalDocuments, setTotalDocuments] = useState(0);
@@ -130,6 +135,19 @@ function DocumentExtraction() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [documentToDelete, setDocumentToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [persistedFilename, setPersistedFilename] = useState(null); // Filename from localStorage (when file object not available)
+
+  // Load persisted document data from localStorage on component mount
+  useEffect(() => {
+    const savedData = loadDocumentFromStorage();
+    if (savedData) {
+      setChunkedOutput(savedData.chunkedOutput);
+      setPersistedFilename(savedData.filename);
+      setForceReplaceMode(savedData.forceReplaceMode);
+      setShowPreview(true); // Show the preview panel with the persisted data
+      console.log('[DocumentExtraction] Loaded persisted document:', savedData.filename);
+    }
+  }, []);
 
   // Fetch upload history from API when modal opens
   useEffect(() => {
@@ -210,12 +228,17 @@ function DocumentExtraction() {
     setCurrentPage(1);
   }, [searchQuery, sortBy, sortOrder]);
 
+  // Get the current filename (from selectedFile or persisted)
+  const getCurrentFilename = () => selectedFile?.name || persistedFilename || 'unknown.pdf';
+
   // --- UPLOAD to Knowledge Base ---
   const handleUploadToKB = async () => {
     if (!chunkedOutput) {
       setError('No processed chunks available to upload.');
       return;
     }
+
+    const currentFilename = getCurrentFilename();
 
   setIsUploadingToKB(true);
   setError('');
@@ -225,9 +248,10 @@ function DocumentExtraction() {
       console.log('[DEBUG] Uploading to KB with data:', {
         chunks_count: chunkedOutput.chunks?.length,
         has_document_metadata: !!chunkedOutput.document_metadata,
-        source_filename: selectedFile?.name,
+        source_filename: currentFilename,
         content_hash: chunkedOutput.content_hash,
-        file_size_bytes: chunkedOutput.file_size_bytes
+        file_size_bytes: chunkedOutput.file_size_bytes,
+        forceReplaceMode: forceReplaceMode
       });
       
       // Get the access token
@@ -241,9 +265,10 @@ function DocumentExtraction() {
       const response = await axios.post('http://127.0.0.1:8009/kb/upload-to-kb', {
         chunks: chunkedOutput.chunks,
         document_metadata: chunkedOutput.document_metadata,
-        source_filename: selectedFile?.name || 'unknown.pdf',
+        source_filename: currentFilename,
         content_hash: chunkedOutput.content_hash,
-        file_size_bytes: chunkedOutput.file_size_bytes
+        file_size_bytes: chunkedOutput.file_size_bytes,
+        force_replace: forceReplaceMode // Use force_replace if we're in override mode
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -254,13 +279,17 @@ function DocumentExtraction() {
       if (response.data.success) {
         // Show success modal
         setUploadSuccess({
-          filename: selectedFile?.name,
+          filename: currentFilename,
           chunks: chunkedOutput.chunks.length,
-          action: response.data.action
+          action: response.data.action,
+          version: response.data.version,
+          previousVersion: response.data.version_info?.previous_version
         });
         setShowSuccessModal(true);
         // Hide the upload button after successful upload
         setIsUploadedToKB(true);
+        setForceReplaceMode(false); // Reset force replace mode after successful upload
+        clearDocumentStorage(); // Clear persisted data after successful upload
       } else {
         throw new Error(response.data.message || 'Upload failed');
       }
@@ -274,6 +303,77 @@ function DocumentExtraction() {
       }
     } finally {
       setIsUploadingToKB(false);
+    }
+  };
+
+  // --- Force Reparse (when user confirms override) ---
+  const handleForceReparse = async () => {
+    if (!selectedFile) {
+      setError('No file selected.');
+      return;
+    }
+
+    // Close modals and set force replace mode
+    setShowOverrideConfirm(false);
+    setShowDuplicateModal(false);
+    setForceReplaceMode(true); // Mark that next upload should force replace
+    
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('force_reparse', 'true'); // Skip duplicate check
+
+    setIsLoading(true);
+    setError('');
+    setJsonOutput(null);
+    setChunkedOutput(null);
+    setIsUploadedToKB(false);
+    clearDocumentStorage(); // Clear any previously persisted data
+
+    try {
+      const response = await axios.post(
+        'http://127.0.0.1:8009/pdf/parse-pdf',
+        formData,
+        {
+          headers: { 
+            'Content-Type': 'multipart/form-data'
+          },
+        }
+      );
+      setChunkedOutput(response.data);
+      // Save to localStorage with forceReplaceMode=true for persistence
+      saveDocumentToStorage(response.data, selectedFile.name, true);
+      setPersistedFilename(selectedFile.name);
+      // After successful parse, user can click "Upload to KB" which will use force_replace
+    } catch (err) {
+      if (err.response?.status === 401) {
+        setError('Authentication failed. Please log in again.');
+      } else if (err.response) {
+        setError(`Error ${err.response.status}: ${err.response.data.error || 'Server error'}`);
+      } else if (err.request) {
+        setError('Network Error: Could not connect to the server.');
+      } else {
+        setError(`Unexpected error: ${err.message}`);
+      }
+      setForceReplaceMode(false); // Reset on error
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // --- Fetch Version History ---
+  const fetchVersionHistory = async (fileName) => {
+    setIsLoadingVersions(true);
+    try {
+      const response = await axios.get(`http://127.0.0.1:8009/kb/document-versions/${encodeURIComponent(fileName)}`);
+      if (response.data.success) {
+        setVersionHistoryData(response.data);
+        setShowVersionHistory(true);
+      }
+    } catch (err) {
+      console.error('Error fetching version history:', err);
+      setError('Failed to load version history');
+    } finally {
+      setIsLoadingVersions(false);
     }
   };
   
@@ -350,6 +450,9 @@ function DocumentExtraction() {
       setChunkedOutput(null);
       setError('');
       setIsUploadedToKB(false); // Reset upload state for new file
+      setForceReplaceMode(false); // Reset force replace mode for new file
+      setPersistedFilename(null); // Clear persisted filename
+      clearDocumentStorage(); // Clear any previously persisted document data
     } else {
       setError('Please select a valid PDF file.');
     }
@@ -370,6 +473,8 @@ function DocumentExtraction() {
   setJsonOutput(null);
   setChunkedOutput(null);
   setIsUploadedToKB(false); // Reset upload state for new parsing
+  setForceReplaceMode(false); // Reset force replace mode for new parsing
+  clearDocumentStorage(); // Clear any previously persisted data
 
   try {
     // Local Flask development (port 8009)
@@ -383,6 +488,9 @@ function DocumentExtraction() {
       }
     );  
     setChunkedOutput(response.data);
+    // Save to localStorage for persistence across page refresh
+    saveDocumentToStorage(response.data, selectedFile.name, false);
+    setPersistedFilename(selectedFile.name);
     
   } catch (err) {
     if (err.response?.status === 409) {
@@ -637,7 +745,8 @@ function DocumentExtraction() {
                 {isUploadingToKB ? 'Uploading...' : 'Upload to Knowledge Base'}
               </ActionButton>
             )}
-            {showPreview && (
+            {/* Show Upload New PDF button when in preview mode or when we have restored chunks */}
+            {(showPreview || (chunkedOutput && !selectedFile)) && (
               <>
                 <input
                   type="file"
@@ -649,6 +758,7 @@ function DocumentExtraction() {
                     setChunkedOutput(null);
                     setJsonOutput(null);
                     setIsUploadedToKB(false); // Reset upload state
+                    clearDocumentStorage(); // Clear persisted data when selecting new file
                   }}
                   style={{ display: 'none' }}
                   id="new-pdf-file-input"
@@ -665,8 +775,8 @@ function DocumentExtraction() {
           </div>
         </header>
 
-        {/* PDF Upload Card - Only show when NOT previewing */}
-        {!showPreview && (
+        {/* PDF Upload Card - Only show when NOT previewing AND we don't have restored chunks */}
+        {!showPreview && !chunkedOutput && (
           <div className="de-card-container">
             <div className="kb-card">
               <div className="kb-card-header">
@@ -715,6 +825,9 @@ function DocumentExtraction() {
                           setShowPreview(false); 
                           setChunkedOutput(null);
                           setJsonOutput(null);
+                          setPersistedFilename(null);
+                          setForceReplaceMode(false);
+                          clearDocumentStorage(); // Clear persisted document data
                         }}
                       >
                         <X size={18} />
@@ -739,10 +852,11 @@ function DocumentExtraction() {
           </div>
         )}
 
-    {showPreview && selectedFile && (
+    {/* Show preview section if we have a selected file OR restored chunks from localStorage */}
+    {((showPreview && selectedFile) || (chunkedOutput && !selectedFile)) && (
       <>
         {/* PDF Preview Header with Parse Button - Above Card */}
-        {!chunkedOutput && (
+        {!chunkedOutput && selectedFile && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
             <h2 style={{ margin: 0 }}>PDF Preview</h2>
             <ActionButton
@@ -756,8 +870,38 @@ function DocumentExtraction() {
           </div>
         )}
         
+        {/* Header for restored session (chunks from localStorage without selectedFile) */}
+        {chunkedOutput && !selectedFile && persistedFilename && (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', padding: '12px 16px', backgroundColor: '#f0f9ff', borderRadius: '8px', border: '1px solid #bae6fd' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <FileText size={24} style={{ color: '#0284c7' }} />
+              <div>
+                <div style={{ fontWeight: 600, color: '#0c4a6e' }}>{persistedFilename}</div>
+                <div style={{ fontSize: '12px', color: '#64748b' }}>
+                  {chunkedOutput.chunks?.length || 0} chunks • Restored from previous session
+                </div>
+              </div>
+            </div>
+            <button
+              className="kb-card-button secondary"
+              onClick={() => {
+                setChunkedOutput(null);
+                setPersistedFilename(null);
+                setForceReplaceMode(false);
+                clearDocumentStorage();
+                setShowUpload(true);
+              }}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              <Upload size={16} />
+              Select New File
+            </button>
+          </div>
+        )}
+        
         <div className="main-content-area" style={{ minHeight: '800px', alignItems: 'stretch' }}>
-          {/* PDF Preview Column */}
+          {/* PDF Preview Column - Only show if we have a file to preview */}
+          {selectedFile && (
           <div className="pdf-preview-container">
           <div className="pdf-document-wrapper" style={{ flex: 1, overflow: 'auto' }}>
             {pdfPreviewFile ? (
@@ -802,10 +946,11 @@ function DocumentExtraction() {
               ))}
             </Document>
             ) : (
-              <div className="placeholder">Select a PDF file to preview</div>
+              <div className="placeholder">Click "Preview & Process" to view the PDF</div>
             )}
           </div>
         </div>
+          )}
 
         {/* Parsed Content Column */}
         <div className="parsed-output-container">
@@ -1032,6 +1177,10 @@ function DocumentExtraction() {
                           <td>{duplicateInfo.existing_doc.file_name}</td>
                         </tr>
                         <tr>
+                          <td><strong>Uploaded By:</strong></td>
+                          <td>{duplicateInfo.existing_doc.uploaded_by || 'Unknown'}</td>
+                        </tr>
+                        <tr>
                           <td><strong>Upload Date:</strong></td>
                           <td>{duplicateInfo.existing_doc.upload_date}</td>
                         </tr>
@@ -1045,6 +1194,14 @@ function DocumentExtraction() {
                         </tr>
                       </tbody>
                     </table>
+                    <button
+                      className="version-history-btn"
+                      onClick={() => fetchVersionHistory(duplicateInfo.existing_doc.file_name)}
+                      disabled={isLoadingVersions}
+                    >
+                      <History size={16} />
+                      {isLoadingVersions ? 'Loading...' : 'View Version History'}
+                    </button>
                   </div>
                 )}
                 {duplicateInfo.cost_saved && (
@@ -1066,13 +1223,165 @@ function DocumentExtraction() {
                   Cancel
                 </button>
                 <button
-                  className="duplicate-btn primary"
-                  onClick={() => {
-                    setShowDuplicateModal(false);
-                    // Could implement force reparse here if needed
-                  }}
+                  className="duplicate-btn warning"
+                  onClick={() => setShowOverrideConfirm(true)}
                 >
-                  OK
+                  Override
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Override Confirmation Modal */}
+      {showOverrideConfirm && (
+        <div className="modal-backdrop" onClick={() => setShowOverrideConfirm(false)}>
+          <div
+            className="duplicate-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '450px' }}
+          >
+            <div className="duplicate-modal-header" style={{ background: '#ff9800' }}>
+              <h2>⚠️ Confirm Override</h2>
+              <button
+                onClick={() => setShowOverrideConfirm(false)}
+                className="close-btn"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="duplicate-modal-body">
+              <div className="duplicate-message">
+                <p className="duplicate-main-message" style={{ color: '#e65100' }}>
+                  Are you sure you want to override the existing document?
+                </p>
+                <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>
+                  This will create a new version and archive the current document. 
+                  The previous version will be saved in the version history.
+                </p>
+              </div>
+              <div className="duplicate-actions">
+                <button
+                  className="duplicate-btn secondary"
+                  onClick={() => setShowOverrideConfirm(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="duplicate-btn danger"
+                  onClick={handleForceReparse}
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Processing...' : 'Yes, Override'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Version History Modal */}
+      {showVersionHistory && versionHistoryData && (
+        <div className="modal-backdrop" onClick={() => setShowVersionHistory(false)}>
+          <div
+            className="duplicate-modal version-history-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '600px' }}
+          >
+            <div className="duplicate-modal-header" style={{ background: '#2196f3' }}>
+              <h2><History size={20} style={{ marginRight: '8px' }} />Version History</h2>
+              <button
+                onClick={() => setShowVersionHistory(false)}
+                className="close-btn"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="duplicate-modal-body">
+              <h3 style={{ marginBottom: '15px', color: '#333' }}>
+                {versionHistoryData.file_name}
+              </h3>
+              <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '15px' }}>
+                Total Versions: {versionHistoryData.total_versions}
+              </p>
+              
+              {/* Current Version */}
+              {versionHistoryData.current_version && (
+                <div className="version-item current">
+                  <div className="version-badge current">
+                    Current (v{versionHistoryData.current_version.version})
+                  </div>
+                  <table className="duplicate-info-table">
+                    <tbody>
+                      <tr>
+                        <td><strong>Uploaded:</strong></td>
+                        <td>{versionHistoryData.current_version.upload_date}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Uploaded By:</strong></td>
+                        <td>{versionHistoryData.current_version.uploaded_by}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Chunks:</strong></td>
+                        <td>{versionHistoryData.current_version.chunks}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Size:</strong></td>
+                        <td>{(versionHistoryData.current_version.file_size_bytes / 1024).toFixed(2)} KB</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Previous Versions */}
+              {versionHistoryData.version_history && versionHistoryData.version_history.length > 0 && (
+                <div className="previous-versions">
+                  <h4 style={{ margin: '20px 0 10px', color: '#666' }}>Previous Versions</h4>
+                  {versionHistoryData.version_history.map((version, idx) => (
+                    <div key={version.version_id} className="version-item archived">
+                      <div className="version-badge archived">
+                        v{version.version} (Archived)
+                      </div>
+                      <table className="duplicate-info-table">
+                        <tbody>
+                          <tr>
+                            <td><strong>Originally Uploaded:</strong></td>
+                            <td>{version.upload_date}</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Archived On:</strong></td>
+                            <td>{version.archived_date}</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Uploaded By:</strong></td>
+                            <td>{version.uploaded_by}</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Chunks:</strong></td>
+                            <td>{version.chunks}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* No history message */}
+              {(!versionHistoryData.version_history || versionHistoryData.version_history.length === 0) && (
+                <p style={{ textAlign: 'center', color: '#999', marginTop: '20px' }}>
+                  No previous versions available.
+                </p>
+              )}
+              
+              <div className="duplicate-actions" style={{ marginTop: '20px' }}>
+                <button
+                  className="duplicate-btn primary"
+                  onClick={() => setShowVersionHistory(false)}
+                >
+                  Close
                 </button>
               </div>
             </div>
@@ -1119,6 +1428,18 @@ function DocumentExtraction() {
                         <td><strong>Chunks Processed:</strong></td>
                         <td>{uploadSuccess.chunks}</td>
                       </tr>
+                      {uploadSuccess.version && (
+                        <tr>
+                          <td><strong>Version:</strong></td>
+                          <td>v{uploadSuccess.version}</td>
+                        </tr>
+                      )}
+                      {uploadSuccess.previousVersion && (
+                        <tr>
+                          <td><strong>Previous Version:</strong></td>
+                          <td>v{uploadSuccess.previousVersion.version_number} (Archived)</td>
+                        </tr>
+                      )}
                       <tr>
                         <td><strong>Status:</strong></td>
                         <td style={{ color: '#4caf50', fontWeight: 'bold' }}>Ready for Search</td>
@@ -1255,13 +1576,22 @@ function DocumentExtraction() {
                                   <td>{item.chunks}</td>
                                   <td>{item.uploaded_by || 'Unknown User'}</td>
                                   <td>
-                                    <button
-                                      className="delete-btn"
-                                      onClick={() => handleDeleteHistory(item.doc_id)}
-                                      title="Delete"
-                                    >
-                                      <Trash2 size={16} />
-                                    </button>
+                                    <div className="action-btns">
+                                      <button
+                                        className="history-icon-btn"
+                                        onClick={() => fetchVersionHistory(item.file_name)}
+                                        title="View Version History"
+                                      >
+                                        <History size={16} />
+                                      </button>
+                                      <button
+                                        className="delete-btn"
+                                        onClick={() => handleDeleteHistory(item.doc_id)}
+                                        title="Delete"
+                                      >
+                                        <Trash2 size={16} />
+                                      </button>
+                                    </div>
                                   </td>
                                 </tr>
                               );

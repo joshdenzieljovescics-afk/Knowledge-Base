@@ -132,17 +132,24 @@ async def upload_to_kb(
     try:
         doc_db = DocumentDatabase()
         
-        # Check if document already exists in our database
+        # ═══════════════════════════════════════════════════════════════════════
+        # NOTE: Primary duplicate detection happens in /pdf/parse-pdf endpoint
+        # to save parsing costs. This endpoint handles force_replace for updates.
+        # ═══════════════════════════════════════════════════════════════════════
+        
+        # Check if we need to replace an existing document
         existing_doc = doc_db.check_duplicate_by_filename(request.source_filename)
         
         if existing_doc and not request.force_replace:
+            # This shouldn't normally happen if parse-pdf was called first,
+            # but handle it gracefully for direct API calls
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail={
                     "error": "duplicate_filename",
-                    "message": f"Document '{request.source_filename}' already exists in database.",
+                    "message": f"Document '{request.source_filename}' already exists.",
                     "existing_doc": existing_doc,
-                    "suggestion": "Set force_replace=true to overwrite the existing document."
+                    "suggestion": "Set force_replace=true to overwrite."
                 }
             )
         
@@ -161,25 +168,62 @@ async def upload_to_kb(
             elif chunk.get('id') and not chunk.get('chunk_id'):
                 chunk['chunk_id'] = chunk['id']
         
-        # Replace or insert document in Weaviate
+        # ═══════════════════════════════════════════════════════════════════════
+        # DOCUMENT REPLACEMENT/INSERTION LOGIC
+        # ═══════════════════════════════════════════════════════════════════════
+        
+        action = "uploaded"
+        version_info = None
+        
         if existing_doc and request.force_replace:
-            # Delete from document database first
+            print(f"[INFO] Replacing existing document: {existing_doc['file_name']} (ID: {existing_doc['doc_id']})")
+            
+            # Get current version before archiving
+            current_doc_version = existing_doc.get('current_version', 1)
+            
+            # Archive the current version before replacing
+            version_id = doc_db.archive_document_version(existing_doc['doc_id'], replaced_by=uploaded_by)
+            if version_id:
+                print(f"[INFO] Archived previous version: {version_id}")
+            
+            # Get next version number
+            next_version = doc_db.get_next_version_number(request.source_filename)
+            version_info = {
+                "previous_version_archived": True,
+                "new_version": next_version,
+                "previous_version": {
+                    "version_number": current_doc_version,
+                    "doc_id": existing_doc['doc_id'],
+                    "uploaded_by": existing_doc.get('uploaded_by'),
+                    "upload_date": existing_doc.get('upload_date')
+                }
+            }
+            
+            # Delete from SQLite document database
             doc_db.delete_document(existing_doc['doc_id'])
-            # Delete from Weaviate
-            weaviate_doc_id = existing_doc.get('doc_id')
-            delete_document_and_chunks(weaviate_doc_id)
-            # Insert new
-            weaviate_doc_id = insert_document(file_metadata, request.chunks)
+            # Delete from Weaviate using weaviate_doc_id
+            try:
+                weaviate_id = existing_doc.get('weaviate_doc_id')
+                if weaviate_id:
+                    delete_document_and_chunks(weaviate_id)
+                    print(f"[INFO] Deleted from Weaviate: {weaviate_id}")
+                else:
+                    print(f"[WARN] No weaviate_doc_id found for document {existing_doc['doc_id']}")
+            except Exception as e:
+                print(f"[WARN] Failed to delete from Weaviate (may not exist): {e}")
             action = "replaced"
-        else:
-            weaviate_doc_id = insert_document(file_metadata, request.chunks)
-            action = "uploaded"
+        
+        # Insert new document to Weaviate
+        weaviate_doc_id = insert_document(file_metadata, request.chunks)
         
         # Save to document tracking database
         doc_id = str(uuid.uuid4())  # Separate ID for our database
         
         # Generate a temporary hash if not provided (use doc_id to ensure uniqueness)
         content_hash = request.content_hash or f"temp-{doc_id}"
+        
+        # Determine version number
+        current_version = version_info['new_version'] if version_info else 1
         
         doc_db.insert_document({
             "doc_id": doc_id,
@@ -191,10 +235,10 @@ async def upload_to_kb(
             "page_count": file_metadata["page_count"],
             "weaviate_doc_id": weaviate_doc_id,
             "metadata": request.document_metadata
-        })
+        }, version=current_version)
         
         print(f"[INFO] Successfully {action} {len(request.chunks)} chunks to knowledge base")
-        print(f"[INFO] Document saved to database: {doc_id}")
+        print(f"[INFO] Document saved to database: {doc_id} (Version {current_version})")
         print(f"[INFO] Weaviate doc_id: {weaviate_doc_id}")
         print(f"[INFO] Uploaded by: {uploaded_by or 'anonymous'}")
         
@@ -203,7 +247,9 @@ async def upload_to_kb(
             "message": f"Successfully {action} {len(request.chunks)} chunks to knowledge base",
             "doc_id": doc_id,
             "weaviate_doc_id": weaviate_doc_id,
-            "action": action
+            "action": action,
+            "version": current_version,
+            "version_info": version_info
         }
         
     except HTTPException:
@@ -401,6 +447,83 @@ async def delete_document(
         raise
     except Exception as e:
         print(f"[ERROR] Failed to delete document: {str(e)}")
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Internal server error: {str(e)}"
+        )
+
+
+@kb_router.get('/document-versions/{file_name}')
+async def get_document_versions(
+    file_name: str,
+    authorization: Optional[str] = Header(None)
+):
+    """
+    Get version history for a document by file name.
+    
+    Path params:
+    - file_name: Name of the file to get version history for
+    
+    Returns:
+    - current_version: Current active version info
+    - version_history: List of archived versions
+    """
+    try:
+        doc_db = DocumentDatabase()
+        
+        # Get current document
+        current_doc = doc_db.get_document_by_filename(file_name)
+        
+        # Get version history
+        versions = doc_db.get_document_versions(file_name)
+        
+        if not current_doc and not versions:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"No document found with filename '{file_name}'"
+            )
+        
+        # Format current version
+        current_version = None
+        if current_doc:
+            current_version = {
+                "doc_id": current_doc["doc_id"],
+                "file_name": current_doc["file_name"],
+                "version": current_doc.get("current_version", 1),
+                "upload_date": current_doc["upload_date"],
+                "file_size_bytes": current_doc["file_size_bytes"],
+                "chunks": current_doc["chunks"],
+                "uploaded_by": current_doc.get("uploaded_by") or "anonymous",
+                "is_current": True
+            }
+        
+        # Format version history
+        formatted_versions = []
+        for v in versions:
+            formatted_versions.append({
+                "version_id": v["version_id"],
+                "version": v["version_number"],
+                "upload_date": v["upload_date"],
+                "archived_date": v["archived_date"],
+                "file_size_bytes": v["file_size_bytes"],
+                "chunks": v["chunks"],
+                "uploaded_by": v.get("uploaded_by") or "anonymous",
+                "is_current": False
+            })
+        
+        return {
+            "success": True,
+            "file_name": file_name,
+            "current_version": current_version,
+            "version_history": formatted_versions,
+            "total_versions": len(formatted_versions) + (1 if current_version else 0)
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[ERROR] Failed to get document versions: {str(e)}")
         traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

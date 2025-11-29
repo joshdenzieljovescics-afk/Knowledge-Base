@@ -1,100 +1,110 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-
-// Using a consistent icon library (lucide-react) for a professional look
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { User } from "lucide-react";
 import {
   LayoutDashboard,
   ScrollText,
   Users,
   Bot,
-  MessageSquare, // Icon for KB Chat
-  FileScan, // ✅ ADDED: Icon for Document Extraction
   CheckSquare,
   BarChart3,
+  FileScan,
   LogOut,
-  MoreVertical,
-} from 'lucide-react';
+  BookOpen,
+} from "lucide-react";
+import safexpressLogo from "../assets/sfxLogo.png";
+import "../css/Sidebar.css";
 
-import safexpressLogo from '../assets/sfxLogo.png';
-import userAvatar from '../assets/accountLogo.png'; // Assuming this is the user's avatar
-import '../css/Sidebar.css';
-
-// Navigation items are now more maintainable with component icons
 const navItems = [
-  { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
-  { label: 'Audit Logs', icon: ScrollText, path: '/audit-logs' },
-  { label: 'Accounts', icon: Users, path: '/accounts' },
-  { label: 'AI Chat', icon: Bot, path: '/ai-chat' },
-  { label: 'KB Chat', icon: MessageSquare, path: '/kb-chat' },
-  { label: 'Task Approval', icon: CheckSquare, path: '/task-approval'},
-  { label: 'Report & Analysis', icon: BarChart3, path: '/report-analysis' },
-  { label: 'Document Extraction', icon: FileScan, path: '/document-extraction' },
+  { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
+  { label: "Audit Logs", icon: ScrollText, path: "/audit-logs" },
+  { label: "Accounts", icon: Users, path: "/accounts" },
+  { label: "AI Assistant", icon: Bot, path: "/ai-chat-new" },
+  { label: "SFX Bot", icon: Bot, path: "/sfx-bot" },
+  {
+    label: "Manage Knowledge Base",
+    icon: FileScan,
+    path: "/document-extraction",
+  },
+  { label: "Dynamic Mapping", icon: BookOpen, path: "/dynamic-mapping" },
+  { label: "Analysis Report", icon: BarChart3, path: "/analysis-report" },
 ];
 
-// Sub-component for individual navigation items for cleaner code
-const NavItem = ({ item, isActive }) => (
+const NavItem = React.memo(({ item, isActive, isCollapsed }) => (
   <li>
-    <Link to={item.path} className={`nav-item ${isActive ? 'active' : ''}`}>
+    <Link to={item.path} className={`nav-item ${isActive ? "active" : ""}`}>
       <item.icon className="nav-icon" size={20} strokeWidth={2} />
-      <span className="nav-label">{item.label}</span>
-      {item.notification && <span className="notification-dot" />}
+      {!isCollapsed && <span className="nav-label">{item.label}</span>}
     </Link>
   </li>
-);
+));
 
-// Sub-component for the user profile section with hoverable logout dropdown
-import { useState } from 'react';
-const UserProfile = ({ user, onLogout }) => {
-  const [showLogout, setShowLogout] = useState(false);
-  return (
-    <div className="user-profile">
-      <img src={user.avatar} alt="User Avatar" className="user-avatar" />
-      <div className="user-details">
-        <span className="user-name">{user.name}</span>
-        <span className="user-email">{user.email}</span>
-      </div>
-      <div
-        className="more-menu-wrapper"
-        onMouseEnter={() => setShowLogout(true)}
-        onMouseLeave={() => setShowLogout(false)}
-        style={{ position: 'relative' }}
-      >
-        <button className="logout-button" title="More options" tabIndex={0}>
-          <MoreVertical size={20} />
-        </button>
-        {showLogout && (
-          <div className="logout-dropdown logout-dropdown-up" style={{ position: 'absolute', right: 0, bottom: '110%', zIndex: 10 }}>
-            <button className="logout-dropdown-btn" onClick={onLogout}>
-              <LogOut size={16} style={{ marginRight: 6 }} /> Logout
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-function Sidebar() {
-  // useLocation is more reliable for determining the active path
+const Sidebar = React.memo(({ isOpen, toggleSidebar, onLogout }) => {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    name: "Admin User",
+    email: "admin@example.com",
+    picture: null
+  });
 
-  // Dummy user data - in a real app, this would come from context or props
-  const user = {
-    name: 'Maria Clara',
-    email: 'm.clara@example.com',
-    avatar: userAvatar,
+  const handleProfileClick = () => {
+    navigate('/profile');
   };
 
-  const handleLogout = () => {
-    // Implement your logout logic here
-    console.log('Logging out...');
-    // e.g., navigate('/login');
-  };
+  // Load user info from localStorage
+  useEffect(() => {
+    const loadUserInfo = () => {
+      try {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          
+          // Build full name from first_name and last_name, or fall back to username
+          let displayName = "User";
+          if (userData.first_name || userData.last_name) {
+            displayName = `${userData.first_name || ''} ${userData.last_name || ''}`.trim();
+          } else if (userData.name) {
+            displayName = userData.name;
+          } else if (userData.username) {
+            displayName = userData.username;
+          }
+          
+          setUserInfo({
+            name: displayName,
+            email: userData.email || "user@example.com",
+            picture: userData.picture || null
+          });
+          
+          console.log("Loaded user info:", { name: displayName, email: userData.email, picture: userData.picture });
+        }
+      } catch (error) {
+        console.error("Error loading user info:", error);
+      }
+    };
 
+    loadUserInfo();
+
+    // Listen for storage changes (in case user info is updated)
+    window.addEventListener("storage", loadUserInfo);
+    return () => window.removeEventListener("storage", loadUserInfo);
+  }, []);
+
+  const handleLogout = React.useCallback(() => {
+    if (onLogout) onLogout();
+    navigate("/login");
+  }, [onLogout, navigate]);
+
+  // Sidebar.jsx — Updated return block
   return (
-    <nav className="sidebar">
+    <nav className="sidebar-container">
       <div className="sidebar-header">
-        <img src={safexpressLogo} alt="Safexpress Logo" className="logo" />
+        <img
+          src={safexpressLogo}
+          alt="Safexpress Logo"
+          className="sidebar-logo"
+        />
       </div>
 
       <ul className="nav-list">
@@ -107,10 +117,43 @@ function Sidebar() {
         ))}
       </ul>
 
-      {/* The UserProfile component is pushed to the bottom using flexbox `margin-top: auto` */}
-      <UserProfile user={user} onLogout={handleLogout} />
+      {/* 👇 Updated User Profile Section with Avatar */}
+      <div className="user-profile-section" onClick={handleProfileClick}>
+        <div className="user-info">
+          <div className="user-avatar">
+            {userInfo.picture ? (
+              <img 
+                src={userInfo.picture} 
+                alt={userInfo.name}
+                className="user-avatar-img"
+                onError={(e) => {
+                  // Fallback to icon if image fails to load
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+            ) : null}
+            <User 
+              size={20} 
+              strokeWidth={1.5} 
+              style={{ display: userInfo.picture ? 'none' : 'block' }}
+            />
+          </div>
+          <div className="user-text">
+            <div className="user-name">{userInfo.name}</div>
+            <div className="user-email">{userInfo.email}</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="logout-section">
+        <button onClick={handleLogout} className="logout-btn">
+          <LogOut size={20} strokeWidth={2} />
+          <span className="nav-label">Logout</span>
+        </button>
+      </div>
     </nav>
   );
-}
+});
 
 export default Sidebar;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { FiCheck } from 'react-icons/fi';
+import '../css/ActionCard.css';
 
 function ActionCard({ icon, title, subtitle, description, tasks, buttonText, onButtonClick }) {
     return (

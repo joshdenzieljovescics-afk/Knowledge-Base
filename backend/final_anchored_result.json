@@ -1,71 +1,59 @@
 [
   {
-    "text": "Standard Operating Procedure (SOP) for Goods Receiving",
+    "text": "Business Continuity & Disaster Recovery Plan (BCDRP)",
     "metadata": {
       "type": "heading",
       "section": "Introduction",
-      "section_title": "Standard Operating Procedure for Goods Receiving",
+      "section_title": "Business Continuity & Disaster Recovery Plan (BCDRP)",
       "parent_section": "",
-      "context": "Title of the SOP document for goods receiving",
+      "context": "Title of the Business Continuity & Disaster Recovery Plan document",
       "tags": [
-        "SOP",
-        "goods",
-        "receiving",
-        "procedure",
-        "introduction"
+        "BCDRP",
+        "business continuity",
+        "disaster recovery",
+        "plan"
       ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
       "page": 1,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259747",
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940495",
       "processing_method": "two_pass",
       "box": {
         "l": 72.0,
         "t": 74.54834048154305,
-        "r": 544.426421871084,
-        "b": 114.02893073154291
+        "r": 538.449311871084,
+        "b": 91.548339981543
       },
-      "line_count": 2,
+      "line_count": 1,
       "anchored": true,
       "matched_line_ids": [
-        "p1-ln-0",
-        "p1-ln-1"
+        "p1-ln-0"
       ]
     },
-    "id": "chunk-0-8f04510c"
+    "id": "chunk-0-3edac57d"
   },
   {
-    "text": "This procedure ensures that all incoming goods are handled efficiently, accurately, and safely, adhering to the Quality Policy and preventing stock reconciliation errors.",
+    "text": "This document is designed to ensure that SAFEXPRESS LOGISTICS INC. can maintain critical operations and quickly resume standard functions following a significant disruption or disaster.",
     "metadata": {
       "type": "paragraph",
       "section": "Introduction",
-      "section_title": "Standard Operating Procedure for Goods Receiving",
+      "section_title": "Business Continuity & Disaster Recovery Plan (BCDRP)",
       "parent_section": "",
-      "context": "Overview of the SOP's purpose and adherence to quality policy",
+      "context": "Purpose of the BCDR Plan for SAFEXPRESS LOGISTICS INC.",
       "tags": [
-        "SOP",
-        "goods",
-        "receiving",
-        "quality",
-        "policy",
-        "efficiency",
-        "accuracy"
+        "BCDRP",
+        "SAFEXPRESS",
+        "operations",
+        "disruption",
+        "disaster"
       ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
       "page": 1,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259772",
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940558",
       "processing_method": "two_pass",
       "box": {
         "l": 72.0,
         "t": 122.61010735547848,
-        "r": 542.540347399458,
+        "r": 538.756837399458,
         "b": 148.1563720054785
       },
       "line_count": 2,
@@ -75,425 +63,501 @@
         "p1-ln-3"
       ]
     },
-    "id": "chunk-1-fabb8be7"
+    "id": "chunk-1-47964199"
   },
   {
-    "text": "1.0 Purpose",
+    "text": "BCDR Plan: SAFEXPRESS LOGISTICS INC.",
     "metadata": {
       "type": "heading",
-      "section": "1",
-      "section_title": "Purpose",
+      "section": "Introduction",
+      "section_title": "BCDR Plan: SAFEXPRESS LOGISTICS INC.",
       "parent_section": "",
-      "context": "Defines the purpose of the SOP for goods receiving",
+      "context": "Title of the BCDR Plan specific to SAFEXPRESS LOGISTICS INC.",
       "tags": [
-        "purpose",
-        "SOP",
-        "goods",
-        "receiving"
+        "BCDR",
+        "SAFEXPRESS",
+        "plan"
       ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
       "page": 1,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259781",
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940586",
       "processing_method": "two_pass",
       "box": {
         "l": 72.0,
-        "t": 178.54870956095692,
-        "r": 149.28601827891603,
-        "b": 191.54871006095698
+        "t": 164.00244056095698,
+        "r": 342.787024028916,
+        "b": 177.00244106095704
       },
       "line_count": 1,
       "anchored": true,
       "matched_line_ids": [
-        "p1-ln-5"
+        "p1-ln-4"
       ]
     },
-    "id": "chunk-2-b638ec69"
+    "id": "chunk-2-771a2188"
   },
   {
-    "text": "To establish a uniform and controlled process for the receipt, inspection, and recording of all incoming cargo and materials, ensuring compliance with client instructions and minimizing discrepancies.",
-    "metadata": {
-      "type": "paragraph",
-      "section": "1",
-      "section_title": "Purpose",
-      "parent_section": "",
-      "context": "Establishes a controlled process for receiving goods",
-      "tags": [
-        "purpose",
-        "process",
-        "receipt",
-        "inspection",
-        "compliance",
-        "discrepancies"
-      ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
-      "page": 1,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259790",
-      "processing_method": "two_pass",
-      "box": {
-        "l": 72.0,
-        "t": 199.43994535547847,
-        "r": 542.6436148994579,
-        "b": 239.53247500547843
-      },
-      "line_count": 3,
-      "anchored": true,
-      "matched_line_ids": [
-        "p1-ln-6",
-        "p1-ln-7",
-        "p1-ln-8"
-      ]
-    },
-    "id": "chunk-3-9fda0e72"
-  },
-  {
-    "text": "2.0 Procedure Steps",
-    "metadata": {
-      "type": "heading",
-      "section": "2",
-      "section_title": "Procedure Steps",
-      "parent_section": "",
-      "context": "Lists the steps involved in the goods receiving procedure",
-      "tags": [
-        "procedure",
-        "steps",
-        "goods",
-        "receiving"
-      ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
-      "page": 1,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259798",
-      "processing_method": "two_pass",
-      "box": {
-        "l": 72.0,
-        "t": 255.37853956095694,
-        "r": 200.57239527891602,
-        "b": 268.378540060957
-      },
-      "line_count": 1,
-      "anchored": true,
-      "matched_line_ids": [
-        "p1-ln-9"
-      ]
-    },
-    "id": "chunk-4-9e54490c"
-  },
-  {
-    "text": "Step | Action | Responsibility | Quality/Safety Check\n2.1 | Vehicle/Cargo Check-in | Gate Guard / Receiving Clerk | Verify the transporter's details against the expected Delivery Order (DO) or Advanced Shipping Notice (ASN). Check the vehicle for signs of tampering or damage before docking.",
+    "text": "Section | Title\nDocument No. | BCDR-001\nDate Issued | November 2025\nRevision | 1.0\nApplicability | All Head Office and Branch Operations",
     "metadata": {
       "type": "table",
-      "section": "2",
-      "section_title": "Procedure Steps",
+      "section": "Introduction",
+      "section_title": "BCDR Plan: SAFEXPRESS LOGISTICS INC.",
       "parent_section": "",
-      "context": "Details the vehicle and cargo check-in process",
+      "context": "Document details including number, date, revision, and applicability",
       "tags": [
-        "procedure",
-        "steps",
-        "vehicle",
-        "cargo",
-        "check-in",
-        "DO",
-        "ASN"
+        "document details",
+        "BCDR",
+        "SAFEXPRESS",
+        "applicability"
       ],
-      "row_index": 1,
-      "continues": true,
+      "row_index": null,
+      "continues": false,
       "is_page_break": false,
       "siblings": [],
       "page": 1,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259806",
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940609",
       "processing_method": "two_pass",
       "box": {
         "l": 72.5000000175,
-        "t": 274.50000039024997,
-        "r": 540.5000175,
-        "b": 715.5000025
+        "t": 183.4999990225001,
+        "r": 539.0000175,
+        "b": 432.49999750000006
       },
       "table_id": "p1-tbl-0",
       "anchored": true
     },
-    "id": "chunk-5-39f9f224"
+    "id": "chunk-3-dce49b14"
   },
   {
-    "text": "2.2 | Unloading Preparation | Receiving Supervisor | Clear the staging area. Ensure all required Personal Protective Equipment (PPE) is worn by the unloading team (safety vest, hard hat, steel-toed boots).",
-    "metadata": {
-      "type": "table",
-      "section": "2",
-      "section_title": "Procedure Steps",
-      "parent_section": "",
-      "context": "Preparation steps for unloading cargo",
-      "tags": [
-        "procedure",
-        "steps",
-        "unloading",
-        "PPE",
-        "safety"
-      ],
-      "row_index": 2,
-      "continues": true,
-      "is_page_break": false,
-      "siblings": [],
-      "page": 1,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259814",
-      "processing_method": "two_pass",
-      "anchored": false
-    },
-    "id": "chunk-6-a98c89df"
-  },
-  {
-    "text": "2.3 | Unloading and Tally | Warehouse Operator | Unload cargo carefully. Perform a preliminary count (tally) against the accompanying shipper's Bill of Lading (BOL).",
-    "metadata": {
-      "type": "table",
-      "section": "2",
-      "section_title": "Procedure Steps",
-      "parent_section": "",
-      "context": "Describes the unloading and tallying process",
-      "tags": [
-        "procedure",
-        "steps",
-        "unloading",
-        "tally",
-        "BOL"
-      ],
-      "row_index": 3,
-      "continues": true,
-      "is_page_break": false,
-      "siblings": [],
-      "page": 1,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259822",
-      "processing_method": "two_pass",
-      "anchored": false
-    },
-    "id": "chunk-7-71b906c9"
-  },
-  {
-    "text": "2.4 | Initial Quality Inspection | Receiving Clerk | Mandatory Check: Inspect every pallet/carton for visible damage (crushing, wetness, torn seals). If damage is found, document it immediately on the BOL and take photo evidence.",
-    "metadata": {
-      "type": "table",
-      "section": "2",
-      "section_title": "Procedure Steps",
-      "parent_section": "",
-      "context": "Initial quality inspection process for received goods",
-      "tags": [
-        "procedure",
-        "steps",
-        "quality",
-        "inspection",
-        "damage",
-        "BOL"
-      ],
-      "row_index": 4,
-      "continues": true,
-      "is_page_break": true,
-      "siblings": [],
-      "page": 1,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259831",
-      "processing_method": "two_pass",
-      "anchored": false
-    },
-    "id": "chunk-8-8d2c7fa0"
-  },
-  {
-    "text": "2.5 | WMS Receiving & Validation | Receiving Clerk | Using the handheld scanner, scan the shipment reference/BOL number. Enter the verified quantity into the Warehouse Management System (WMS). The WMS generates a System Receiving Report.",
-    "metadata": {
-      "type": "table",
-      "section": "2",
-      "section_title": "Procedure Steps",
-      "parent_section": "",
-      "context": "Process for receiving and validating goods in WMS",
-      "tags": [
-        "procedure",
-        "steps",
-        "WMS",
-        "receiving",
-        "validation",
-        "BOL"
-      ],
-      "row_index": 5,
-      "continues": true,
-      "is_page_break": false,
-      "siblings": [],
-      "page": 2,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259840",
-      "processing_method": "two_pass",
-      "anchored": false
-    },
-    "id": "chunk-9-69410465"
-  },
-  {
-    "text": "2.6 | Discrepancy Resolution | Receiving Supervisor | If there is a quantity mismatch or damage, the clerk must immediately notify the client or relevant internal department. No stock is put away until the discrepancy is acknowledged.",
-    "metadata": {
-      "type": "table",
-      "section": "2",
-      "section_title": "Procedure Steps",
-      "parent_section": "",
-      "context": "Steps for resolving discrepancies in received goods",
-      "tags": [
-        "procedure",
-        "steps",
-        "discrepancy",
-        "resolution",
-        "damage"
-      ],
-      "row_index": 6,
-      "continues": true,
-      "is_page_break": false,
-      "siblings": [],
-      "page": 2,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259848",
-      "processing_method": "two_pass",
-      "anchored": false
-    },
-    "id": "chunk-10-3ffe2444"
-  },
-  {
-    "text": "2.7 | Put-Away & Location Assignment | Warehouse Operator | Move the verified and received stock to its assigned bin or storage area (Ambient, Cold, or Temperature-Controlled). Scan the item and the storage location to confirm placement in the WMS.",
-    "metadata": {
-      "type": "table",
-      "section": "2",
-      "section_title": "Procedure Steps",
-      "parent_section": "",
-      "context": "Process for putting away and assigning location to goods",
-      "tags": [
-        "procedure",
-        "steps",
-        "put-away",
-        "location",
-        "WMS"
-      ],
-      "row_index": 7,
-      "continues": true,
-      "is_page_break": false,
-      "siblings": [],
-      "page": 2,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259856",
-      "processing_method": "two_pass",
-      "anchored": false
-    },
-    "id": "chunk-11-83f65de4"
-  },
-  {
-    "text": "2.8 | Document Filing | Receiving Clerk | Attach the signed BOL, the System Receiving Report, and any Discrepancy Reports. File documents for record-keeping and reconciliation.",
-    "metadata": {
-      "type": "table",
-      "section": "2",
-      "section_title": "Procedure Steps",
-      "parent_section": "",
-      "context": "Filing process for receiving documents",
-      "tags": [
-        "procedure",
-        "steps",
-        "document",
-        "filing",
-        "BOL"
-      ],
-      "row_index": 8,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
-      "page": 2,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259864",
-      "processing_method": "two_pass",
-      "anchored": false
-    },
-    "id": "chunk-12-2a5a26de"
-  },
-  {
-    "text": "3.0 Control Checklists (Receiving/Dispatch Checklist)",
+    "text": "1.0 Introduction and Policy",
     "metadata": {
       "type": "heading",
-      "section": "3",
-      "section_title": "Control Checklists (Receiving/Dispatch Checklist)",
+      "section": "1",
+      "section_title": "Introduction and Policy",
       "parent_section": "",
-      "context": "Checklist for receiving and dispatch control",
+      "context": "Introduction to the BCDR Plan and its primary objectives",
       "tags": [
-        "control",
-        "checklist",
-        "receiving",
-        "dispatch"
+        "introduction",
+        "policy",
+        "BCDR",
+        "objectives"
       ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
-      "page": 2,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259873",
+      "page": 1,
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940630",
       "processing_method": "two_pass",
       "box": {
         "l": 72.0,
-        "t": 598.802369560957,
-        "r": 405.66084402891596,
-        "b": 611.8023700609571
+        "t": 461.471069560957,
+        "r": 241.692896528916,
+        "b": 474.471070060957
       },
       "line_count": 1,
       "anchored": true,
       "matched_line_ids": [
-        "p2-ln-23"
+        "p1-ln-11"
       ]
     },
-    "id": "chunk-13-5bcbf77a"
+    "id": "chunk-4-5d4788bc"
   },
   {
-    "text": "\u25cf [ ] ASN/DO verified against physical shipment.\n\u25cf [ ] Total Piece Count verified (Tally vs. BOL).\n\u25cf [ ] Cargo inspected for damage (Pass/Fail).\n\u25cf [ ] WMS entry completed and System Receiving Report generated.\n\u25cf [ ] Discrepancy logged and resolution confirmed (if applicable).\n\u25cf [ ] Final put-away scan confirmed in WMS.",
+    "text": "The primary objective of this BCDR Plan is to minimize the impact of unforeseen events (natural disasters, system failures, power outages, etc.) on our core logistics services (Safety, Quality, Delivery). We commit to the protection of personnel, client cargo, and vital business data, ensuring an acceptable level of service continuity.",
     "metadata": {
-      "type": "list",
-      "section": "3",
-      "section_title": "Control Checklists (Receiving/Dispatch Checklist)",
+      "type": "paragraph",
+      "section": "1",
+      "section_title": "Introduction and Policy",
       "parent_section": "",
-      "context": "Checklist items for verifying receiving and dispatch processes",
+      "context": "Objectives of the BCDR Plan to ensure service continuity",
       "tags": [
-        "control",
-        "checklist",
-        "ASN",
-        "DO",
-        "BOL",
-        "WMS",
-        "discrepancy"
+        "BCDR",
+        "objectives",
+        "service continuity",
+        "logistics",
+        "safety"
+      ],
+      "page": 1,
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940651",
+      "processing_method": "two_pass",
+      "box": {
+        "l": 72.0,
+        "t": 482.3623053554785,
+        "r": 541.204312399458,
+        "b": 537.0010992554785
+      },
+      "line_count": 4,
+      "anchored": true,
+      "matched_line_ids": [
+        "p1-ln-12",
+        "p1-ln-13",
+        "p1-ln-14",
+        "p1-ln-15"
+      ]
+    },
+    "id": "chunk-5-33b6e128"
+  },
+  {
+    "text": "2.0 Critical Business Functions (CBFs) and Recovery Objectives",
+    "metadata": {
+      "type": "heading",
+      "section": "2",
+      "section_title": "Critical Business Functions (CBFs) and Recovery Objectives",
+      "parent_section": "",
+      "context": "Identification of critical business functions and their recovery objectives",
+      "tags": [
+        "CBFs",
+        "recovery objectives",
+        "business functions"
+      ],
+      "page": 1,
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940672",
+      "processing_method": "two_pass",
+      "box": {
+        "l": 72.0,
+        "t": 574.0382095609571,
+        "r": 472.836971528916,
+        "b": 587.038210060957
+      },
+      "line_count": 1,
+      "anchored": true,
+      "matched_line_ids": [
+        "p1-ln-17"
+      ]
+    },
+    "id": "chunk-6-d1c3f996"
+  },
+  {
+    "text": "The following functions are essential for immediate survival and customer commitment:",
+    "metadata": {
+      "type": "paragraph",
+      "section": "2",
+      "section_title": "Critical Business Functions (CBFs) and Recovery Objectives",
+      "parent_section": "",
+      "context": "Essential functions for business survival and customer commitment",
+      "tags": [
+        "essential functions",
+        "survival",
+        "customer commitment"
+      ],
+      "page": 1,
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940691",
+      "processing_method": "two_pass",
+      "box": {
+        "l": 72.0,
+        "t": 594.9294453554785,
+        "r": 497.820629899458,
+        "b": 605.9294456054786
+      },
+      "line_count": 1,
+      "anchored": true,
+      "matched_line_ids": [
+        "p1-ln-18"
+      ]
+    },
+    "id": "chunk-7-44550f5d"
+  },
+  {
+    "text": "CBF | Function Description | Recovery Time Objective (RTO) | Recovery Point Objective (RPO)",
+    "metadata": {
+      "type": "table",
+      "section": "2",
+      "section_title": "Critical Business Functions (CBFs) and Recovery Objectives",
+      "parent_section": "",
+      "context": "Table header for critical business functions and recovery objectives",
+      "tags": [
+        "CBF",
+        "RTO",
+        "RPO",
+        "functions"
+      ],
+      "row_index": null,
+      "continues": true,
+      "is_page_break": true,
+      "siblings": [],
+      "page": 1,
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940711",
+      "processing_method": "two_pass",
+      "box": {
+        "l": 72.5000000175,
+        "t": 619.4999977775,
+        "r": 539.0000175,
+        "b": 684.49999775
+      },
+      "table_id": "p1-tbl-1",
+      "anchored": true
+    },
+    "id": "chunk-8-17bcb2ce"
+  },
+  {
+    "text": "A | Transportation Dispatch & Tracking | 4 Hours | 1 Hour\nB | Warehouse Management System (WMS) Access | 6 Hours | 12 Hours\nC | Financial/Billing System Access | 24 Hours | 24 Hours\nD | Communication (Internal & External) | 1 Hour (Redundant Communication Lines) | N/A",
+    "metadata": {
+      "type": "table",
+      "section": "2",
+      "section_title": "Critical Business Functions (CBFs) and Recovery Objectives",
+      "parent_section": "",
+      "context": "Details of critical business functions and their recovery objectives",
+      "tags": [
+        "CBF",
+        "RTO",
+        "RPO",
+        "transportation",
+        "warehouse",
+        "communication"
       ],
       "row_index": null,
       "continues": false,
       "is_page_break": false,
       "siblings": [],
       "page": 2,
-      "source_file": "SOP.pdf",
-      "created_at": "2025-11-24T23:11:51.259882",
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940732",
+      "processing_method": "two_pass",
+      "box": {
+        "l": 72.5000000175,
+        "t": 72.50000001750004,
+        "r": 540.5000175,
+        "b": 329.500005
+      },
+      "table_id": "p2-tbl-0",
+      "anchored": true
+    },
+    "id": "chunk-9-ffaaba47"
+  },
+  {
+    "text": "3.0 Emergency Response Team Structure",
+    "metadata": {
+      "type": "heading",
+      "section": "3",
+      "section_title": "Emergency Response Team Structure",
+      "parent_section": "",
+      "context": "Structure of the emergency response team and their roles",
+      "tags": [
+        "emergency response",
+        "team structure",
+        "roles"
+      ],
+      "page": 2,
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940752",
+      "processing_method": "two_pass",
+      "box": {
+        "l": 72.0,
+        "t": 353.259889560957,
+        "r": 331.54226652891595,
+        "b": 366.259890060957
+      },
+      "line_count": 1,
+      "anchored": true,
+      "matched_line_ids": [
+        "p2-ln-9"
+      ]
+    },
+    "id": "chunk-10-4b25c67f"
+  },
+  {
+    "text": "Role | Responsibility | Backup Contact\nIncident Commander (IC) | Overall decision-making authority. Declares disaster level. | Head of Operations\nLogistics Lead | Manages fleet safety, cargo integrity, and alternative delivery routes. | Senior Dispatch Manager\nIT & Systems Lead | Manages system recovery, data restoration, and access to backup servers. | WMS Administrator\nHR & Safety Lead | Personnel accounting, staff welfare, and site safety clearance. | HR Manager",
+    "metadata": {
+      "type": "table",
+      "section": "3",
+      "section_title": "Emergency Response Team Structure",
+      "parent_section": "",
+      "context": "Roles and responsibilities within the emergency response team",
+      "tags": [
+        "emergency response",
+        "roles",
+        "responsibilities",
+        "backup"
+      ],
+      "row_index": null,
+      "continues": false,
+      "is_page_break": false,
+      "siblings": [],
+      "page": 2,
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940772",
+      "processing_method": "two_pass",
+      "box": {
+        "l": 72.5000000175,
+        "t": 372.500002734375,
+        "r": 540.5000175,
+        "b": 679.5000075
+      },
+      "table_id": "p2-tbl-1",
+      "anchored": true
+    },
+    "id": "chunk-11-246c4b16"
+  },
+  {
+    "text": "4.0 Disaster Scenario: Major Power and Network Outage",
+    "metadata": {
+      "type": "heading",
+      "section": "4",
+      "section_title": "Disaster Scenario: Major Power and Network Outage",
+      "parent_section": "",
+      "context": "Scenario description for major power and network outage",
+      "tags": [
+        "disaster scenario",
+        "power outage",
+        "network outage"
+      ],
+      "page": 3,
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940791",
+      "processing_method": "two_pass",
+      "box": {
+        "l": 72.0,
+        "t": 73.94872956095696,
+        "r": 422.280341528916,
+        "b": 86.94873006095702
+      },
+      "line_count": 1,
+      "anchored": true,
+      "matched_line_ids": [
+        "p3-ln-0"
+      ]
+    },
+    "id": "chunk-12-c7580e75"
+  },
+  {
+    "text": "4.1 Response and Activation",
+    "metadata": {
+      "type": "heading",
+      "section": "4.1",
+      "section_title": "Response and Activation",
+      "parent_section": "4",
+      "context": "Steps for response and activation during a major disruption",
+      "tags": [
+        "response",
+        "activation",
+        "disruption"
+      ],
+      "page": 3,
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940810",
+      "processing_method": "two_pass",
+      "box": {
+        "l": 72.0,
+        "t": 94.83984335547848,
+        "r": 224.711992399458,
+        "b": 105.83984360547845
+      },
+      "line_count": 1,
+      "anchored": true,
+      "matched_line_ids": [
+        "p3-ln-1"
+      ]
+    },
+    "id": "chunk-13-ef51ee07"
+  },
+  {
+    "text": "1. Immediate Action: IC to declare Level 2 (Major Disruption).\n2. Communication: Activate satellite/backup communication devices. Notify all critical personnel via SMS/alternative channel.\n3. WMS/IT: IT Lead immediately switches to off-site cloud servers (if applicable) or initiates Backup & Recovery Procedure (Refer to IT Manual).",
+    "metadata": {
+      "type": "list",
+      "section": "4.1",
+      "section_title": "Response and Activation",
+      "parent_section": "4",
+      "context": "Immediate actions for response and activation",
+      "tags": [
+        "response",
+        "activation",
+        "communication",
+        "IT",
+        "backup"
+      ],
+      "page": 3,
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940824",
       "processing_method": "two_pass",
       "box": {
         "l": 90.0,
-        "t": 619.6936053554784,
-        "r": 435.47596489945806,
-        "b": 703.4249256054785
+        "t": 111.38623035547846,
+        "r": 539.0799748994581,
+        "b": 180.57128900547855
       },
-      "line_count": 6,
+      "line_count": 5,
       "anchored": true,
       "matched_line_ids": [
-        "p2-ln-24",
-        "p2-ln-25",
-        "p2-ln-26",
-        "p2-ln-27",
-        "p2-ln-28",
-        "p2-ln-29"
+        "p3-ln-2",
+        "p3-ln-3",
+        "p3-ln-4",
+        "p3-ln-5",
+        "p3-ln-6"
       ]
     },
-    "id": "chunk-14-bf277fca"
+    "id": "chunk-14-6b2db799"
+  },
+  {
+    "text": "4.2 Logistics Continuity Protocol",
+    "metadata": {
+      "type": "heading",
+      "section": "4.2",
+      "section_title": "Logistics Continuity Protocol",
+      "parent_section": "4",
+      "context": "Protocol for maintaining logistics continuity during disruptions",
+      "tags": [
+        "logistics",
+        "continuity",
+        "protocol"
+      ],
+      "page": 3,
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940836",
+      "processing_method": "two_pass",
+      "box": {
+        "l": 72.0,
+        "t": 212.6638153554785,
+        "r": 246.669532399458,
+        "b": 223.66381560547848
+      },
+      "line_count": 1,
+      "anchored": true,
+      "matched_line_ids": [
+        "p3-ln-8"
+      ]
+    },
+    "id": "chunk-15-4c4997fc"
+  },
+  {
+    "text": "\u25cf Dispatch: Switch to manual dispatch procedures using pre-printed Delivery Order (DO) and Bill of Lading (BOL) forms. Log all movements via secure chat groups.\n\u25cf Warehouse: Halt all non-critical picking/packing. Receiving must be done manually, creating handwritten Receiving Reports. No movement of High-Value Cargo without dual sign-off.\n\u25cf Data: Once systems are restored, all manual records must be prioritized for data entry to meet RPO of 12 hours for WMS data.",
+    "metadata": {
+      "type": "list",
+      "section": "4.2",
+      "section_title": "Logistics Continuity Protocol",
+      "parent_section": "4",
+      "context": "Steps for logistics continuity during a major disruption",
+      "tags": [
+        "logistics",
+        "dispatch",
+        "warehouse",
+        "data",
+        "continuity"
+      ],
+      "page": 3,
+      "source_file": "BCDRP.pdf",
+      "created_at": "2025-11-30T01:55:58.940848",
+      "processing_method": "two_pass",
+      "box": {
+        "l": 90.0,
+        "t": 229.20996535547852,
+        "r": 542.370697399458,
+        "b": 327.48755000547857
+      },
+      "line_count": 7,
+      "anchored": true,
+      "matched_line_ids": [
+        "p3-ln-9",
+        "p3-ln-10",
+        "p3-ln-11",
+        "p3-ln-12",
+        "p3-ln-13",
+        "p3-ln-14",
+        "p3-ln-15"
+      ]
+    },
+    "id": "chunk-16-7bc3c917"
   }
 ]
