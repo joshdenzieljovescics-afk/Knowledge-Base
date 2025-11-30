@@ -38,38 +38,38 @@ function ReportAnalysis() {
   const [reports, setReports] = useState(initialReports);
 
   return (
-    <div className="report-page">
-      <div className="container">
+    <div className="reportanalysis-page">
+      <div className="reportanalysis-container">
         
         {/* Page Header */}
-        <header className="page-header">
+        <header className="reportanalysis-header-row">
           <div>
-            <h1 className="header-title">Report & Analysis</h1>
-            <p className="header-subtitle">Access, review, and analyze organizational reports.</p>
+            <h1 className="reportanalysis-header-title">Report & Analysis</h1>
+            <p className="reportanalysis-header-subtitle">Access, review, and analyze organizational reports.</p>
           </div>
-          <button className="action-button new-report-button">
+          <button className="action-button reportanalysis-new-report">
             <FileText size={16} />
             <span>New Report</span>
           </button>
         </header>
 
         {/* Filter and Actions Bar */}
-        <div className="filter-bar">
-          <div className="search-container" style={{ position: 'relative' }}>
+        <div className="reportanalysis-filter-bar">
+          <div className="reportanalysis-search-container" style={{ position: 'relative' }}>
             <Search size={20} className="search-icon" style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
             <input
               type="text"
               placeholder="Search by title, link, or category..."
-              className="search-input"
+              className="reportanalysis-search-input"
               style={{ paddingLeft: '2.5rem' }}
             />
           </div>
-          <div className="filter-actions">
-            <button className="action-button filter-button">
+          <div className="reportanalysis-filter-actions">
+            <button className="action-button reportanalysis-filter-button">
               <Filter size={16} />
               <span>Filter</span>
             </button>
-            <button className="action-button download-button">
+            <button className="action-button reportanalysis-download-button">
               <Download size={16} />
               <span>Download All</span>
             </button>
@@ -78,24 +78,24 @@ function ReportAnalysis() {
 
 
         {/* Reports List */}
-        <div className="reports-list">
+        <div className="reportanalysis-reports-list">
           {reports.map(report => (
-            <div key={report.id} className="report-card">
-              <div className="report-card-icon">
+            <div key={report.id} className="reportanalysis-report-card">
+              <div className="reportanalysis-report-card-icon">
                 <FileText size={24} />
               </div>
-              <div className="report-card-details">
-                <h3 className="report-card-title">{report.title}</h3>
-                <a href={report.link} target="_blank" rel="noopener noreferrer" className="report-card-link">
+              <div className="reportanalysis-report-card-details">
+                <h3 className="reportanalysis-report-card-title">{report.title}</h3>
+                <a href={report.link} target="_blank" rel="noopener noreferrer" className="reportanalysis-report-card-link">
                   <LinkIcon size={14} />
                   <span>{report.link}</span>
                 </a>
-                 <div className="report-card-meta">
-                    <span className="report-card-badge">{report.category}</span>
-                    <span className="report-card-date">Date: {report.date}</span>
+                 <div className="reportanalysis-report-card-meta">
+                    <span className="reportanalysis-report-card-badge">{report.category}</span>
+                    <span className="reportanalysis-report-card-date">Date: {report.date}</span>
                 </div>
               </div>
-              <button className="action-button analysis-button">
+              <button className="action-button reportanalysis-analysis-button">
                 <BrainCircuit size={16} />
                 <span>Perform Analysis</span>
               </button>

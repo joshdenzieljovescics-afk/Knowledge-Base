@@ -2,11 +2,11 @@
   {
     "id": "p1-ln-0",
     "type": "text",
-    "text": "Standard Operating Procedure (SOP) for Goods",
+    "text": "Business Continuity & Disaster Recovery Plan (BCDRP) -",
     "box": {
       "l": 72.0,
       "t": 74.54834048154305,
-      "r": 544.426421871084,
+      "r": 538.449311871084,
       "b": 91.548339981543
     },
     "indent": 72.0,
@@ -14,71 +14,11 @@
     "line_breaks_after": 1,
     "words": [
       {
-        "text": "Standard",
+        "text": "Business Continuity & Disaster Recovery Plan (BCDRP) -",
         "box": {
           "l": 72.0,
           "t": 74.54834048154305,
-          "r": 150.36701912108398,
-          "b": 91.548339981543
-        },
-        "font_size": 17.0,
-        "bold": true,
-        "italic": true
-      },
-      {
-        "text": "Operating",
-        "box": {
-          "l": 166.86484875,
-          "t": 74.54834048154305,
-          "r": 251.83625687108398,
-          "b": 91.548339981543
-        },
-        "font_size": 17.0,
-        "bold": true,
-        "italic": true
-      },
-      {
-        "text": "Procedure",
-        "box": {
-          "l": 268.33408499999996,
-          "t": 74.54834048154305,
-          "r": 357.105499371084,
-          "b": 91.548339981543
-        },
-        "font_size": 17.0,
-        "bold": true,
-        "italic": true
-      },
-      {
-        "text": "(SOP)",
-        "box": {
-          "l": 373.60332,
-          "t": 74.54834048154305,
-          "r": 425.527916871084,
-          "b": 91.548339981543
-        },
-        "font_size": 17.0,
-        "bold": true,
-        "italic": true
-      },
-      {
-        "text": "for",
-        "box": {
-          "l": 442.02576,
-          "t": 74.54834048154305,
-          "r": 469.39959437108394,
-          "b": 91.548339981543
-        },
-        "font_size": 17.0,
-        "bold": true,
-        "italic": true
-      },
-      {
-        "text": "Goods",
-        "box": {
-          "l": 485.89746,
-          "t": 74.54834048154305,
-          "r": 544.426421871084,
+          "r": 538.449311871084,
           "b": 91.548339981543
         },
         "font_size": 17.0,
@@ -94,11 +34,11 @@
   {
     "id": "p1-ln-1",
     "type": "text",
-    "text": "Receiving",
+    "text": "Excerpt",
     "box": {
       "l": 72.0,
       "t": 97.02893123154297,
-      "r": 156.996296121084,
+      "r": 139.05825437108396,
       "b": 114.02893073154291
     },
     "indent": 72.0,
@@ -106,11 +46,11 @@
     "line_breaks_after": 1,
     "words": [
       {
-        "text": "Receiving",
+        "text": "Excerpt",
         "box": {
           "l": 72.0,
           "t": 97.02893123154297,
-          "r": 156.996296121084,
+          "r": 139.05825437108396,
           "b": 114.02893073154291
         },
         "font_size": 17.0,
@@ -126,11 +66,11 @@
   {
     "id": "p1-ln-2",
     "type": "text",
-    "text": "This procedure ensures that all incoming goods are handled efficiently, accurately, and safely,",
+    "text": "This document is designed to ensure that SAFEXPRESS LOGISTICS INC. can maintain critical",
     "box": {
       "l": 72.0,
       "t": 122.61010735547848,
-      "r": 542.540347399458,
+      "r": 538.756837399458,
       "b": 133.61010760547845
     },
     "indent": 72.0,
@@ -138,11 +78,11 @@
     "line_breaks_after": 0,
     "words": [
       {
-        "text": "This procedure ensures that all incoming goods are handled efficiently, accurately, and safely,",
+        "text": "This document is designed to ensure that SAFEXPRESS LOGISTICS INC. can maintain critical",
         "box": {
           "l": 72.0,
           "t": 122.61010735547848,
-          "r": 542.540347399458,
+          "r": 538.756837399458,
           "b": 133.61010760547845
         },
         "font_size": 11.0,
@@ -158,11 +98,11 @@
   {
     "id": "p1-ln-3",
     "type": "text",
-    "text": "adhering to the Quality Policy and preventing stock reconciliation errors.",
+    "text": "operations and quickly resume standard functions following a significant disruption or disaster.",
     "box": {
       "l": 72.0,
       "t": 137.15637175547852,
-      "r": 539.992565749458,
+      "r": 531.682507399458,
       "b": 148.1563720054785
     },
     "indent": 72.0,
@@ -170,119 +110,11 @@
     "line_breaks_after": 1,
     "words": [
       {
-        "text": "adhering",
+        "text": "operations and quickly resume standard functions following a significant disruption or disaster.",
         "box": {
           "l": 72.0,
           "t": 137.15637175547852,
-          "r": 117.838733899458,
-          "b": 148.1563720054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      },
-      {
-        "text": "to",
-        "box": {
-          "l": 131.33656274999998,
-          "t": 137.15637175547852,
-          "r": 143.560028149458,
-          "b": 148.1563720054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      },
-      {
-        "text": "the",
-        "box": {
-          "l": 157.05785774999998,
-          "t": 137.15637175547852,
-          "r": 175.394653399458,
-          "b": 148.1563720054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      },
-      {
-        "text": "Quality",
-        "box": {
-          "l": 188.892483,
-          "t": 137.15637175547852,
-          "r": 226.159672399458,
-          "b": 148.1563720054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      },
-      {
-        "text": "Policy",
-        "box": {
-          "l": 239.6574975,
-          "t": 137.15637175547852,
-          "r": 272.03510989945806,
-          "b": 148.1563720054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      },
-      {
-        "text": "and",
-        "box": {
-          "l": 285.5329275,
-          "t": 137.15637175547852,
-          "r": 306.929062399458,
-          "b": 148.1563720054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      },
-      {
-        "text": "preventing",
-        "box": {
-          "l": 319.6769025,
-          "t": 137.15637175547852,
-          "r": 374.06570989945806,
-          "b": 148.1563720054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      },
-      {
-        "text": "stock",
-        "box": {
-          "l": 386.81354999999996,
-          "t": 137.15637175547852,
-          "r": 415.52529739945805,
-          "b": 148.1563720054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      },
-      {
-        "text": "reconciliation",
-        "box": {
-          "l": 428.273115,
-          "t": 137.15637175547852,
-          "r": 495.484342399458,
-          "b": 148.1563720054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      },
-      {
-        "text": "errors.",
-        "box": {
-          "l": 508.23220499999996,
-          "t": 137.15637175547852,
-          "r": 539.992565749458,
+          "r": 531.682507399458,
           "b": 148.1563720054785
         },
         "font_size": 11.0,
@@ -296,26 +128,26 @@
     "page_height": 792
   },
   {
-    "id": "p1-ln-5",
+    "id": "p1-ln-4",
     "type": "text",
-    "text": "1.0 Purpose",
+    "text": "BCDR Plan: SAFEXPRESS LOGISTICS INC.",
     "box": {
       "l": 72.0,
-      "t": 178.54870956095692,
-      "r": 149.28601827891603,
-      "b": 191.54871006095698
+      "t": 164.00244056095698,
+      "r": 342.787024028916,
+      "b": 177.00244106095704
     },
     "indent": 72.0,
     "line_breaks_before": 1,
     "line_breaks_after": 1,
     "words": [
       {
-        "text": "1.0 Purpose",
+        "text": "BCDR Plan: SAFEXPRESS LOGISTICS INC.",
         "box": {
           "l": 72.0,
-          "t": 178.54870956095692,
-          "r": 149.28601827891603,
-          "b": 191.54871006095698
+          "t": 164.00244056095698,
+          "r": 342.787024028916,
+          "b": 177.00244106095704
         },
         "font_size": 13.0,
         "bold": true,
@@ -323,135 +155,7 @@
       }
     ],
     "page": 1,
-    "top": 178.54870956095692,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-6",
-    "type": "text",
-    "text": "To establish a uniform and controlled process for the receipt, inspection, and recording of all",
-    "box": {
-      "l": 72.0,
-      "t": 199.43994535547847,
-      "r": 542.307112399458,
-      "b": 210.43994560547844
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 0,
-    "words": [
-      {
-        "text": "To establish a uniform and controlled process for the receipt, inspection, and recording of all",
-        "box": {
-          "l": 72.0,
-          "t": 199.43994535547847,
-          "r": 542.307112399458,
-          "b": 210.43994560547844
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      }
-    ],
-    "page": 1,
-    "top": 199.43994535547847,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-7",
-    "type": "text",
-    "text": "incoming cargo and materials, ensuring compliance with client instructions and minimizing",
-    "box": {
-      "l": 72.0,
-      "t": 213.9862097554785,
-      "r": 542.6436148994579,
-      "b": 224.98621000547848
-    },
-    "indent": 72.0,
-    "line_breaks_before": 0,
-    "line_breaks_after": 0,
-    "words": [
-      {
-        "text": "incoming cargo and materials, ensuring compliance with client instructions and minimizing",
-        "box": {
-          "l": 72.0,
-          "t": 213.9862097554785,
-          "r": 542.6436148994579,
-          "b": 224.98621000547848
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      }
-    ],
-    "page": 1,
-    "top": 213.9862097554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-8",
-    "type": "text",
-    "text": "discrepancies.",
-    "box": {
-      "l": 72.0,
-      "t": 228.53247475547846,
-      "r": 145.319202649458,
-      "b": 239.53247500547843
-    },
-    "indent": 72.0,
-    "line_breaks_before": 0,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "discrepancies.",
-        "box": {
-          "l": 72.0,
-          "t": 228.53247475547846,
-          "r": 145.319202649458,
-          "b": 239.53247500547843
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      }
-    ],
-    "page": 1,
-    "top": 228.53247475547846,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p1-ln-9",
-    "type": "text",
-    "text": "2.0 Procedure Steps",
-    "box": {
-      "l": 72.0,
-      "t": 255.37853956095694,
-      "r": 200.57239527891602,
-      "b": 268.378540060957
-    },
-    "indent": 72.0,
-    "line_breaks_before": 1,
-    "line_breaks_after": 1,
-    "words": [
-      {
-        "text": "2.0 Procedure Steps",
-        "box": {
-          "l": 72.0,
-          "t": 255.37853956095694,
-          "r": 200.57239527891602,
-          "b": 268.378540060957
-        },
-        "font_size": 13.0,
-        "bold": true,
-        "italic": true
-      }
-    ],
-    "page": 1,
-    "top": 255.37853956095694,
+    "top": 164.00244056095698,
     "page_width": 612,
     "page_height": 792
   },
@@ -460,44 +164,280 @@
     "type": "table",
     "table": [
       [
-        "Step",
-        "Action",
-        "Responsibility",
-        "Quality/Safety Check"
+        "Section",
+        "Title"
       ],
       [
-        "2.1",
-        "Vehicle/Cargo\nCheck-in",
-        "Gate Guard /\nReceiving Clerk",
-        "Verify the transporter's details against the\nexpected Delivery Order (DO) or Advanced\nShipping Notice (ASN). Check the vehicle\nfor signs of tampering or damage before\ndocking."
+        "Document No.",
+        "BCDR-001"
       ],
       [
-        "2.2",
-        "Unloading\nPreparation",
-        "Receiving\nSupervisor",
-        "Clear the staging area. Ensure all required\nPersonal Protective Equipment (PPE) is\nworn by the unloading team (safety vest,\nhard hat, steel-toed boots)."
+        "Date Issued",
+        "November 2025"
       ],
       [
-        "2.3",
-        "Unloading and\nTally",
-        "Warehouse\nOperator",
-        "Unload cargo carefully. Perform a\npreliminary count (tally) against the\naccompanying shipper's Bill of Lading\n(BOL)."
+        "Revision",
+        "1.0"
       ],
       [
-        "2.4",
-        "Initial Quality\nInspection",
-        "Receiving Clerk",
-        "Mandatory Check: Inspect every\npallet/carton for visible damage (crushing,\nwetness, torn seals). If damage is found,"
+        "Applicability",
+        "All Head Office and Branch Operations"
       ]
     ],
     "box": {
       "l": 72.5000000175,
-      "t": 274.50000039024997,
-      "r": 540.5000175,
-      "b": 715.5000025
+      "t": 183.4999990225001,
+      "r": 539.0000175,
+      "b": 432.49999750000006
     },
     "page": 1,
-    "top": 274.50000039024997,
+    "top": 183.4999990225001,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p1-ln-11",
+    "type": "text",
+    "text": "1.0 Introduction and Policy",
+    "box": {
+      "l": 72.0,
+      "t": 461.471069560957,
+      "r": 241.692896528916,
+      "b": 474.471070060957
+    },
+    "indent": 72.0,
+    "line_breaks_before": 1,
+    "line_breaks_after": 1,
+    "words": [
+      {
+        "text": "1.0 Introduction and Policy",
+        "box": {
+          "l": 72.0,
+          "t": 461.471069560957,
+          "r": 241.692896528916,
+          "b": 474.471070060957
+        },
+        "font_size": 13.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 1,
+    "top": 461.471069560957,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p1-ln-12",
+    "type": "text",
+    "text": "The primary objective of this BCDR Plan is to minimize the impact of unforeseen events (natural",
+    "box": {
+      "l": 72.0,
+      "t": 482.3623053554785,
+      "r": 541.204312399458,
+      "b": 493.3623056054785
+    },
+    "indent": 72.0,
+    "line_breaks_before": 1,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "The primary objective of this BCDR Plan is to minimize the impact of unforeseen events (natural",
+        "box": {
+          "l": 72.0,
+          "t": 482.3623053554785,
+          "r": 541.204312399458,
+          "b": 493.3623056054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      }
+    ],
+    "page": 1,
+    "top": 482.3623053554785,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p1-ln-13",
+    "type": "text",
+    "text": "disasters, system failures, power outages, etc.) on our core logistics services (Safety, Quality,",
+    "box": {
+      "l": 72.0,
+      "t": 496.9085697554785,
+      "r": 533.641282399458,
+      "b": 507.9085700054785
+    },
+    "indent": 72.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "disasters, system failures, power outages, etc.) on our core logistics services (Safety, Quality,",
+        "box": {
+          "l": 72.0,
+          "t": 496.9085697554785,
+          "r": 533.641282399458,
+          "b": 507.9085700054785
+        },
+        "font_size": 11.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 1,
+    "top": 496.9085697554785,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p1-ln-14",
+    "type": "text",
+    "text": "Delivery). We commit to the protection of personnel, client cargo, and vital business data,",
+    "box": {
+      "l": 72.0,
+      "t": 511.4548347554785,
+      "r": 511.10987989945806,
+      "b": 522.4548350054786
+    },
+    "indent": 72.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "Delivery). We commit to the protection of personnel, client cargo, and vital business data,",
+        "box": {
+          "l": 72.0,
+          "t": 511.4548347554785,
+          "r": 511.10987989945806,
+          "b": 522.4548350054786
+        },
+        "font_size": 11.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 1,
+    "top": 511.4548347554785,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p1-ln-15",
+    "type": "text",
+    "text": "ensuring an acceptable level of service continuity.",
+    "box": {
+      "l": 72.0,
+      "t": 526.0010990054784,
+      "r": 316.20742489945803,
+      "b": 537.0010992554785
+    },
+    "indent": 72.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 1,
+    "words": [
+      {
+        "text": "ensuring an acceptable level of service continuity.",
+        "box": {
+          "l": 72.0,
+          "t": 526.0010990054784,
+          "r": 316.20742489945803,
+          "b": 537.0010992554785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      }
+    ],
+    "page": 1,
+    "top": 526.0010990054784,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p1-ln-17",
+    "type": "text",
+    "text": "2.0 Critical Business Functions (CBFs) and Recovery Objectives",
+    "box": {
+      "l": 72.0,
+      "t": 574.0382095609571,
+      "r": 472.836971528916,
+      "b": 587.038210060957
+    },
+    "indent": 72.0,
+    "line_breaks_before": 1,
+    "line_breaks_after": 1,
+    "words": [
+      {
+        "text": "2.0 Critical Business Functions (CBFs) and Recovery Objectives",
+        "box": {
+          "l": 72.0,
+          "t": 574.0382095609571,
+          "r": 472.836971528916,
+          "b": 587.038210060957
+        },
+        "font_size": 13.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 1,
+    "top": 574.0382095609571,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p1-ln-18",
+    "type": "text",
+    "text": "The following functions are essential for immediate survival and customer commitment:",
+    "box": {
+      "l": 72.0,
+      "t": 594.9294453554785,
+      "r": 497.820629899458,
+      "b": 605.9294456054786
+    },
+    "indent": 72.0,
+    "line_breaks_before": 1,
+    "line_breaks_after": 1,
+    "words": [
+      {
+        "text": "The following functions are essential for immediate survival and customer commitment:",
+        "box": {
+          "l": 72.0,
+          "t": 594.9294453554785,
+          "r": 497.820629899458,
+          "b": 605.9294456054786
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      }
+    ],
+    "page": 1,
+    "top": 594.9294453554785,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p1-tbl-1",
+    "type": "table",
+    "table": [
+      [
+        "CBF",
+        "Function Description",
+        "Recovery Time Objective\n(RTO)",
+        "Recovery Point\nObjective (RPO)"
+      ]
+    ],
+    "box": {
+      "l": 72.5000000175,
+      "t": 619.4999977775,
+      "r": 539.0000175,
+      "b": 684.49999775
+    },
+    "page": 1,
+    "top": 619.4999977775,
     "page_width": 612,
     "page_height": 792
   },
@@ -506,41 +446,35 @@
     "type": "table",
     "table": [
       [
-        "",
-        "",
-        "",
-        "document it immediately on the BOL and\ntake photo evidence."
+        "A",
+        "Transportation Dispatch &\nTracking",
+        "4 Hours",
+        "1 Hour"
       ],
       [
-        "2.5",
-        "WMS Receiving &\nValidation",
-        "Receiving Clerk",
-        "Using the handheld scanner, scan the\nshipment reference/BOL number. Enter the\nverified quantity into the Warehouse\nManagement System (WMS). The WMS\ngenerates a System Receiving Report."
+        "B",
+        "Warehouse Management\nSystem (WMS) Access",
+        "6 Hours",
+        "12 Hours"
       ],
       [
-        "2.6",
-        "Discrepancy\nResolution",
-        "Receiving\nSupervisor",
-        "If there is a quantity mismatch or damage,\nthe clerk must immediately notify the client\nor relevant internal department. No stock\nis put away until the discrepancy is\nacknowledged."
+        "C",
+        "Financial/Billing System\nAccess",
+        "24 Hours",
+        "24 Hours"
       ],
       [
-        "2.7",
-        "Put-Away &\nLocation\nAssignment",
-        "Warehouse\nOperator",
-        "Move the verified and received stock to its\nassigned bin or storage area (Ambient,\nCold, or Temperature-Controlled). Scan the\nitem and the storage location to confirm\nplacement in the WMS."
-      ],
-      [
-        "2.8",
-        "Document Filing",
-        "Receiving Clerk",
-        "Attach the signed BOL, the System\nReceiving Report, and any Discrepancy\nReports. File documents for record-keeping\nand reconciliation."
+        "D",
+        "Communication (Internal &\nExternal)",
+        "1 Hour (Redundant\nCommunication Lines)",
+        "N/A"
       ]
     ],
     "box": {
       "l": 72.5000000175,
       "t": 72.50000001750004,
       "r": 540.5000175,
-      "b": 553.5
+      "b": 329.500005
     },
     "page": 2,
     "top": 72.50000001750004,
@@ -548,26 +482,26 @@
     "page_height": 792
   },
   {
-    "id": "p2-ln-23",
+    "id": "p2-ln-9",
     "type": "text",
-    "text": "3.0 Control Checklists (Receiving/Dispatch Checklist)",
+    "text": "3.0 Emergency Response Team Structure",
     "box": {
       "l": 72.0,
-      "t": 598.802369560957,
-      "r": 405.66084402891596,
-      "b": 611.8023700609571
+      "t": 353.259889560957,
+      "r": 331.54226652891595,
+      "b": 366.259890060957
     },
     "indent": 72.0,
     "line_breaks_before": 1,
     "line_breaks_after": 1,
     "words": [
       {
-        "text": "3.0 Control Checklists (Receiving/Dispatch Checklist)",
+        "text": "3.0 Emergency Response Team Structure",
         "box": {
           "l": 72.0,
-          "t": 598.802369560957,
-          "r": 405.66084402891596,
-          "b": 611.8023700609571
+          "t": 353.259889560957,
+          "r": 331.54226652891595,
+          "b": 366.259890060957
         },
         "font_size": 13.0,
         "bold": true,
@@ -575,19 +509,352 @@
       }
     ],
     "page": 2,
-    "top": 598.802369560957,
+    "top": 353.259889560957,
     "page_width": 612,
     "page_height": 792
   },
   {
-    "id": "p2-ln-24",
+    "id": "p2-tbl-1",
+    "type": "table",
+    "table": [
+      [
+        "Role",
+        "Responsibility",
+        "Backup Contact"
+      ],
+      [
+        "Incident\nCommander (IC)",
+        "Overall decision-making authority. Declares\ndisaster level.",
+        "Head of Operations"
+      ],
+      [
+        "Logistics Lead",
+        "Manages fleet safety, cargo integrity, and\nalternative delivery routes.",
+        "Senior Dispatch\nManager"
+      ],
+      [
+        "IT & Systems Lead",
+        "Manages system recovery, data restoration,\nand access to backup servers.",
+        "WMS Administrator"
+      ],
+      [
+        "HR & Safety Lead",
+        "Personnel accounting, staff welfare, and site\nsafety clearance.",
+        "HR Manager"
+      ]
+    ],
+    "box": {
+      "l": 72.5000000175,
+      "t": 372.500002734375,
+      "r": 540.5000175,
+      "b": 679.5000075
+    },
+    "page": 2,
+    "top": 372.500002734375,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p3-ln-0",
     "type": "text",
-    "text": "\u25cf [ ] ASN/DO verified against physical shipment.",
+    "text": "4.0 Disaster Scenario: Major Power and Network Outage",
+    "box": {
+      "l": 72.0,
+      "t": 73.94872956095696,
+      "r": 422.280341528916,
+      "b": 86.94873006095702
+    },
+    "indent": 72.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 1,
+    "words": [
+      {
+        "text": "4.0 Disaster Scenario: Major Power and Network Outage",
+        "box": {
+          "l": 72.0,
+          "t": 73.94872956095696,
+          "r": 422.280341528916,
+          "b": 86.94873006095702
+        },
+        "font_size": 13.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 3,
+    "top": 73.94872956095696,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p3-ln-1",
+    "type": "text",
+    "text": "4.1 Response and Activation",
+    "box": {
+      "l": 72.0,
+      "t": 94.83984335547848,
+      "r": 224.711992399458,
+      "b": 105.83984360547845
+    },
+    "indent": 72.0,
+    "line_breaks_before": 1,
+    "line_breaks_after": 1,
+    "words": [
+      {
+        "text": "4.1 Response and Activation",
+        "box": {
+          "l": 72.0,
+          "t": 94.83984335547848,
+          "r": 224.711992399458,
+          "b": 105.83984360547845
+        },
+        "font_size": 11.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 3,
+    "top": 94.83984335547848,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p3-ln-2",
+    "type": "text",
+    "text": "1. Immediate Action: IC to declare Level 2 (Major Disruption).",
     "box": {
       "l": 90.0,
-      "t": 619.6936053554784,
-      "r": 335.88073489945805,
-      "b": 630.6936056054785
+      "t": 111.38623035547846,
+      "r": 403.664092399458,
+      "b": 122.38623060547843
+    },
+    "indent": 90.0,
+    "line_breaks_before": 1,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "1.",
+        "box": {
+          "l": 90.0,
+          "t": 111.38623035547846,
+          "r": 102.22346502445801,
+          "b": 122.38623060547843
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "Immediate Action: IC to declare Level 2 (Major Disruption).",
+        "box": {
+          "l": 108.0,
+          "t": 111.38623035547846,
+          "r": 403.664092399458,
+          "b": 122.38623060547843
+        },
+        "font_size": 11.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 3,
+    "top": 111.38623035547846,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p3-ln-3",
+    "type": "text",
+    "text": "2. Communication: Activate satellite/backup communication devices. Notify all critical",
+    "box": {
+      "l": 90.0,
+      "t": 125.93249435547841,
+      "r": 518.5077523994581,
+      "b": 136.93249460547838
+    },
+    "indent": 90.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "2.",
+        "box": {
+          "l": 90.0,
+          "t": 125.93249435547841,
+          "r": 102.22346502445801,
+          "b": 136.93249460547838
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "Communication: Activate satellite/backup communication devices. Notify all critical",
+        "box": {
+          "l": 108.0,
+          "t": 125.93249435547841,
+          "r": 518.5077523994581,
+          "b": 136.93249460547838
+        },
+        "font_size": 11.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 3,
+    "top": 125.93249435547841,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p3-ln-4",
+    "type": "text",
+    "text": "personnel via SMS/alternative channel.",
+    "box": {
+      "l": 108.0,
+      "t": 140.47875875547845,
+      "r": 301.696544899458,
+      "b": 151.47875900547842
+    },
+    "indent": 108.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "personnel via SMS/alternative channel.",
+        "box": {
+          "l": 108.0,
+          "t": 140.47875875547845,
+          "r": 301.696544899458,
+          "b": 151.47875900547842
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      }
+    ],
+    "page": 3,
+    "top": 140.47875875547845,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p3-ln-5",
+    "type": "text",
+    "text": "3. WMS/IT: IT Lead immediately switches to off-site cloud servers (if applicable) or initiates",
+    "box": {
+      "l": 90.0,
+      "t": 155.02502435547854,
+      "r": 539.0799748994581,
+      "b": 166.0250246054785
+    },
+    "indent": 90.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "3.",
+        "box": {
+          "l": 90.0,
+          "t": 155.02502435547854,
+          "r": 102.22346502445801,
+          "b": 166.0250246054785
+        },
+        "font_size": 11.0,
+        "bold": false,
+        "italic": true
+      },
+      {
+        "text": "WMS/IT: IT Lead immediately switches to off-site cloud servers (if applicable) or initiates",
+        "box": {
+          "l": 108.0,
+          "t": 155.02502435547854,
+          "r": 539.0799748994581,
+          "b": 166.0250246054785
+        },
+        "font_size": 11.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 3,
+    "top": 155.02502435547854,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p3-ln-6",
+    "type": "text",
+    "text": "Backup & Recovery Procedure (Refer to IT Manual).",
+    "box": {
+      "l": 108.0,
+      "t": 169.57128875547858,
+      "r": 376.18900489945804,
+      "b": 180.57128900547855
+    },
+    "indent": 108.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 1,
+    "words": [
+      {
+        "text": "Backup & Recovery Procedure (Refer to IT Manual).",
+        "box": {
+          "l": 108.0,
+          "t": 169.57128875547858,
+          "r": 376.18900489945804,
+          "b": 180.57128900547855
+        },
+        "font_size": 11.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 3,
+    "top": 169.57128875547858,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p3-ln-8",
+    "type": "text",
+    "text": "4.2 Logistics Continuity Protocol",
+    "box": {
+      "l": 72.0,
+      "t": 212.6638153554785,
+      "r": 246.669532399458,
+      "b": 223.66381560547848
+    },
+    "indent": 72.0,
+    "line_breaks_before": 1,
+    "line_breaks_after": 1,
+    "words": [
+      {
+        "text": "4.2 Logistics Continuity Protocol",
+        "box": {
+          "l": 72.0,
+          "t": 212.6638153554785,
+          "r": 246.669532399458,
+          "b": 223.66381560547848
+        },
+        "font_size": 11.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 3,
+    "top": 212.6638153554785,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p3-ln-9",
+    "type": "text",
+    "text": "\u25cf Dispatch: Switch to manual dispatch procedures using pre-printed Delivery Order (DO)",
+    "box": {
+      "l": 90.0,
+      "t": 229.20996535547852,
+      "r": 541.163069899458,
+      "b": 240.2099656054785
     },
     "indent": 90.0,
     "line_breaks_before": 1,
@@ -597,41 +864,73 @@
         "text": "\u25cf",
         "box": {
           "l": 90.0,
-          "t": 619.6936053554784,
+          "t": 229.20996535547852,
           "r": 99.69547662445801,
-          "b": 630.6936056054785
+          "b": 240.2099656054785
         },
         "font_size": 11.0,
         "bold": false,
         "italic": true
       },
       {
-        "text": "[ ] ASN/DO verified against physical shipment.",
+        "text": "Dispatch: Switch to manual dispatch procedures using pre-printed Delivery Order (DO)",
         "box": {
           "l": 108.0,
-          "t": 619.6936053554784,
-          "r": 335.88073489945805,
-          "b": 630.6936056054785
+          "t": 229.20996535547852,
+          "r": 541.163069899458,
+          "b": 240.2099656054785
         },
         "font_size": 11.0,
-        "bold": false,
+        "bold": true,
         "italic": true
       }
     ],
-    "page": 2,
-    "top": 619.6936053554784,
+    "page": 3,
+    "top": 229.20996535547852,
     "page_width": 612,
     "page_height": 792
   },
   {
-    "id": "p2-ln-25",
+    "id": "p3-ln-10",
     "type": "text",
-    "text": "\u25cf [ ] Total Piece Count verified (Tally vs. BOL).",
+    "text": "and Bill of Lading (BOL) forms. Log all movements via secure chat groups.",
+    "box": {
+      "l": 108.0,
+      "t": 243.7563497554786,
+      "r": 481.237364899458,
+      "b": 254.75635000547857
+    },
+    "indent": 108.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "and Bill of Lading (BOL) forms. Log all movements via secure chat groups.",
+        "box": {
+          "l": 108.0,
+          "t": 243.7563497554786,
+          "r": 481.237364899458,
+          "b": 254.75635000547857
+        },
+        "font_size": 11.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 3,
+    "top": 243.7563497554786,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p3-ln-11",
+    "type": "text",
+    "text": "\u25cf Warehouse: Halt all non-critical picking/packing. Receiving must be done manually,",
     "box": {
       "l": 90.0,
-      "t": 634.2398653554785,
-      "r": 325.90153489945806,
-      "b": 645.2398656054786
+      "t": 258.30248535547844,
+      "r": 518.152799899458,
+      "b": 269.3024856054784
     },
     "indent": 90.0,
     "line_breaks_before": 0,
@@ -641,41 +940,105 @@
         "text": "\u25cf",
         "box": {
           "l": 90.0,
-          "t": 634.2398653554785,
+          "t": 258.30248535547844,
           "r": 99.69547662445801,
-          "b": 645.2398656054786
+          "b": 269.3024856054784
         },
         "font_size": 11.0,
         "bold": false,
         "italic": true
       },
       {
-        "text": "[ ] Total Piece Count verified (Tally vs. BOL).",
+        "text": "Warehouse: Halt all non-critical picking/packing. Receiving must be done manually,",
         "box": {
           "l": 108.0,
-          "t": 634.2398653554785,
-          "r": 325.90153489945806,
-          "b": 645.2398656054786
+          "t": 258.30248535547844,
+          "r": 518.152799899458,
+          "b": 269.3024856054784
+        },
+        "font_size": 11.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 3,
+    "top": 258.30248535547844,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p3-ln-12",
+    "type": "text",
+    "text": "creating handwritten Receiving Reports. No movement of High-Value Cargo without",
+    "box": {
+      "l": 108.0,
+      "t": 272.8488697554785,
+      "r": 527.878769899458,
+      "b": 283.8488700054785
+    },
+    "indent": 108.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "creating handwritten Receiving Reports. No movement of High-Value Cargo without",
+        "box": {
+          "l": 108.0,
+          "t": 272.8488697554785,
+          "r": 527.878769899458,
+          "b": 283.8488700054785
+        },
+        "font_size": 11.0,
+        "bold": true,
+        "italic": true
+      }
+    ],
+    "page": 3,
+    "top": 272.8488697554785,
+    "page_width": 612,
+    "page_height": 792
+  },
+  {
+    "id": "p3-ln-13",
+    "type": "text",
+    "text": "dual sign-off.",
+    "box": {
+      "l": 108.0,
+      "t": 287.3950147554785,
+      "r": 173.992866649458,
+      "b": 298.3950150054785
+    },
+    "indent": 108.0,
+    "line_breaks_before": 0,
+    "line_breaks_after": 0,
+    "words": [
+      {
+        "text": "dual sign-off.",
+        "box": {
+          "l": 108.0,
+          "t": 287.3950147554785,
+          "r": 173.992866649458,
+          "b": 298.3950150054785
         },
         "font_size": 11.0,
         "bold": false,
         "italic": true
       }
     ],
-    "page": 2,
-    "top": 634.2398653554785,
+    "page": 3,
+    "top": 287.3950147554785,
     "page_width": 612,
     "page_height": 792
   },
   {
-    "id": "p2-ln-26",
+    "id": "p3-ln-14",
     "type": "text",
-    "text": "\u25cf [ ] Cargo inspected for damage (Pass/Fail).",
+    "text": "\u25cf Data: Once systems are restored, all manual records must be prioritized for data entry to",
     "box": {
       "l": 90.0,
-      "t": 648.7861353554786,
-      "r": 320.610839899458,
-      "b": 659.7861356054785
+      "t": 301.94140535547854,
+      "r": 542.370697399458,
+      "b": 312.94140560547856
     },
     "indent": 90.0,
     "line_breaks_before": 0,
@@ -685,161 +1048,61 @@
         "text": "\u25cf",
         "box": {
           "l": 90.0,
-          "t": 648.7861353554786,
+          "t": 301.94140535547854,
           "r": 99.69547662445801,
-          "b": 659.7861356054785
+          "b": 312.94140560547856
         },
         "font_size": 11.0,
         "bold": false,
         "italic": true
       },
       {
-        "text": "[ ] Cargo inspected for damage (Pass/Fail).",
+        "text": "Data: Once systems are restored, all manual records must be prioritized for data entry to",
         "box": {
           "l": 108.0,
-          "t": 648.7861353554786,
-          "r": 320.610839899458,
-          "b": 659.7861356054785
+          "t": 301.94140535547854,
+          "r": 542.370697399458,
+          "b": 312.94140560547856
         },
         "font_size": 11.0,
-        "bold": false,
+        "bold": true,
         "italic": true
       }
     ],
-    "page": 2,
-    "top": 648.7861353554786,
+    "page": 3,
+    "top": 301.94140535547854,
     "page_width": 612,
     "page_height": 792
   },
   {
-    "id": "p2-ln-27",
+    "id": "p3-ln-15",
     "type": "text",
-    "text": "\u25cf [ ] WMS entry completed and System Receiving Report generated.",
+    "text": "meet RPO of 12 hours for WMS data.",
     "box": {
-      "l": 90.0,
-      "t": 663.3323953554786,
-      "r": 435.47596489945806,
-      "b": 674.3323956054786
+      "l": 108.0,
+      "t": 316.48754975547854,
+      "r": 293.72075239945804,
+      "b": 327.48755000547857
     },
-    "indent": 90.0,
+    "indent": 108.0,
     "line_breaks_before": 0,
     "line_breaks_after": 0,
     "words": [
       {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 663.3323953554786,
-          "r": 99.69547662445801,
-          "b": 674.3323956054786
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      },
-      {
-        "text": "[ ] WMS entry completed and System Receiving Report generated.",
+        "text": "meet RPO of 12 hours for WMS data.",
         "box": {
           "l": 108.0,
-          "t": 663.3323953554786,
-          "r": 435.47596489945806,
-          "b": 674.3323956054786
+          "t": 316.48754975547854,
+          "r": 293.72075239945804,
+          "b": 327.48755000547857
         },
         "font_size": 11.0,
-        "bold": false,
+        "bold": true,
         "italic": true
       }
     ],
-    "page": 2,
-    "top": 663.3323953554786,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-28",
-    "type": "text",
-    "text": "\u25cf [ ] Discrepancy logged and resolution confirmed (if applicable).",
-    "box": {
-      "l": 90.0,
-      "t": 677.8786653554785,
-      "r": 414.720689899458,
-      "b": 688.8786656054785
-    },
-    "indent": 90.0,
-    "line_breaks_before": 0,
-    "line_breaks_after": 0,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 677.8786653554785,
-          "r": 99.69547662445801,
-          "b": 688.8786656054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      },
-      {
-        "text": "[ ] Discrepancy logged and resolution confirmed (if applicable).",
-        "box": {
-          "l": 108.0,
-          "t": 677.8786653554785,
-          "r": 414.720689899458,
-          "b": 688.8786656054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      }
-    ],
-    "page": 2,
-    "top": 677.8786653554785,
-    "page_width": 612,
-    "page_height": 792
-  },
-  {
-    "id": "p2-ln-29",
-    "type": "text",
-    "text": "\u25cf [ ] Final put-away scan confirmed in WMS.",
-    "box": {
-      "l": 90.0,
-      "t": 692.4249253554784,
-      "r": 316.923509899458,
-      "b": 703.4249256054785
-    },
-    "indent": 90.0,
-    "line_breaks_before": 0,
-    "line_breaks_after": 0,
-    "words": [
-      {
-        "text": "\u25cf",
-        "box": {
-          "l": 90.0,
-          "t": 692.4249253554784,
-          "r": 99.69547662445801,
-          "b": 703.4249256054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      },
-      {
-        "text": "[ ] Final put-away scan confirmed in WMS.",
-        "box": {
-          "l": 108.0,
-          "t": 692.4249253554784,
-          "r": 316.923509899458,
-          "b": 703.4249256054785
-        },
-        "font_size": 11.0,
-        "bold": false,
-        "italic": true
-      }
-    ],
-    "page": 2,
-    "top": 692.4249253554784,
+    "page": 3,
+    "top": 316.48754975547854,
     "page_width": 612,
     "page_height": 792
   }

@@ -1,20 +1,21 @@
 import React from 'react';
+import '../css/WelcomeCard.css';
 
-function WelcomeCard({ userName, logo }) {
+function WelcomeCard({ userName, handImage }) {
     return (
         <div className="card welcome-card">
-            <div className="welcome-content">
-                <div className="welcome-text-group">
-                    <div>
-                        <h2 className="welcome-title">Welcome</h2>
-                        <p className="welcome-name">{userName}</p>
-                    </div>
-                </div>
+            <div className="welcome-left">
+                <h2 className="welcome-title">
+                    👋 Welcome back, <span className="highlight">{userName}</span>
+                </h2>
                 <p className="welcome-description">
-                    Here's your personal space to manage projects, track progress, and collaborate effectively. Let's get started!
+                    This is your personal dashboard — manage projects, keep track of tasks, 
+                    and stay on top of your goals. Let’s make progress today!
                 </p>
+                <button className="get-started-btn">Get Started</button>
             </div>
-            <img src={logo} alt="SFX Logo" className="welcome-logo" />
+
+            
         </div>
     );
 }

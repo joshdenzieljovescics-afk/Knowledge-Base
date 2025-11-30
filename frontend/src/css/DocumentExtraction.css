@@ -1035,6 +1035,32 @@ button:disabled {
   color: #1f2937;
 }
 
+.history-table .action-btns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.history-table .history-icon-btn {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #2563eb;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.history-table .history-icon-btn:hover {
+  background: #2563eb;
+  color: white;
+}
+
 .history-table .delete-btn {
   background: #fee2e2;
   border: 1px solid #fca5a5;
@@ -1320,4 +1346,252 @@ button:disabled {
   align-items: flex-start;
   justify-content: center;
   height: 40px;
+}
+
+/* ============================================
+   DUPLICATE & VERSION MODALS
+   ============================================ */
+.duplicate-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.duplicate-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #f59e0b;
+  color: white;
+}
+
+.duplicate-modal-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.duplicate-modal-header .close-btn {
+  color: white;
+  opacity: 0.8;
+}
+
+.duplicate-modal-header .close-btn:hover {
+  opacity: 1;
+  color: white;
+}
+
+.duplicate-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.duplicate-message {
+  margin-bottom: 20px;
+}
+
+.duplicate-main-message {
+  font-size: 1rem;
+  color: #b45309;
+  margin: 0 0 16px 0;
+  font-weight: 500;
+}
+
+.duplicate-details {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.duplicate-details h3 {
+  margin: 0 0 12px 0;
+  font-size: 0.9rem;
+  color: #374151;
+  font-weight: 600;
+}
+
+.duplicate-info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.duplicate-info-table td {
+  padding: 8px 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.duplicate-info-table td:first-child {
+  width: 140px;
+  color: #6b7280;
+}
+
+.duplicate-cost-saved {
+  margin-top: 16px;
+  padding: 12px;
+  background: #ecfdf5;
+  border-radius: 6px;
+  border: 1px solid #a7f3d0;
+}
+
+.duplicate-cost-saved p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #047857;
+}
+
+.duplicate-suggestion {
+  margin-top: 12px;
+  padding: 12px;
+  background: #eff6ff;
+  border-radius: 6px;
+  border: 1px solid #bfdbfe;
+}
+
+.duplicate-suggestion p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #1e40af;
+}
+
+.duplicate-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.duplicate-btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.duplicate-btn.primary {
+  background: #26326e;
+  color: white;
+}
+
+.duplicate-btn.primary:hover {
+  background: #1e2a5e;
+}
+
+.duplicate-btn.secondary {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.duplicate-btn.secondary:hover {
+  background: #d1d5db;
+}
+
+.duplicate-btn.warning {
+  background: #f59e0b;
+  color: white;
+}
+
+.duplicate-btn.warning:hover {
+  background: #d97706;
+}
+
+.duplicate-btn.danger {
+  background: #ef4444;
+  color: white;
+}
+
+.duplicate-btn.danger:hover {
+  background: #dc2626;
+}
+
+.duplicate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Version History Button in Duplicate Modal */
+.version-history-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  color: #2563eb;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.version-history-btn:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+.version-history-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Version History Modal Specific */
+.version-history-modal {
+  max-width: 600px;
+}
+
+.version-item {
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.version-item.current {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.version-item.archived {
+  background: #f9fafb;
+}
+
+.version-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.version-badge.current {
+  background: #22c55e;
+  color: white;
+}
+
+.version-badge.archived {
+  background: #9ca3af;
+  color: white;
+}
+
+.previous-versions {
+  margin-top: 20px;
 }

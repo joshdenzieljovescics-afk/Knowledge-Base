@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Upload, Settings, Search, Filter, ArrowUpDown, ChevronRight } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Search, Upload, Settings, ArrowUpDown } from 'lucide-react';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import '../css/AuditLogs.css';
 
 const allLogs = [
@@ -15,31 +17,6 @@ const allLogs = [
   { name: 'Liza Gomez', email: 'lizagomez@example.com', action: 'Login', details: 'User logged into system', date: '2025-08-03', timestamp: '08:15 AM' },
   { name: 'Mark Lee', email: 'marklee@example.com', action: 'Login', details: 'User logged into system', date: '2025-08-03', timestamp: '10:00 AM' },
 ];
-
-// Get unique users with their action count and last activity
-const getUniqueUsers = () => {
-  const userMap = new Map();
-  
-  allLogs.forEach(log => {
-    if (!userMap.has(log.email)) {
-      userMap.set(log.email, {
-        name: log.name,
-        email: log.email,
-        actionCount: 0,
-        lastActivity: log.date
-      });
-    }
-    const user = userMap.get(log.email);
-    user.actionCount++;
-    // Update last activity if this log is more recent
-    if (new Date(log.date) > new Date(user.lastActivity)) {
-      user.lastActivity = log.date;
-    }
-  });
-  
-  return Array.from(userMap.values());
-};
-
 
 const ActionButton = ({ icon: Icon, children, className = '', ...props }) => (
   <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -67,46 +44,42 @@ const ActionButton = ({ icon: Icon, children, className = '', ...props }) => (
   </div>
 );
 
-
-function AuditLogs() {
+function UserActivityDetails() {
+  const { userEmail } = useParams();
   const navigate = useNavigate();
-  const [users] = useState(getUniqueUsers());
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
-  const [sortField, setSortField] = useState('name');
-  const [sortOrder, setSortOrder] = useState('asc');
-  const usersPerPage = 10;
+  const [sortField, setSortField] = useState('date');
+  const [sortOrder, setSortOrder] = useState('desc');
+  const logsPerPage = 10;
+
+  // Filter logs for this specific user
+  const userLogs = allLogs.filter(log => log.email === userEmail);
+  const userName = userLogs.length > 0 ? userLogs[0].name : 'User';
 
   // Apply search filter
-  const searchFilteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const searchFilteredLogs = userLogs.filter(log =>
+    log.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    log.details.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    log.date.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Sort the filtered users
-  const filteredUsers = [...searchFilteredUsers].sort((a, b) => {
+  // Sort the filtered logs
+  const filteredLogs = [...searchFilteredLogs].sort((a, b) => {
     let aVal = a[sortField];
     let bVal = b[sortField];
     
-    if (sortField === 'actionCount') {
-      // For numbers, compare directly
-      if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
-      if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
-    } else if (sortField === 'lastActivity') {
+    if (sortField === 'date') {
       aVal = new Date(aVal);
       bVal = new Date(bVal);
-      if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
-      if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
-    } else {
-      // For strings
+    } else if (sortField === 'action' || sortField === 'details') {
       aVal = aVal.toLowerCase();
       bVal = bVal.toLowerCase();
-      if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
-      if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
     }
+    
+    if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
+    if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+    return 0;
   });
 
   const handleSort = (field) => {
@@ -119,21 +92,105 @@ function AuditLogs() {
     setPage(1);
   };
 
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
-  const startIdx = (page - 1) * usersPerPage;
-  const endIdx = startIdx + usersPerPage;
-  const currentUsers = filteredUsers.slice(startIdx, endIdx);
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Activity Log: ${userName}`, 14, 20);
+    
+    // Add date
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    const currentDate = new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    doc.text(`Generated on: ${currentDate}`, 14, 28);
+    
+    // Add user info
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`User: ${userName}`, 14, 36);
+    doc.text(`Email: ${userEmail}`, 14, 42);
+    doc.text(`Total Records: ${filteredLogs.length}`, 14, 48);
+    
+    // Prepare table data
+    const tableColumn = ['Action', 'Details', 'Date', 'Time'];
+    const tableRows = filteredLogs.map(log => [
+      log.action,
+      log.details,
+      log.date,
+      log.timestamp
+    ]);
+    
+    // Add table
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 56,
+      theme: 'grid',
+      headStyles: {
+        fillColor: [38, 50, 110], // #26326e
+        textColor: [255, 255, 255],
+        fontStyle: 'bold',
+        fontSize: 10
+      },
+      bodyStyles: {
+        fontSize: 9
+      },
+      alternateRowStyles: {
+        fillColor: [245, 247, 250]
+      },
+      columnStyles: {
+        0: { cellWidth: 40 }, // Action
+        1: { cellWidth: 70 }, // Details
+        2: { cellWidth: 35 }, // Date
+        3: { cellWidth: 35 }  // Time
+      }
+    });
+    
+    // Save the PDF
+    const fileName = `activity-log-${userName.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fileName);
+  };
+
+  const totalPages = Math.ceil(filteredLogs.length / logsPerPage);
+  const startIdx = (page - 1) * logsPerPage;
+  const endIdx = startIdx + logsPerPage;
+  const currentLogs = filteredLogs.slice(startIdx, endIdx);
 
   return (
     <div className="auditlogs-page">
       <div className="auditlogs-container">
+        <div style={{ marginBottom: '16px' }}>
+          <button 
+            onClick={() => navigate('/audit-logs')}
+            style={{ 
+              background: '#26326e', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '8px', 
+              padding: '10px', 
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            title="Back to Users"
+          >
+            <ArrowLeft size={20} />
+          </button>
+        </div>
         <div className="auditlogs-header-row">
           <div>
-            <h1 className="auditlogs-header-title">Audit Logs - Users</h1>
-            <div className="auditlogs-header-subtitle">Select a user to view their activity history.</div>
+            <h1 className="auditlogs-header-title">Activity Log: {userName}</h1>
+            <div className="auditlogs-header-subtitle">All actions performed by this user.</div>
           </div>
-          <div className="auditlogs-header-actions" >
-            <ActionButton icon={Upload} className="action-button-export">Export</ActionButton>
+          <div className="auditlogs-header-actions">
+            <ActionButton icon={Upload} className="action-button-export" onClick={handleExportPDF}>Export</ActionButton>
             <ActionButton icon={Settings} className="action-button-settings">Settings</ActionButton>
           </div>
         </div>
@@ -143,7 +200,7 @@ function AuditLogs() {
             <Search size={22} style={{ color: '#26326e', marginRight: 10 }} />
             <input
               type="text"
-              placeholder="Search by name or email..."
+              placeholder="Search by action or details..."
               style={{ flex: 1, padding: '10px 16px', borderRadius: 8, border: '1px solid #26326e', fontSize: '1.1rem' }}
               value={searchTerm}
               onChange={(e) => {
@@ -155,96 +212,57 @@ function AuditLogs() {
           <div style={{ marginBottom: 24 }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '1.05rem' }}>
               <colgroup>
+                <col style={{ width: '20%' }} />
                 <col style={{ width: '40%' }} />
                 <col style={{ width: '20%' }} />
-                <col style={{ width: '25%' }} />
-                <col style={{ width: '15%' }} />
+                <col style={{ width: '20%' }} />
               </colgroup>
               <thead>
                 <tr style={{ background: '#f8fafc', color: '#26326e', fontWeight: 700 }}>
                   <th 
-                    onClick={() => handleSort('name')} 
+                    onClick={() => handleSort('action')} 
                     style={{ padding: '10px 16px', fontWeight: 700, textAlign: 'left', fontSize: '1.05rem', cursor: 'pointer', userSelect: 'none' }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      User
-                      <ArrowUpDown size={16} style={{ opacity: sortField === 'name' ? 1 : 0.3 }} />
+                      Action
+                      <ArrowUpDown size={16} style={{ opacity: sortField === 'action' ? 1 : 0.3 }} />
                     </div>
                   </th>
                   <th 
-                    onClick={() => handleSort('actionCount')} 
+                    onClick={() => handleSort('details')} 
                     style={{ padding: '10px 8px', fontWeight: 700, textAlign: 'left', fontSize: '1.05rem', cursor: 'pointer', userSelect: 'none' }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      Total Actions
-                      <ArrowUpDown size={16} style={{ opacity: sortField === 'actionCount' ? 1 : 0.3 }} />
+                      Details
+                      <ArrowUpDown size={16} style={{ opacity: sortField === 'details' ? 1 : 0.3 }} />
                     </div>
                   </th>
                   <th 
-                    onClick={() => handleSort('lastActivity')} 
+                    onClick={() => handleSort('date')} 
                     style={{ padding: '10px 8px', fontWeight: 700, textAlign: 'left', fontSize: '1.05rem', cursor: 'pointer', userSelect: 'none' }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      Last Activity
-                      <ArrowUpDown size={16} style={{ opacity: sortField === 'lastActivity' ? 1 : 0.3 }} />
+                      Date
+                      <ArrowUpDown size={16} style={{ opacity: sortField === 'date' ? 1 : 0.3 }} />
                     </div>
                   </th>
-                  <th style={{ padding: '10px 8px', fontWeight: 700, textAlign: 'center', fontSize: '1.05rem' }}>Actions</th>
+                  <th style={{ padding: '10px 8px', fontWeight: 700, textAlign: 'left', fontSize: '1.05rem' }}>Time</th>
                 </tr>
               </thead>
               <tbody>
-                {currentUsers.length === 0 ? (
+                {currentLogs.length === 0 ? (
                   <tr>
                     <td colSpan="4" style={{ textAlign: 'center', color: '#64748b', fontStyle: 'italic', padding: '2rem' }}>
-                      No users found.
+                      No activities found.
                     </td>
                   </tr>
                 ) : (
-                  currentUsers.map((user, idx) => (
-                    <tr 
-                      key={startIdx + idx} 
-                      style={{ 
-                        borderBottom: '1px solid #e2e8f0', 
-                        background: idx % 2 === 0 ? '#fff' : '#f8fafc',
-                        cursor: 'pointer',
-                        transition: 'background 0.2s'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = '#f0f4ff'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = idx % 2 === 0 ? '#fff' : '#f8fafc'}
-                      onClick={() => navigate(`/audit-logs/user/${user.email}`)}
-                    >
-                      <td style={{ padding: '16px 16px', fontWeight: 600, color: '#26326e', textAlign: 'left' }}>
-                        <div>{user.name}</div>
-                        <div style={{ fontWeight: 400, color: '#6b7280', fontSize: '0.98rem' }}>{user.email}</div>
-                      </td>
-                      <td style={{ padding: '16px 16px', textAlign: 'left', color: '#475569', fontWeight: 600 }}>
-                        {user.actionCount} {user.actionCount === 1 ? 'action' : 'actions'}
-                      </td>
-                      <td style={{ padding: '16px 16px', textAlign: 'left', color: '#475569' }}>{user.lastActivity}</td>
-                      <td style={{ padding: '16px 16px', textAlign: 'center' }}>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/audit-logs/user/${user.email}`);
-                          }}
-                          style={{
-                            background: '#26326e',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '6px',
-                            padding: '8px 12px',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            fontSize: '0.9rem',
-                            fontWeight: 600
-                          }}
-                        >
-                          View
-                          <ChevronRight size={16} />
-                        </button>
-                      </td>
+                  currentLogs.map((log, idx) => (
+                    <tr key={startIdx + idx} style={{ borderBottom: '1px solid #e2e8f0', background: idx % 2 === 0 ? '#fff' : '#f8fafc' }}>
+                      <td style={{ padding: '16px 16px', fontWeight: 600, color: '#26326e', textAlign: 'left' }}>{log.action}</td>
+                      <td style={{ padding: '16px 16px', textAlign: 'left', color: '#475569' }}>{log.details}</td>
+                      <td style={{ padding: '16px 16px', textAlign: 'left' }}>{log.date}</td>
+                      <td style={{ padding: '16px 16px', color: '#6b7280', fontFamily: 'monospace', textAlign: 'left', letterSpacing: '1px' }}>{log.timestamp}</td>
                     </tr>
                   ))
                 )}
@@ -253,7 +271,7 @@ function AuditLogs() {
           </div>
           <div className='auditlogs-pagination-row' style={{ marginTop: '20px', paddingTop: '12px', borderTop: '1px solid #e5e7eb' }}>
             <div className='auditlogs-pagination-info'>
-              Showing <span style={{ fontWeight: 700 }}>{startIdx + 1}</span> to <span style={{ fontWeight: 700 }}>{Math.min(endIdx, filteredUsers.length)}</span> of <span style={{ fontWeight: 700 }}>{filteredUsers.length}</span> results
+              Showing <span style={{ fontWeight: 700 }}>{startIdx + 1}</span> to <span style={{ fontWeight: 700 }}>{Math.min(endIdx, filteredLogs.length)}</span> of <span style={{ fontWeight: 700 }}>{filteredLogs.length}</span> results
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <button
@@ -287,4 +305,4 @@ function AuditLogs() {
   );
 }
 
-export default AuditLogs;
+export default UserActivityDetails;

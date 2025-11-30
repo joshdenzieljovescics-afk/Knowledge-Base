@@ -1,5 +1,5 @@
 """PDF-related API endpoints."""
-from fastapi import APIRouter, File, UploadFile, HTTPException, status, Header
+from fastapi import APIRouter, File, UploadFile, HTTPException, status, Header, Form
 from typing import Optional
 from services.pdf_service import parse_and_chunk_pdf_file
 from database.document_validator import calculate_file_hash
@@ -18,7 +18,7 @@ pdf_router = APIRouter(prefix='/pdf', tags=['pdf'])
 @pdf_router.post('/parse-pdf')
 async def parse_pdf(
     file: UploadFile = File(...),
-    force_reparse: bool = False,
+    force_reparse: str = Form("false"),
     authorization: Optional[str] = Header(None)
 ):
     """
@@ -28,13 +28,15 @@ async def parse_pdf(
     
     Args:
         file: PDF file upload
-        force_reparse: If true, skip duplicate check and reparse anyway
+        force_reparse: If "true", skip duplicate check and reparse anyway
         authorization: JWT token for user identification
     
     Expects multipart/form-data with 'file' field containing PDF.
     Returns JSON with chunks and metadata.
     """
-    print("[DEBUG] Starting parse-pdf endpoint")
+    # Convert string to boolean
+    force_reparse_bool = force_reparse.lower() == 'true'
+    print(f"[DEBUG] Starting parse-pdf endpoint (force_reparse={force_reparse_bool})")
     
     # Validate filename exists
     if not file.filename:
@@ -75,50 +77,41 @@ async def parse_pdf(
         content_hash = calculate_file_hash(file_bytes)
         file_size_bytes = len(file_bytes)
         
-        # ==================== DUPLICATE CHECK BEFORE PARSING ====================
-        # This saves expensive OpenAI API calls and processing time
-        if not force_reparse:
+        # ═══════════════════════════════════════════════════════════════════════
+        # DUPLICATE DETECTION - Block duplicates before expensive parsing
+        # Duplicates are NOT allowed. User must explicitly choose to override.
+        # ═══════════════════════════════════════════════════════════════════════
+        if not force_reparse_bool:
             doc_db = DocumentDatabase()
             
-            # Check by filename first (fastest)
-            existing_by_name = doc_db.check_duplicate_by_filename(sanitized_filename)
-            if existing_by_name:
-                print(f"[DUPLICATE] Found existing file by name: {sanitized_filename}")
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail={
-                        "error": "duplicate_filename",
-                        "message": f"Document '{sanitized_filename}' has already been uploaded and parsed.",
-                        "existing_doc": {
-                            "doc_id": existing_by_name["doc_id"],
-                            "file_name": existing_by_name["file_name"],
-                            "upload_date": existing_by_name["upload_date"],
-                            "chunks": existing_by_name["chunks"],
-                            "file_size_bytes": existing_by_name["file_size_bytes"]
-                        },
-                    }
-                )
+            # Check for any duplicate (filename OR content)
+            duplicate_check = doc_db.check_duplicates(sanitized_filename, content_hash)
             
-            # Check by content hash (detects renamed duplicates)
-            existing_by_hash = doc_db.check_duplicate_by_hash(content_hash)
-            if existing_by_hash:
-                print(f"[DUPLICATE] Found existing file by content hash (renamed): {existing_by_hash['file_name']}")
+            if duplicate_check['is_duplicate']:
+                existing_doc = duplicate_check['existing_doc']
+                print(f"[DUPLICATE] {duplicate_check['message']}")
+                
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
                     detail={
-                        "error": "duplicate_content",
-                        "message": f"This file content has already been uploaded as '{existing_by_hash['file_name']}'.",
+                        "error": "duplicate_detected",
+                        "duplicate_type": duplicate_check['duplicate_type'],
+                        "message": duplicate_check['message'],
                         "existing_doc": {
-                            "doc_id": existing_by_hash["doc_id"],
-                            "file_name": existing_by_hash["file_name"],
-                            "upload_date": existing_by_hash["upload_date"],
-                            "chunks": existing_by_hash["chunks"],
-                            "file_size_bytes": existing_by_hash["file_size_bytes"]
+                            "doc_id": existing_doc["doc_id"],
+                            "file_name": existing_doc["file_name"],
+                            "upload_date": existing_doc["upload_date"],
+                            "chunks": existing_doc["chunks"],
+                            "file_size_bytes": existing_doc["file_size_bytes"],
+                            "uploaded_by": existing_doc.get("uploaded_by")
                         },
+                        "action_required": "Use the 'Override' button to replace the existing file."
                     }
                 )
         
-        # ==================== PARSE PDF ====================
+        # ═══════════════════════════════════════════════════════════════════════
+        # PARSE PDF - Only reached if no duplicate or force_reparse=true
+        # ═══════════════════════════════════════════════════════════════════════
         print(f"[INFO] No duplicate found or force_reparse=true. Proceeding with parsing...")
         result = parse_and_chunk_pdf_file(file_bytes, sanitized_filename)
         
