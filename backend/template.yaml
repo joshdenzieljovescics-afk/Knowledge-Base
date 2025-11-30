@@ -1,0 +1,240 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Knowledge Base PDF Processing and Vector Search API
+
+Globals:
+  Function:
+    Timeout: 900  # 15 minutes (max for Lambda)
+    MemorySize: 3008  # 3GB for PDF processing
+    Environment:
+      Variables:
+        ENVIRONMENT: production
+        RATE_LIMIT_ENABLED: 'true'
+        USE_HTTPS: 'false'  # API Gateway handles HTTPS
+        DEBUG: 'false'
+
+Parameters:
+  OpenAIApiKey:
+    Type: String
+    Description: OpenAI API Key
+    NoEcho: true
+
+  WeaviateUrl:
+    Type: String
+    Description: Weaviate Cluster URL
+
+  WeaviateApiKey:
+    Type: String
+    Description: Weaviate API Key
+    NoEcho: true
+
+  JWTSecretKey:
+    Type: String
+    Description: JWT Secret Key for authentication
+    NoEcho: true
+
+  AllowedOrigins:
+    Type: String
+    Description: Comma-separated list of allowed CORS origins
+    Default: '*'
+
+Resources:
+  # Lambda Function
+  KnowledgeBaseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: knowledge-base-api
+      CodeUri: .
+      Handler: lambda_handler.handler
+      Runtime: python3.11
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          OPENAI_API_KEY: !Ref OpenAIApiKey
+          WEAVIATE_URL: !Ref WeaviateUrl
+          WEAVIATE_API_KEY: !Ref WeaviateApiKey
+          JWT_SECRET_KEY: !Ref JWTSecretKey
+          ALLOWED_ORIGINS: !Ref AllowedOrigins
+      Events:
+        # API Gateway Event - catch all routes
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+            ApiId: !Ref HttpApi
+        # Root path
+        RootApiEvent:
+          Type: HttpApi
+          Properties:
+            Path: /
+            Method: ANY
+            ApiId: !Ref HttpApi
+      Policies:
+        # Add permissions for accessing other AWS services if needed
+        - Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: '*'
+      # Layers for large dependencies (optional)
+      # Uncomment and create layers if deployment package exceeds 50MB
+      # Layers:
+      #   - !Ref DependenciesLayer
+
+  # HTTP API Gateway (cheaper and simpler than REST API)
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: prod
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'  # Configure this based on AllowedOrigins parameter
+        AllowMethods:
+          - GET
+          - POST
+          - PUT
+          - PATCH
+          - DELETE
+          - OPTIONS
+        AllowHeaders:
+          - '*'
+        MaxAge: 600
+      # Enable access logging
+      AccessLogSettings:
+        DestinationArn: !GetAtt ApiAccessLogGroup.Arn
+        Format: '$context.requestId $context.error.message $context.error.messageString'
+
+  # CloudWatch Log Group for API Gateway
+  ApiAccessLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/apigateway/knowledge-base-api
+      RetentionInDays: 30
+
+  # CloudWatch Log Group for Lambda Function
+  FunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${KnowledgeBaseFunction}
+      RetentionInDays: 30
+
+  # Optional: Lambda Layer for dependencies (use if package > 50MB)
+  # DependenciesLayer:
+  #   Type: AWS::Serverless::LayerVersion
+  #   Properties:
+  #     LayerName: knowledge-base-dependencies
+  #     Description: Python dependencies for Knowledge Base API
+  #     ContentUri: ./layer
+  #     CompatibleRuntimes:
+  #       - python3.11
+  #     RetentionPolicy: Retain
+
+  # S3 Bucket for storing PDFs (optional)
+  PdfStorageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'knowledge-base-pdfs-${AWS::AccountId}'
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldVersions
+            Status: Enabled
+            NoncurrentVersionExpirationInDays: 90
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - '*'
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+            AllowedHeaders:
+              - '*'
+            MaxAge: 3600
+
+  # DynamoDB Table for metadata (alternative to SQLite)
+  DocumentMetadataTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: knowledge-base-documents
+      BillingMode: PAY_PER_REQUEST  # On-demand pricing
+      AttributeDefinitions:
+        - AttributeName: document_id
+          AttributeType: S
+        - AttributeName: file_hash
+          AttributeType: S
+      KeySchema:
+        - AttributeName: document_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: FileHashIndex
+          KeySchema:
+            - AttributeName: file_hash
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      TimeToLiveSpecification:
+        Enabled: false
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+
+  # DynamoDB Table for chat history
+  ChatHistoryTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: knowledge-base-chat-history
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: session_id
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: N
+      KeySchema:
+        - AttributeName: session_id
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+      TimeToLiveSpecification:
+        Enabled: true
+        AttributeName: ttl
+
+Outputs:
+  ApiEndpoint:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
+    Export:
+      Name: KnowledgeBaseApiEndpoint
+
+  FunctionArn:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt KnowledgeBaseFunction.Arn
+    Export:
+      Name: KnowledgeBaseFunctionArn
+
+  PdfBucketName:
+    Description: "S3 Bucket for PDF storage"
+    Value: !Ref PdfStorageBucket
+    Export:
+      Name: KnowledgeBasePdfBucket
+
+  DocumentTableName:
+    Description: "DynamoDB table for document metadata"
+    Value: !Ref DocumentMetadataTable
+    Export:
+      Name: KnowledgeBaseDocumentTable
+
+  ChatHistoryTableName:
+    Description: "DynamoDB table for chat history"
+    Value: !Ref ChatHistoryTable
+    Export:
+      Name: KnowledgeBaseChatHistoryTable
