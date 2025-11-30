@@ -1,0 +1,618 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="29.1.1" pages="2">
+  <diagram name="Chat Message Flow" id="chat-message-flow">
+    <mxGraphModel dx="2977" dy="1506" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="0" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="2200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" value="Chat Message Flow - System Sequence Diagram" vertex="1">
+          <mxGeometry height="30" width="700" x="450" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="User" vertex="1">
+          <mxGeometry height="60" width="30" x="50" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="user-line" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="65" y="2100" as="sourcePoint" />
+            <mxPoint x="65" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frontend" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Frontend" vertex="1">
+          <mxGeometry height="40" width="100" x="140" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="frontend-line" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="190" y="2100" as="sourcePoint" />
+            <mxPoint x="190" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="chat-routes" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Chat Routes" vertex="1">
+          <mxGeometry height="40" width="100" x="280" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="chat-routes-line" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="2100" as="sourcePoint" />
+            <mxPoint x="330" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="chat-svc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Chat Svc" vertex="1">
+          <mxGeometry height="40" width="100" x="420" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="chat-svc-line" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="2100" as="sourcePoint" />
+            <mxPoint x="470" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="query-proc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Query Proc" vertex="1">
+          <mxGeometry height="40" width="100" x="560" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="query-proc-line" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="610" y="2100" as="sourcePoint" />
+            <mxPoint x="610" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="weaviate-srch" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Weaviate Srch" vertex="1">
+          <mxGeometry height="40" width="100" x="700" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="weaviate-srch-line" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="750" y="2100" as="sourcePoint" />
+            <mxPoint x="750" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="context-mgr" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Context Mgr" vertex="1">
+          <mxGeometry height="40" width="100" x="840" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="context-mgr-line" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="890" y="2100" as="sourcePoint" />
+            <mxPoint x="890" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="chat-db" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Chat DB" vertex="1">
+          <mxGeometry height="60" width="60" x="980" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="chat-db-line" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1010" y="2100" as="sourcePoint" />
+            <mxPoint x="1010" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="weaviate" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Weaviate" vertex="1">
+          <mxGeometry height="60" width="60" x="1090" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="weaviate-line" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1120" y="2100" as="sourcePoint" />
+            <mxPoint x="1120" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="openai" parent="1" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="OpenAI" vertex="1">
+          <mxGeometry height="60" width="80" x="1200" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="openai-line" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1240" y="2100" as="sourcePoint" />
+            <mxPoint x="1240" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg1" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Type msg">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="65" y="170" as="sourcePoint" />
+            <mxPoint x="190" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg2" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="POST /chat/message">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="190" y="210" as="sourcePoint" />
+            <mxPoint x="470" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg3" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Validate ownership">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="250" as="sourcePoint" />
+            <mxPoint x="1010" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg4" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Save user msg">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="290" as="sourcePoint" />
+            <mxPoint x="1010" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg5" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Get conversation context">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="330" as="sourcePoint" />
+            <mxPoint x="1010" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg6" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Recent messages">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1010" y="370" as="sourcePoint" />
+            <mxPoint x="470" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg7" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Process query">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="410" as="sourcePoint" />
+            <mxPoint x="610" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg8" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Expand query with context">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="610" y="450" as="sourcePoint" />
+            <mxPoint x="1240" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg9" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Enhanced query">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1240" y="490" as="sourcePoint" />
+            <mxPoint x="610" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg10" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Processed query">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="610" y="530" as="sourcePoint" />
+            <mxPoint x="470" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg11" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Hybrid search">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="570" as="sourcePoint" />
+            <mxPoint x="750" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg12" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Query KB">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="750" y="610" as="sourcePoint" />
+            <mxPoint x="1120" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg13" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Chunks (vector+BM25)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1120" y="650" as="sourcePoint" />
+            <mxPoint x="750" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg14" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Rerank">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="750" y="690" as="sourcePoint" />
+            <mxPoint x="1240" y="690" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg15" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Scores">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1240" y="730" as="sourcePoint" />
+            <mxPoint x="750" y="730" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg16" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Top chunks">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="750" y="770" as="sourcePoint" />
+            <mxPoint x="470" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg17" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Build KB context">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="810" as="sourcePoint" />
+            <mxPoint x="890" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg18" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Formatted context">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="890" y="850" as="sourcePoint" />
+            <mxPoint x="470" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg19" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Generate response">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="890" as="sourcePoint" />
+            <mxPoint x="1240" y="890" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg19-detail" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;fontStyle=2" value="(system prompt +&#xa;KB context +&#xa;conversation +&#xa;user message)" vertex="1">
+          <mxGeometry height="60" width="120" x="480" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="msg20" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="AI response with citations">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1240" y="990" as="sourcePoint" />
+            <mxPoint x="470" y="990" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg21" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Save assistant msg with sources">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="1030" as="sourcePoint" />
+            <mxPoint x="1010" y="1030" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg22" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Update session title (if 1st msg)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="1070" as="sourcePoint" />
+            <mxPoint x="1010" y="1070" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg23" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Track tokens">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="1110" as="sourcePoint" />
+            <mxPoint x="1010" y="1110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg24" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Response with sources">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="1150" as="sourcePoint" />
+            <mxPoint x="330" y="1150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg25" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="200 OK with message">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="1190" as="sourcePoint" />
+            <mxPoint x="190" y="1190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg26" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Display response">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="190" y="1230" as="sourcePoint" />
+            <mxPoint x="65" y="1230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-box" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="" vertex="1">
+          <mxGeometry height="120" width="300" x="50" y="1320" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" value="Legend" vertex="1">
+          <mxGeometry height="20" width="60" x="60" y="1330" as="geometry" />
+        </mxCell>
+        <mxCell id="legend1" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Request →">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="70" y="1365" as="sourcePoint" />
+            <mxPoint x="150" y="1365" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend2" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Response ←">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="150" y="1395" as="sourcePoint" />
+            <mxPoint x="70" y="1395" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-text1" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11" value="Synchronous call" vertex="1">
+          <mxGeometry height="20" width="150" x="160" y="1355" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-text2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11" value="Return/Response" vertex="1">
+          <mxGeometry height="20" width="150" x="160" y="1385" as="geometry" />
+        </mxCell>
+        <mxCell id="note1" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;fontSize=10" value="Query Processing:&#xa;- Expand with conversation context&#xa;- Handle follow-up questions&#xa;- Reference resolution" vertex="1">
+          <mxGeometry height="80" width="200" x="1320" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="note2" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;fontSize=10" value="Hybrid Search Process:&#xa;1. Vector search (semantic)&#xa;2. BM25 keyword search&#xa;3. Merge results&#xa;4. Rerank with OpenAI&#xa;5. Return top chunks" vertex="1">
+          <mxGeometry height="100" width="200" x="1320" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="note3" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;fontSize=10" value="Context Building:&#xa;- Format KB chunks&#xa;- Add metadata&#xa;- Include page numbers&#xa;- Structure for GPT-4o" vertex="1">
+          <mxGeometry height="80" width="200" x="1320" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="note4" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;fontSize=10" value="Response Generation:&#xa;- System prompt (role definition)&#xa;- KB context (retrieved chunks)&#xa;- Conversation history&#xa;- User message&#xa;- Returns answer + citations" vertex="1">
+          <mxGeometry height="100" width="200" x="1320" y="970" as="geometry" />
+        </mxCell>
+        <mxCell id="group1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;fontSize=10;fontStyle=2" value="Authentication &amp; Validation" vertex="1">
+          <mxGeometry height="80" width="640" x="410" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="group2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;fontSize=10;fontStyle=2" value="Query Processing &amp; Expansion" vertex="1">
+          <mxGeometry height="160" width="870" x="410" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="group3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;fontSize=10;fontStyle=2" value="Knowledge Base Search" vertex="1">
+          <mxGeometry height="240" width="870" x="410" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="group4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;fontSize=10;fontStyle=2" value="Response Generation &amp; Persistence" vertex="1">
+          <mxGeometry height="260" width="870" x="410" y="870" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="NEW Chat Message Flow" id="rAPtyf6fasIP6qZ5sGI3">
+    <mxGraphModel dx="1603" dy="811" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="0" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="2200" math="0" shadow="0">
+      <root>
+        <mxCell id="eq189viut-zFCUR-OQiS-0" />
+        <mxCell id="eq189viut-zFCUR-OQiS-1" parent="eq189viut-zFCUR-OQiS-0" />
+        <mxCell id="eq189viut-zFCUR-OQiS-2" parent="eq189viut-zFCUR-OQiS-1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" value="Chat Message Flow - System Sequence Diagram" vertex="1">
+          <mxGeometry height="30" width="700" x="450" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-3" parent="eq189viut-zFCUR-OQiS-1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="User" vertex="1">
+          <mxGeometry height="60" width="30" x="50" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-4" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="65" y="2100" as="sourcePoint" />
+            <mxPoint x="65" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-5" parent="eq189viut-zFCUR-OQiS-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Frontend" vertex="1">
+          <mxGeometry height="40" width="100" x="140" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-6" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="190" y="2100" as="sourcePoint" />
+            <mxPoint x="190" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-7" parent="eq189viut-zFCUR-OQiS-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Chat Routes" vertex="1">
+          <mxGeometry height="40" width="100" x="280" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-8" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="2100" as="sourcePoint" />
+            <mxPoint x="330" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-9" parent="eq189viut-zFCUR-OQiS-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Chat Svc" vertex="1">
+          <mxGeometry height="40" width="100" x="420" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-10" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="2100" as="sourcePoint" />
+            <mxPoint x="470" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-11" parent="eq189viut-zFCUR-OQiS-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Query Proc" vertex="1">
+          <mxGeometry height="40" width="100" x="560" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-12" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="610" y="2100" as="sourcePoint" />
+            <mxPoint x="610" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-13" parent="eq189viut-zFCUR-OQiS-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Weaviate Srch" vertex="1">
+          <mxGeometry height="40" width="100" x="700" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-14" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="750" y="2100" as="sourcePoint" />
+            <mxPoint x="750" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-15" parent="eq189viut-zFCUR-OQiS-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Context Mgr" vertex="1">
+          <mxGeometry height="40" width="100" x="840" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-16" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="890" y="2100" as="sourcePoint" />
+            <mxPoint x="890" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-17" parent="eq189viut-zFCUR-OQiS-1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Chat DB" vertex="1">
+          <mxGeometry height="60" width="60" x="980" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-18" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1010" y="2100" as="sourcePoint" />
+            <mxPoint x="1010" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-19" parent="eq189viut-zFCUR-OQiS-1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Weaviate" vertex="1">
+          <mxGeometry height="60" width="60" x="1090" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-20" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1120" y="2100" as="sourcePoint" />
+            <mxPoint x="1120" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-21" parent="eq189viut-zFCUR-OQiS-1" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="OpenAI" vertex="1">
+          <mxGeometry height="60" width="80" x="1200" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-22" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=none;dashed=1;html=1;strokeColor=#666666;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1240" y="2100" as="sourcePoint" />
+            <mxPoint x="1240" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-23" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Type msg">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="65" y="170" as="sourcePoint" />
+            <mxPoint x="190" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-24" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="POST /chat/message">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="190" y="210" as="sourcePoint" />
+            <mxPoint x="470" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-25" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Validate ownership">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="250" as="sourcePoint" />
+            <mxPoint x="1010" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-26" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Save user msg">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="290" as="sourcePoint" />
+            <mxPoint x="1010" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-27" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Get conversation context">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="330" as="sourcePoint" />
+            <mxPoint x="1010" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-28" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Recent messages">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1010" y="370" as="sourcePoint" />
+            <mxPoint x="470" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-29" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Process query">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="410" as="sourcePoint" />
+            <mxPoint x="610" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-30" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Expand query with context">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="610" y="450" as="sourcePoint" />
+            <mxPoint x="1240" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-31" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Enhanced query">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1240" y="490" as="sourcePoint" />
+            <mxPoint x="610" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-32" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Processed query">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="610" y="530" as="sourcePoint" />
+            <mxPoint x="470" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-33" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Hybrid search">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="570" as="sourcePoint" />
+            <mxPoint x="750" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-34" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Query KB">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="750" y="610" as="sourcePoint" />
+            <mxPoint x="1120" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-35" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Chunks (vector+BM25)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1120" y="650" as="sourcePoint" />
+            <mxPoint x="750" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-36" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Rerank">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="750" y="690" as="sourcePoint" />
+            <mxPoint x="1240" y="690" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-37" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Scores">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1240" y="730" as="sourcePoint" />
+            <mxPoint x="750" y="730" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-38" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Top chunks">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="750" y="770" as="sourcePoint" />
+            <mxPoint x="470" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-39" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Build KB context">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="810" as="sourcePoint" />
+            <mxPoint x="890" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-40" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Formatted context">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="890" y="850" as="sourcePoint" />
+            <mxPoint x="470" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-41" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Generate response">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="890" as="sourcePoint" />
+            <mxPoint x="1240" y="890" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-42" parent="eq189viut-zFCUR-OQiS-1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;fontStyle=2" value="(system prompt +&#xa;KB context +&#xa;conversation +&#xa;user message)" vertex="1">
+          <mxGeometry height="60" width="120" x="480" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-43" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="AI response with citations">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1240" y="990" as="sourcePoint" />
+            <mxPoint x="470" y="990" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-44" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Save assistant msg with sources">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="1030" as="sourcePoint" />
+            <mxPoint x="1010" y="1030" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-45" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Update session title (if 1st msg)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="1070" as="sourcePoint" />
+            <mxPoint x="1010" y="1070" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-46" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Track tokens">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="1110" as="sourcePoint" />
+            <mxPoint x="1010" y="1110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-47" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Response with sources">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="470" y="1150" as="sourcePoint" />
+            <mxPoint x="330" y="1150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-48" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="200 OK with message">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="1190" as="sourcePoint" />
+            <mxPoint x="190" y="1190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-49" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Display response">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="190" y="1230" as="sourcePoint" />
+            <mxPoint x="65" y="1230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-50" parent="eq189viut-zFCUR-OQiS-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="" vertex="1">
+          <mxGeometry height="120" width="300" x="50" y="1320" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-51" parent="eq189viut-zFCUR-OQiS-1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" value="Legend" vertex="1">
+          <mxGeometry height="20" width="60" x="60" y="1330" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-52" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;" value="Request →">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="70" y="1365" as="sourcePoint" />
+            <mxPoint x="150" y="1365" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-53" edge="1" parent="eq189viut-zFCUR-OQiS-1" style="endArrow=classic;html=1;strokeColor=#000000;dashed=1;" value="Response ←">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="150" y="1395" as="sourcePoint" />
+            <mxPoint x="70" y="1395" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-54" parent="eq189viut-zFCUR-OQiS-1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11" value="Synchronous call" vertex="1">
+          <mxGeometry height="20" width="150" x="160" y="1355" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-55" parent="eq189viut-zFCUR-OQiS-1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11" value="Return/Response" vertex="1">
+          <mxGeometry height="20" width="150" x="160" y="1385" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-56" parent="eq189viut-zFCUR-OQiS-1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;fontSize=10" value="Query Processing:&#xa;- Expand with conversation context&#xa;- Handle follow-up questions&#xa;- Reference resolution" vertex="1">
+          <mxGeometry height="80" width="200" x="1320" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-57" parent="eq189viut-zFCUR-OQiS-1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;fontSize=10" value="Hybrid Search Process:&#xa;1. Vector search (semantic)&#xa;2. BM25 keyword search&#xa;3. Merge results&#xa;4. Rerank with OpenAI&#xa;5. Return top chunks" vertex="1">
+          <mxGeometry height="100" width="200" x="1320" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-58" parent="eq189viut-zFCUR-OQiS-1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;fontSize=10" value="Context Building:&#xa;- Format KB chunks&#xa;- Add metadata&#xa;- Include page numbers&#xa;- Structure for GPT-4o" vertex="1">
+          <mxGeometry height="80" width="200" x="1320" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-59" parent="eq189viut-zFCUR-OQiS-1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;fontSize=10" value="Response Generation:&#xa;- System prompt (role definition)&#xa;- KB context (retrieved chunks)&#xa;- Conversation history&#xa;- User message&#xa;- Returns answer + citations" vertex="1">
+          <mxGeometry height="100" width="200" x="1320" y="970" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-60" parent="eq189viut-zFCUR-OQiS-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;fontSize=10;fontStyle=2" value="Authentication &amp; Validation" vertex="1">
+          <mxGeometry height="80" width="640" x="410" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-61" parent="eq189viut-zFCUR-OQiS-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;fontSize=10;fontStyle=2" value="Query Processing &amp; Expansion" vertex="1">
+          <mxGeometry height="160" width="870" x="410" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-62" parent="eq189viut-zFCUR-OQiS-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;fontSize=10;fontStyle=2" value="Knowledge Base Search" vertex="1">
+          <mxGeometry height="240" width="870" x="410" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="eq189viut-zFCUR-OQiS-63" parent="eq189viut-zFCUR-OQiS-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#999999;dashed=1;verticalAlign=top;align=left;fontSize=10;fontStyle=2" value="Response Generation &amp; Persistence" vertex="1">
+          <mxGeometry height="260" width="870" x="410" y="870" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

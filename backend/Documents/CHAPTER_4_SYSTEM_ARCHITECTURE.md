@@ -478,12 +478,12 @@ User       Frontend    Chat Routes    Chat Service    Chat DB
  │<─Switch to──┤            │               │            │
  │  new thread │            │               │            │
  │             │            │               │            │
- │─View all────>│            │               │            │
+ │─View all───>│            │               │            │
  │  sessions   │            │               │            │
  │             │            │               │            │
- │             │─GET /chat/sessions──────────>│            │
+ │             │─GET /chat/sessions────────>│            │
  │             │            │               │            │
- │             │            │               │─Get user───>│
+ │             │            │               │─Get user──>│
  │             │            │               │  sessions  │
  │             │            │               │            │
  │             │            │               │<──sessions─┤
@@ -497,14 +497,14 @@ User       Frontend    Chat Routes    Chat Service    Chat DB
  │<─Display────┤            │               │            │
  │  sidebar    │            │               │            │
  │             │            │               │            │
- │─Edit title──>│            │               │            │
+ │─Edit title─>│            │               │            │
  │             │            │               │            │
  │             │─PATCH /chat/session/{id}/title──>│      │
  │             │            │               │            │
- │             │            │               │─Validate───>│
+ │             │            │               │─Validate──>│
  │             │            │               │  ownership │
  │             │            │               │            │
- │             │            │               │─Update─────>│
+ │             │            │               │─Update────>│
  │             │            │               │  title     │
  │             │            │               │            │
  │             │            │               │<──success──┤
@@ -521,22 +521,22 @@ User       Frontend    Chat Routes    Chat Service    Chat DB
 ```
 User       Frontend    Auth Server    Chat Routes    JWT Middleware
  │             │            │               │                │
- │─Login───────>│            │               │                │
+ │─Login──────>│            │               │                │
  │             │            │               │                │
- │             │─POST /auth/login────────────>│                │
+ │             │─POST /auth/login──────────>│                │
  │             │            │               │                │
  │             │            │<──JWT token───┤                │
  │             │            │               │                │
  │             │<──Store────┤               │                │
- │             │  in localStorage            │                │
+ │             │  in localStorage           │                │
  │             │            │               │                │
- │─Access chat─>│            │               │                │
+ │─AccessChat─>│            │               │                │
  │             │            │               │                │
- │             │─POST /chat/message──────────>│                │
- │             │  Authorization:             │                │
- │             │  Bearer <token>             │                │
+ │             │─POST /chat/message────────>│                │
+ │             │  Authorization:            │                │
+ │             │  Bearer <token>            │                │
  │             │            │               │                │
- │             │            │               │─Verify JWT─────>│
+ │             │            │               │─Verify JWT────>│
  │             │            │               │                │
  │             │            │               │                │─Decode token
  │             │            │               │                │─Verify signature
@@ -553,12 +553,12 @@ User       Frontend    Auth Server    Chat Routes    JWT Middleware
  │             │            │               │                │        │
  │             │<──200 OK───┤               │                │        │
  │             │            │               │                │        │
- │─Token expires────────────────────────────────────────────────────>│
+ │─Token expires─────────────────────────────────────────────────────>│
  │             │            │               │                │        │
- │             │─Request─────────────────────>│                │        │
- │             │  (expired token)            │                │        │
+ │             │─Request───────────────────>│                │        │
+ │             │  (expired token)           │                │        │
  │             │            │               │                │        │
- │             │            │               │─Verify JWT─────>│        │
+ │             │            │               │─Verify JWT────>│        │
  │             │            │               │                │        │
  │             │            │               │<──401 Error────┤        │
  │             │            │               │  (Expired)     │        │
