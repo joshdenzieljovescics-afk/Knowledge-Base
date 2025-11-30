@@ -1,4 +1,5 @@
 """
+<<<<<<< Updated upstream
 AWS Lambda handler for the Knowledge Base FastAPI application.
 Uses Mangum to adapt FastAPI for AWS Lambda + API Gateway.
 """
