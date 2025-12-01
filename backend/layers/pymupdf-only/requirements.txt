@@ -1,0 +1,8 @@
+# Layer 5: PyMuPDF (For Image Processor Lambda ONLY ~240MB)
+# This layer is ONLY attached to the ImageProcessorFunction
+
+PyMuPDF==1.24.0
+pillow==10.3.0
+
+# Note: This layer will be close to 250MB limit
+# Only use for dedicated image processor Lambda

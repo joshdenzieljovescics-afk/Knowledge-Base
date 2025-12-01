@@ -1,0 +1,7 @@
+# Layer 6: Data Processing (Optional ~25MB)
+# Only include if numpy is actively used in calculations
+
+numpy==1.26.4
+
+# openpyxl removed - not found in imports
+# Only add back if Excel processing is needed

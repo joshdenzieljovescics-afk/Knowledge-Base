@@ -1,149 +1,392 @@
-"""PDF-related API endpoints."""
-from fastapi import APIRouter, File, UploadFile, HTTPException, status, Header
-from typing import Optional
-from services.pdf_service import parse_and_chunk_pdf_file
-from database.document_validator import calculate_file_hash
-from database.document_db import DocumentDatabase
-from middleware.security_middleware import (
-    sanitize_filename,
-    validate_file_type,
-    MAX_FILE_SIZE_MB,
-    ALLOWED_FILE_TYPES
-)
-import traceback
+"""PDF upload and management routes."""
 
-pdf_router = APIRouter(prefix='/pdf', tags=['pdf'])
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
+from typing import List, Optional
+import uuid
+import io
+from datetime import datetime
+from pydantic import BaseModel
+
+from config import Config
+from middleware.jwt_middleware import get_current_user
+from services.pdf_service import PDFService
 
 
-@pdf_router.post('/parse-pdf')
-async def parse_pdf(
-    file: UploadFile = File(...),
-    force_reparse: bool = False,
-    authorization: Optional[str] = Header(None)
+# Response models for PDF routes
+class DocumentResponse(BaseModel):
+    document_id: str
+    filename: str
+    uploaded_at: str
+    chunk_count: int = 0
+    file_size: int = 0
+    status: str = "unknown"
+    storage_location: Optional[str] = None
+
+
+class DocumentListResponse(BaseModel):
+    documents: List[DocumentResponse]
+    total: int
+
+
+# Constants
+MAX_UPLOAD_SIZE = 50 * 1024 * 1024  # 50MB
+
+pdf_router = APIRouter(prefix="/pdf", tags=["PDF Management"])
+pdf_service = PDFService()
+
+
+@pdf_router.post("/upload", response_model=DocumentResponse)
+async def upload_pdf(
+    file: UploadFile = File(...), current_user: dict = Depends(get_current_user)
 ):
     """
-    Parse PDF file and return semantic chunks with coordinates.
-    
-    Checks for duplicates BEFORE parsing to save processing costs.
-    
-    Args:
-        file: PDF file upload
-        force_reparse: If true, skip duplicate check and reparse anyway
-        authorization: JWT token for user identification
-    
-    Expects multipart/form-data with 'file' field containing PDF.
-    Returns JSON with chunks and metadata.
+    Upload a PDF document.
+
+    Works in both local and Lambda environments:
+    - Local: Saves to filesystem
+    - Lambda: Uploads to S3
     """
-    print("[DEBUG] Starting parse-pdf endpoint")
-    
-    # Validate filename exists
-    if not file.filename:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No filename provided"
-        )
-    
-    # Sanitize filename
-    sanitized_filename = sanitize_filename(file.filename)
-    
     # Validate file type
-    if not validate_file_type(sanitized_filename, ALLOWED_FILE_TYPES):
+    if not file.filename.endswith(".pdf"):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"File type not allowed. Accepted types: {', '.join(ALLOWED_FILE_TYPES)}"
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Only PDF files are allowed"
         )
-    
+
+    # Read file content
+    file_content = await file.read()
+    file_size = len(file_content)
+
     # Validate file size
-    file_bytes = await file.read()
-    file_size_mb = len(file_bytes) / (1024 * 1024)
-    
-    if file_size_mb > MAX_FILE_SIZE_MB:
+    if file_size > MAX_UPLOAD_SIZE:
         raise HTTPException(
             status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail=f"File size exceeds maximum allowed size of {MAX_FILE_SIZE_MB}MB"
+            detail=f"File size exceeds maximum allowed size of {MAX_UPLOAD_SIZE / (1024*1024)}MB",
         )
-    
-    # Validate minimum size (empty file check)
-    if len(file_bytes) < 100:  # PDFs have header, should be at least 100 bytes
+
+    if file_size == 0:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="File appears to be empty or corrupted"
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Empty file"
         )
+
+    document_id = str(uuid.uuid4())
+    user_id = current_user.get("user_id", current_user.get("sub", "anonymous"))
 
     try:
-        # Calculate content hash for duplicate detection
-        content_hash = calculate_file_hash(file_bytes)
-        file_size_bytes = len(file_bytes)
-        
-        # ==================== DUPLICATE CHECK BEFORE PARSING ====================
-        # This saves expensive OpenAI API calls and processing time
-        if not force_reparse:
-            doc_db = DocumentDatabase()
-            
-            # Check by filename first (fastest)
-            existing_by_name = doc_db.check_duplicate_by_filename(sanitized_filename)
-            if existing_by_name:
-                print(f"[DUPLICATE] Found existing file by name: {sanitized_filename}")
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail={
-                        "error": "duplicate_filename",
-                        "message": f"Document '{sanitized_filename}' has already been uploaded and parsed.",
-                        "existing_doc": {
-                            "doc_id": existing_by_name["doc_id"],
-                            "file_name": existing_by_name["file_name"],
-                            "upload_date": existing_by_name["upload_date"],
-                            "chunks": existing_by_name["chunks"],
-                            "file_size_bytes": existing_by_name["file_size_bytes"]
-                        },
-                    }
-                )
-            
-            # Check by content hash (detects renamed duplicates)
-            existing_by_hash = doc_db.check_duplicate_by_hash(content_hash)
-            if existing_by_hash:
-                print(f"[DUPLICATE] Found existing file by content hash (renamed): {existing_by_hash['file_name']}")
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail={
-                        "error": "duplicate_content",
-                        "message": f"This file content has already been uploaded as '{existing_by_hash['file_name']}'.",
-                        "existing_doc": {
-                            "doc_id": existing_by_hash["doc_id"],
-                            "file_name": existing_by_hash["file_name"],
-                            "upload_date": existing_by_hash["upload_date"],
-                            "chunks": existing_by_hash["chunks"],
-                            "file_size_bytes": existing_by_hash["file_size_bytes"]
-                        },
-                    }
-                )
-        
-        # ==================== PARSE PDF ====================
-        print(f"[INFO] No duplicate found or force_reparse=true. Proceeding with parsing...")
-        result = parse_and_chunk_pdf_file(file_bytes, sanitized_filename)
-        
-        # Add content hash and file size to the result
-        result['content_hash'] = content_hash
-        result['file_size_bytes'] = file_size_bytes
-        
-        # DEBUG: Log what we're returning
-        print(f"[DEBUG] Result keys: {list(result.keys())}")
-        print(f"[DEBUG] content_hash: {result.get('content_hash')}")
-        print(f"[DEBUG] file_size_bytes: {result.get('file_size_bytes')}")
-        print(f"[DEBUG] chunks count: {len(result.get('chunks', []))}")
-        
-        # Note: Document will be saved to database when uploaded to KB
-        print(f"[INFO] Parsing complete. Ready for upload to KB.")
-        
-        return result
+        if Config.IS_LAMBDA:
+            # Lambda: Upload to S3 and store metadata in DynamoDB
+            from utils.s3_storage import get_s3_storage
+            from database.dynamodb_adapter import get_dynamodb_adapter
 
-    except HTTPException:
-        # Re-raise HTTP exceptions (like 409 Conflict) without modification
-        raise
+            s3_storage = get_s3_storage()
+            db_adapter = get_dynamodb_adapter()
+
+            # Upload to S3
+            s3_key = s3_storage.upload_file(
+                file_data=file_content,
+                filename=file.filename,
+                content_type="application/pdf",
+                metadata={
+                    "document_id": document_id,
+                    "user_id": user_id,
+                    "original_filename": file.filename,
+                },
+            )
+
+            # Process PDF and create chunks
+            chunks = await pdf_service.process_pdf(
+                pdf_content=file_content,
+                document_id=document_id,
+                filename=file.filename,
+                user_id=user_id,
+            )
+
+            # Store metadata in DynamoDB
+            doc_record = db_adapter.create_document(
+                document_id=document_id,
+                filename=file.filename,
+                user_id=user_id,
+                s3_key=s3_key,
+                chunk_count=len(chunks),
+                file_size=file_size,
+                metadata={
+                    "content_type": "application/pdf",
+                    "processing_status": "completed",
+                },
+            )
+
+            return DocumentResponse(
+                document_id=document_id,
+                filename=file.filename,
+                uploaded_at=doc_record["uploaded_at"],
+                chunk_count=len(chunks),
+                file_size=file_size,
+                status="processed",
+                storage_location=f"s3://{s3_storage.bucket}/{s3_key}",
+            )
+
+        else:
+            # Local: Save to filesystem
+            import os
+
+            file_path = os.path.join(Config.UPLOAD_DIR, f"{document_id}.pdf")
+            with open(file_path, "wb") as f:
+                f.write(file_content)
+
+            # Process PDF
+            chunks = await pdf_service.process_pdf(
+                pdf_content=file_content,
+                document_id=document_id,
+                filename=file.filename,
+                user_id=user_id,
+            )
+
+            # Store in local SQLite database (your existing logic)
+            # TODO: Add your existing database storage logic here
+
+            return DocumentResponse(
+                document_id=document_id,
+                filename=file.filename,
+                uploaded_at=datetime.utcnow().isoformat(),
+                chunk_count=len(chunks),
+                file_size=file_size,
+                status="processed",
+                storage_location=f"file://{file_path}",
+            )
+
     except Exception as e:
-        print(f"\n[ERROR] PDF processing failed: {str(e)}")
-        traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to process PDF file. Please ensure the file is a valid PDF."
+            detail=f"Failed to process PDF: {str(e)}",
+        )
+
+
+@pdf_router.get("/documents", response_model=DocumentListResponse)
+async def list_documents(
+    current_user: dict = Depends(get_current_user), limit: int = 100
+):
+    """
+    List all documents for the current user.
+    """
+    user_id = current_user.get("user_id", current_user.get("sub", "anonymous"))
+
+    try:
+        if Config.IS_LAMBDA:
+            from database.dynamodb_adapter import get_dynamodb_adapter
+
+            db_adapter = get_dynamodb_adapter()
+            documents = db_adapter.list_user_documents(user_id=user_id, limit=limit)
+
+            return DocumentListResponse(
+                documents=[
+                    DocumentResponse(
+                        document_id=doc["document_id"],
+                        filename=doc["filename"],
+                        uploaded_at=doc["uploaded_at"],
+                        chunk_count=doc.get("chunk_count", 0),
+                        file_size=doc.get("file_size", 0),
+                        status=doc.get("status", "unknown"),
+                        storage_location=f"s3://{doc['s3_key']}",
+                    )
+                    for doc in documents
+                ],
+                total=len(documents),
+            )
+        else:
+            # Local: Query SQLite database
+            # TODO: Add your existing database query logic
+            return DocumentListResponse(documents=[], total=0)
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to list documents: {str(e)}",
+        )
+
+
+@pdf_router.get("/documents/{document_id}", response_model=DocumentResponse)
+async def get_document(
+    document_id: str, current_user: dict = Depends(get_current_user)
+):
+    """
+    Get document details by ID.
+    """
+    try:
+        if Config.IS_LAMBDA:
+            from database.dynamodb_adapter import get_dynamodb_adapter
+
+            db_adapter = get_dynamodb_adapter()
+            doc = db_adapter.get_document(document_id)
+            if not doc:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
+                )
+
+            # Verify user owns document
+            user_id = current_user.get("user_id", current_user.get("sub", "anonymous"))
+            if doc["user_id"] != user_id:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
+                )
+
+            return DocumentResponse(
+                document_id=doc["document_id"],
+                filename=doc["filename"],
+                uploaded_at=doc["uploaded_at"],
+                chunk_count=doc.get("chunk_count", 0),
+                file_size=doc.get("file_size", 0),
+                status=doc.get("status", "unknown"),
+                storage_location=f"s3://{doc['s3_key']}",
+            )
+        else:
+            # Local: Query SQLite
+            # TODO: Add your existing logic
+            raise HTTPException(
+                status_code=404, detail="Not implemented for local mode"
+            )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get document: {str(e)}",
+        )
+
+
+@pdf_router.get("/documents/{document_id}/download")
+async def download_document(
+    document_id: str, current_user: dict = Depends(get_current_user)
+):
+    """
+    Download a PDF document.
+
+    Returns a presigned URL in Lambda, or streams file directly in local mode.
+    """
+    try:
+        if Config.IS_LAMBDA:
+            from database.dynamodb_adapter import get_dynamodb_adapter
+            from utils.s3_storage import get_s3_storage
+
+            db_adapter = get_dynamodb_adapter()
+            s3_storage = get_s3_storage()
+
+            # Get document metadata
+            doc = db_adapter.get_document(document_id)
+
+            if not doc:
+                raise HTTPException(status_code=404, detail="Document not found")
+
+            # Verify ownership
+            user_id = current_user.get("user_id", current_user.get("sub", "anonymous"))
+            if doc["user_id"] != user_id:
+                raise HTTPException(status_code=403, detail="Access denied")
+
+            # Increment download counter
+            db_adapter.increment_document_downloads(document_id)
+
+            # Generate presigned URL (valid for 1 hour)
+            download_url = s3_storage.generate_presigned_url(
+                s3_key=doc["s3_key"], expiration=3600
+            )
+
+            return {
+                "download_url": download_url,
+                "expires_in": 3600,
+                "filename": doc["filename"],
+            }
+
+        else:
+            # Local: Stream file directly
+            import os
+
+            file_path = os.path.join(Config.UPLOAD_DIR, f"{document_id}.pdf")
+            if not os.path.exists(file_path):
+                raise HTTPException(status_code=404, detail="File not found")
+
+            def iter_file():
+                with open(file_path, "rb") as f:
+                    yield from f
+
+            return StreamingResponse(
+                iter_file(),
+                media_type="application/pdf",
+                headers={
+                    "Content-Disposition": f"attachment; filename={document_id}.pdf"
+                },
+            )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to download document: {str(e)}",
+        )
+
+
+@pdf_router.delete("/documents/{document_id}")
+async def delete_document(
+    document_id: str, current_user: dict = Depends(get_current_user)
+):
+    """
+    Delete a document and its chunks from vector database.
+    """
+    try:
+        if Config.IS_LAMBDA:
+            from database.dynamodb_adapter import get_dynamodb_adapter
+            from utils.s3_storage import get_s3_storage
+
+            db_adapter = get_dynamodb_adapter()
+            s3_storage = get_s3_storage()
+
+            # Get document
+            doc = db_adapter.get_document(document_id)
+
+            if not doc:
+                raise HTTPException(status_code=404, detail="Document not found")
+
+            # Verify ownership
+            user_id = current_user.get("user_id", current_user.get("sub", "anonymous"))
+            if doc["user_id"] != user_id:
+                raise HTTPException(status_code=403, detail="Access denied")
+
+            # Delete from S3
+            s3_storage.delete_file(doc["s3_key"])
+
+            # Delete from vector database
+            await pdf_service.delete_document_chunks(document_id)
+
+            # Delete from DynamoDB
+            db_adapter.delete_document(document_id)
+
+            return {
+                "message": "Document deleted successfully",
+                "document_id": document_id,
+            }
+
+        else:
+            # Local: Delete from filesystem and database
+            import os
+
+            file_path = os.path.join(Config.UPLOAD_DIR, f"{document_id}.pdf")
+            if os.path.exists(file_path):
+                os.remove(file_path)
+
+            # Delete from vector database
+            await pdf_service.delete_document_chunks(document_id)
+
+            # TODO: Delete from SQLite
+
+            return {
+                "message": "Document deleted successfully",
+                "document_id": document_id,
+            }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete document: {str(e)}",
         )

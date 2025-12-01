@@ -6,25 +6,17 @@ version = 0.1
 stack_name = "knowledge-base-api"
 s3_bucket = "knowledge-base-deployment-artifacts"
 s3_prefix = "knowledge-base"
-region = "us-east-1"
+region = "ap-southeast-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 image_repositories = []
 
-# IMPORTANT: Replace these placeholder values with your actual credentials
-# For production, use AWS Secrets Manager instead of hardcoding values
-parameter_overrides = [
-    "OpenAIApiKey=your-openai-api-key-here",
-    "WeaviateUrl=https://your-cluster.weaviate.network",
-    "WeaviateApiKey=your-weaviate-api-key-here",
-    "JWTSecretKey=your-jwt-secret-key-here",
-    "AllowedOrigins=https://yourdomain.com,http://localhost:5173"
-]
 
 [default.build]
 [default.build.parameters]
 cached = true
 parallel = true
+use_container = true
 
 [default.sync]
 [default.sync.parameters]

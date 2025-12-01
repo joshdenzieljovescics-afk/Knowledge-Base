@@ -1,240 +1,298 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Knowledge Base PDF Processing and Vector Search API
+Description: SafexpressOps Knowledge Base - PDF Processing & Vector Search System
 
 Globals:
   Function:
-    Timeout: 900  # 15 minutes (max for Lambda)
-    MemorySize: 3008  # 3GB for PDF processing
-    Environment:
-      Variables:
-        ENVIRONMENT: production
-        RATE_LIMIT_ENABLED: 'true'
-        USE_HTTPS: 'false'  # API Gateway handles HTTPS
-        DEBUG: 'false'
+    Timeout: 900
+    MemorySize: 3008
+    Runtime: python3.11
+    Architectures:
+      - x86_64
 
 Parameters:
-  OpenAIApiKey:
+  OpenAIAPIKey:
     Type: String
+    NoEcho: true
     Description: OpenAI API Key
+  
+  WeaviateURL:
+    Type: String
+    Description: Weaviate Cluster URL (with https://)
+  
+  WeaviateAPIKey:
+    Type: String
     NoEcho: true
-
-  WeaviateUrl:
-    Type: String
-    Description: Weaviate Cluster URL
-
-  WeaviateApiKey:
-    Type: String
     Description: Weaviate API Key
-    NoEcho: true
-
+  
   JWTSecretKey:
     Type: String
-    Description: JWT Secret Key for authentication
     NoEcho: true
-
-  AllowedOrigins:
+    Description: JWT Secret Key for authentication
+  
+  PDFProcessingLayerArn:
     Type: String
-    Description: Comma-separated list of allowed CORS origins
-    Default: '*'
+    Description: ARN of existing PDF Processing Layer
+    Default: ""
+  
+  AIVectorDBLayerArn:
+    Type: String
+    Description: ARN of existing AI/VectorDB Layer
+    Default: ""
+  
+  FastAPICoreLayerArn:
+    Type: String
+    Description: ARN of existing FastAPI Core Layer
+    Default: ""
+  
+  SecurityAuthLayerArn:
+    Type: String
+    Description: ARN of existing Security/Auth Layer
+    Default: ""
+  
+  PyMuPDFLayerArn:
+    Type: String
+    Description: ARN of existing PyMuPDF Layer (for image processor)
+    Default: ""
+
+Conditions:
+  HasPDFLayer: !Not [!Equals [!Ref PDFProcessingLayerArn, ""]]
+  HasAILayer: !Not [!Equals [!Ref AIVectorDBLayerArn, ""]]
+  HasFastAPILayer: !Not [!Equals [!Ref FastAPICoreLayerArn, ""]]
+  HasSecurityLayer: !Not [!Equals [!Ref SecurityAuthLayerArn, ""]]
+  HasPyMuPDFLayer: !Not [!Equals [!Ref PyMuPDFLayerArn, ""]]
 
 Resources:
-  # Lambda Function
+  # ==================== LAMBDA FUNCTIONS ====================
+  
+  # Main Knowledge Base API Function
   KnowledgeBaseFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: knowledge-base-api
-      CodeUri: .
+      FunctionName: SafexpressOps-KnowledgeBase
+      CodeUri: ./
       Handler: lambda_handler.handler
-      Runtime: python3.11
-      Architectures:
-        - x86_64
+      Description: Knowledge Base API - PDF Processing & Vector Search
+      Layers:
+        - !If [HasPDFLayer, !Ref PDFProcessingLayerArn, !Ref AWS::NoValue]
+        - !If [HasAILayer, !Ref AIVectorDBLayerArn, !Ref AWS::NoValue]
+        - !If [HasFastAPILayer, !Ref FastAPICoreLayerArn, !Ref AWS::NoValue]
+        - !If [HasSecurityLayer, !Ref SecurityAuthLayerArn, !Ref AWS::NoValue]
       Environment:
         Variables:
-          OPENAI_API_KEY: !Ref OpenAIApiKey
-          WEAVIATE_URL: !Ref WeaviateUrl
-          WEAVIATE_API_KEY: !Ref WeaviateApiKey
+          OPENAI_API_KEY: !Ref OpenAIAPIKey
+          WEAVIATE_URL: !Ref WeaviateURL
+          WEAVIATE_API_KEY: !Ref WeaviateAPIKey
           JWT_SECRET_KEY: !Ref JWTSecretKey
-          ALLOWED_ORIGINS: !Ref AllowedOrigins
+          IS_LAMBDA: "true"
+          DOCUMENTS_TABLE: !Ref DocumentsTable
+          CHAT_SESSIONS_TABLE: !Ref ChatSessionsTable
+          CHAT_MESSAGES_TABLE: !Ref ChatMessagesTable
+          DOCUMENT_VERSIONS_TABLE: !Ref DocumentVersionsTable
+          PDF_STORAGE_BUCKET: !Ref PDFStorageBucket
+          IMAGE_PROCESSOR_LAMBDA_ARN: !GetAtt ImageProcessorFunction.Arn
       Events:
-        # API Gateway Event - catch all routes
         ApiEvent:
           Type: HttpApi
           Properties:
             Path: /{proxy+}
             Method: ANY
-            ApiId: !Ref HttpApi
-        # Root path
-        RootApiEvent:
-          Type: HttpApi
-          Properties:
-            Path: /
-            Method: ANY
-            ApiId: !Ref HttpApi
+            TimeoutInMillis: 29000
       Policies:
-        # Add permissions for accessing other AWS services if needed
-        - Statement:
-          - Effect: Allow
-            Action:
-              - logs:CreateLogGroup
-              - logs:CreateLogStream
-              - logs:PutLogEvents
-            Resource: '*'
-      # Layers for large dependencies (optional)
-      # Uncomment and create layers if deployment package exceeds 50MB
-      # Layers:
-      #   - !Ref DependenciesLayer
-
-  # HTTP API Gateway (cheaper and simpler than REST API)
-  HttpApi:
-    Type: AWS::Serverless::HttpApi
+        - S3CrudPolicy:
+            BucketName: !Ref PDFStorageBucket
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ChatSessionsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ChatMessagesTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DocumentsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DocumentVersionsTable
+        - LambdaInvokePolicy:
+            FunctionName: !Ref ImageProcessorFunction
+    Metadata:
+      BuildMethod: python3.11
+  
+  # Dedicated Image Processor Function (with PyMuPDF)
+  ImageProcessorFunction:
+    Type: AWS::Serverless::Function
     Properties:
-      StageName: prod
-      CorsConfiguration:
-        AllowOrigins:
-          - '*'  # Configure this based on AllowedOrigins parameter
-        AllowMethods:
-          - GET
-          - POST
-          - PUT
-          - PATCH
-          - DELETE
-          - OPTIONS
-        AllowHeaders:
-          - '*'
-        MaxAge: 600
-      # Enable access logging
-      AccessLogSettings:
-        DestinationArn: !GetAtt ApiAccessLogGroup.Arn
-        Format: '$context.requestId $context.error.message $context.error.messageString'
+      FunctionName: SafexpressOps-ImageProcessor
+      CodeUri: ./
+      Handler: lambda_image_processor.lambda_handler
+      Description: Image extraction from PDFs using PyMuPDF
+      Timeout: 300
+      MemorySize: 2048
+      Layers:
+        - !If [HasPyMuPDFLayer, !Ref PyMuPDFLayerArn, !Ref AWS::NoValue]
+      Environment:
+        Variables:
+          IS_LAMBDA: "true"
+      ReservedConcurrentExecutions: 5  # Limit concurrent executions
+    Metadata:
+      BuildMethod: python3.11
 
-  # CloudWatch Log Group for API Gateway
-  ApiAccessLogGroup:
-    Type: AWS::Logs::LogGroup
+  # ==================== DYNAMODB TABLES ====================
+  
+  ChatSessionsTable:
+    Type: AWS::DynamoDB::Table
     Properties:
-      LogGroupName: /aws/apigateway/knowledge-base-api
-      RetentionInDays: 30
+      TableName: safexpress-chat-sessions
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: session_id
+          AttributeType: S
+        - AttributeName: user_id
+          AttributeType: S
+        - AttributeName: updated_at
+          AttributeType: S
+      KeySchema:
+        - AttributeName: session_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: user-updated-index
+          KeySchema:
+            - AttributeName: user_id
+              KeyType: HASH
+            - AttributeName: updated_at
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Project
+          Value: SafexpressOps
 
-  # CloudWatch Log Group for Lambda Function
-  FunctionLogGroup:
-    Type: AWS::Logs::LogGroup
+  ChatMessagesTable:
+    Type: AWS::DynamoDB::Table
     Properties:
-      LogGroupName: !Sub /aws/lambda/${KnowledgeBaseFunction}
-      RetentionInDays: 30
+      TableName: safexpress-chat-messages
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: message_id
+          AttributeType: S
+        - AttributeName: session_id
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: S
+      KeySchema:
+        - AttributeName: message_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: session-timestamp-index
+          KeySchema:
+            - AttributeName: session_id
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Project
+          Value: SafexpressOps
 
-  # Optional: Lambda Layer for dependencies (use if package > 50MB)
-  # DependenciesLayer:
-  #   Type: AWS::Serverless::LayerVersion
-  #   Properties:
-  #     LayerName: knowledge-base-dependencies
-  #     Description: Python dependencies for Knowledge Base API
-  #     ContentUri: ./layer
-  #     CompatibleRuntimes:
-  #       - python3.11
-  #     RetentionPolicy: Retain
+  DocumentsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: safexpress-documents
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: doc_id
+          AttributeType: S
+        - AttributeName: file_name
+          AttributeType: S
+        - AttributeName: content_hash
+          AttributeType: S
+      KeySchema:
+        - AttributeName: doc_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: filename-index
+          KeySchema:
+            - AttributeName: file_name
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: content-hash-index
+          KeySchema:
+            - AttributeName: content_hash
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Project
+          Value: SafexpressOps
 
-  # S3 Bucket for storing PDFs (optional)
-  PdfStorageBucket:
+  DocumentVersionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: safexpress-document-versions
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: version_id
+          AttributeType: S
+        - AttributeName: doc_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: version_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: doc-id-index
+          KeySchema:
+            - AttributeName: doc_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Project
+          Value: SafexpressOps
+
+  # ==================== S3 BUCKET ====================
+  
+  PDFStorageBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub 'knowledge-base-pdfs-${AWS::AccountId}'
+      BucketName: !Sub safexpress-pdf-storage-${AWS::AccountId}
       VersioningConfiguration:
         Status: Enabled
-      LifecycleConfiguration:
-        Rules:
-          - Id: DeleteOldVersions
-            Status: Enabled
-            NoncurrentVersionExpirationInDays: 90
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-      CorsConfiguration:
-        CorsRules:
-          - AllowedOrigins:
-              - '*'
-            AllowedMethods:
-              - GET
-              - PUT
-              - POST
-            AllowedHeaders:
-              - '*'
-            MaxAge: 3600
-
-  # DynamoDB Table for metadata (alternative to SQLite)
-  DocumentMetadataTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: knowledge-base-documents
-      BillingMode: PAY_PER_REQUEST  # On-demand pricing
-      AttributeDefinitions:
-        - AttributeName: document_id
-          AttributeType: S
-        - AttributeName: file_hash
-          AttributeType: S
-      KeySchema:
-        - AttributeName: document_id
-          KeyType: HASH
-      GlobalSecondaryIndexes:
-        - IndexName: FileHashIndex
-          KeySchema:
-            - AttributeName: file_hash
-              KeyType: HASH
-          Projection:
-            ProjectionType: ALL
-      TimeToLiveSpecification:
-        Enabled: false
-      StreamSpecification:
-        StreamViewType: NEW_AND_OLD_IMAGES
-
-  # DynamoDB Table for chat history
-  ChatHistoryTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: knowledge-base-chat-history
-      BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: session_id
-          AttributeType: S
-        - AttributeName: timestamp
-          AttributeType: N
-      KeySchema:
-        - AttributeName: session_id
-          KeyType: HASH
-        - AttributeName: timestamp
-          KeyType: RANGE
-      TimeToLiveSpecification:
-        Enabled: true
-        AttributeName: ttl
+      Tags:
+        - Key: Project
+          Value: SafexpressOps
 
 Outputs:
-  ApiEndpoint:
-    Description: "API Gateway endpoint URL"
-    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
-    Export:
-      Name: KnowledgeBaseApiEndpoint
-
+  KnowledgeBaseAPI:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/"
+  
   FunctionArn:
-    Description: "Lambda Function ARN"
+    Description: Main Lambda Function ARN
     Value: !GetAtt KnowledgeBaseFunction.Arn
-    Export:
-      Name: KnowledgeBaseFunctionArn
-
-  PdfBucketName:
-    Description: "S3 Bucket for PDF storage"
-    Value: !Ref PdfStorageBucket
-    Export:
-      Name: KnowledgeBasePdfBucket
-
-  DocumentTableName:
-    Description: "DynamoDB table for document metadata"
-    Value: !Ref DocumentMetadataTable
-    Export:
-      Name: KnowledgeBaseDocumentTable
-
-  ChatHistoryTableName:
-    Description: "DynamoDB table for chat history"
-    Value: !Ref ChatHistoryTable
-    Export:
-      Name: KnowledgeBaseChatHistoryTable
+  
+  ImageProcessorArn:
+    Description: Image Processor Lambda Function ARN
+    Value: !GetAtt ImageProcessorFunction.Arn
+  
+  PDFBucket:
+    Description: S3 Bucket for PDF storage
+    Value: !Ref PDFStorageBucket
+  
+  DocumentsTableName:
+    Description: Documents DynamoDB Table
+    Value: !Ref DocumentsTable
+  
+  ChatSessionsTableName:
+    Description: Chat Sessions DynamoDB Table
+    Value: !Ref ChatSessionsTable
+  
+  ChatMessagesTableName:
+    Description: Chat Messages DynamoDB Table
+    Value: !Ref ChatMessagesTable
+  
+  DocumentVersionsTableName:
+    Description: Document Versions DynamoDB Table
+    Value: !Ref DocumentVersionsTable

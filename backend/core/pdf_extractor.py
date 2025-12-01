@@ -3,7 +3,14 @@ import io
 import statistics
 import base64
 import pdfplumber
-import fitz
+
+# PyMuPDF is optional - only used in local development
+try:
+    import fitz
+    HAS_PYMUPDF = True
+except ImportError:
+    HAS_PYMUPDF = False
+    print("[INFO] PyMuPDF not available - using pdfplumber for images")
 
 
 def lines_from_chars(page, line_tol=5, word_tol=None):
@@ -182,8 +189,29 @@ def extract_images_with_bbox_pymupdf(file_bytes, page_number):
     """
     Uses xref placement rects to get true positions of images on the page.
     Returns list of dicts with unique IDs.
+    
+    NOTE: This function is deprecated in Lambda environment.
+    Use lambda_image_service.extract_images_from_pdf() instead.
     """
     images = []
+    
+    # Check if we're in Lambda and should use the image processor Lambda
+    try:
+        from config import Config
+        if Config.IS_LAMBDA:
+            print("[INFO] In Lambda - image extraction should use lambda_image_service")
+            # Return empty list - caller should use lambda_image_service
+            return images
+    except:
+        pass
+    
+    # Local/development mode - use PyMuPDF if available
+    try:
+        import fitz
+    except ImportError:
+        print("[WARN] PyMuPDF not available - using pdfplumber fallback")
+        return extract_images_with_bbox_pdfplumber_fallback(file_bytes, page_number)
+    
     with fitz.open(stream=file_bytes, filetype="pdf") as doc:
         page = doc[page_number]
         xref_rows = page.get_images(full=True)
@@ -213,6 +241,42 @@ def extract_images_with_bbox_pymupdf(file_bytes, page_number):
                     "page": page_number + 1,
                     "image_b64": img_b64,
                 })
+    return images
+
+
+def extract_images_with_bbox_pdfplumber_fallback(file_bytes, page_number):
+    """
+    Fallback image extraction using pdfplumber (no base64 data).
+    Used when PyMuPDF is not available.
+    """
+    images = []
+    try:
+        import pdfplumber
+        import io
+        
+        with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
+            if page_number >= len(pdf.pages):
+                return images
+            
+            page = pdf.pages[page_number]
+            
+            for img_index, img in enumerate(page.images):
+                images.append({
+                    "id": f"p{page_number+1}-img-{img_index}",
+                    "type": "image",
+                    "subtype": "embedded",
+                    "box": {
+                        "l": img["x0"],
+                        "t": img["top"],
+                        "r": img["x1"],
+                        "b": img["bottom"]
+                    },
+                    "page": page_number + 1,
+                    "image_b64": None,  # Not extracted
+                })
+    except Exception as e:
+        print(f"[ERROR] pdfplumber fallback failed: {e}")
+    
     return images
 
 

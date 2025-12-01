@@ -1,348 +1,231 @@
-"""
-DynamoDB adapter for AWS Lambda deployment.
-Replaces SQLite database operations with DynamoDB.
-"""
+"""DynamoDB adapter for document tracking (replaces documents.db)."""
+
 import boto3
-from typing import Optional, List, Dict, Any
-from datetime import datetime
 import uuid
-import os
-from decimal import Decimal
+from datetime import datetime, timezone, timedelta
+from typing import List, Dict, Optional
+from botocore.exceptions import ClientError
 
 
-class DynamoDBAdapter:
-    """
-    Adapter for DynamoDB operations.
-
-    This class provides a similar interface to the SQLite operations
-    but uses DynamoDB tables instead of local database files.
-
-    Tables:
-    - knowledge-base-documents: Document metadata and upload history
-    - knowledge-base-chat-history: Chat conversation history
-    """
-
+class DynamoDBDocumentsAdapter:
     def __init__(self):
-        """Initialize DynamoDB client and table references"""
-        self.dynamodb = boto3.resource('dynamodb')
+        from config import Config
 
-        # Get table names from environment or use defaults
-        self.documents_table_name = os.environ.get(
-            'DOCUMENTS_TABLE',
-            'knowledge-base-documents'
-        )
-        self.chat_table_name = os.environ.get(
-            'CHAT_TABLE',
-            'knowledge-base-chat-history'
-        )
+        self.dynamodb = boto3.resource("dynamodb", region_name=Config.AWS_REGION)
+        self.documents_table = self.dynamodb.Table(Config.DOCUMENTS_TABLE)
+        self.versions_table = self.dynamodb.Table(Config.DOCUMENT_VERSIONS_TABLE)
 
-        self.documents_table = self.dynamodb.Table(self.documents_table_name)
-        self.chat_table = self.dynamodb.Table(self.chat_table_name)
-
-    # ==================== Document Operations ====================
-
-    def save_document(self, doc_data: Dict[str, Any]) -> str:
-        """
-        Save document metadata to DynamoDB.
-
-        Args:
-            doc_data: Dictionary containing document metadata
-                - filename: Original filename
-                - file_hash: SHA256 hash
-                - file_size: Size in bytes
-                - uploaded_by: User ID (optional)
-                - chunk_count: Number of chunks
-                - metadata: Additional metadata
-
-        Returns:
-            str: Generated document ID (UUID)
-        """
-        doc_id = str(uuid.uuid4())
+    def insert_document(self, doc_data: Dict, version: int = 1) -> str:
+        """Insert a new document record."""
+        ph_tz = timezone(timedelta(hours=8))
+        upload_date = datetime.now(ph_tz).isoformat()
 
         item = {
-            'document_id': doc_id,
-            'file_hash': doc_data.get('file_hash', ''),
-            'filename': doc_data.get('filename', ''),
-            'original_filename': doc_data.get('original_filename', doc_data.get('filename', '')),
-            'file_size': Decimal(str(doc_data.get('file_size', 0))),
-            'upload_date': datetime.utcnow().isoformat(),
-            'uploaded_by': doc_data.get('uploaded_by', 'anonymous'),
-            'chunk_count': Decimal(str(doc_data.get('chunk_count', 0))),
-            'uploaded_to_kb': doc_data.get('uploaded_to_kb', False),
-            's3_key': doc_data.get('s3_key', ''),
-            'metadata': doc_data.get('metadata', {})
+            "doc_id": doc_data.get("doc_id"),
+            "file_name": doc_data.get("file_name"),
+            "upload_date": upload_date,
+            "file_size_bytes": doc_data.get("file_size_bytes"),
+            "chunks": doc_data.get("chunks"),
+            "uploaded_by": doc_data.get("uploaded_by"),
+            "content_hash": doc_data.get("content_hash"),
+            "page_count": doc_data.get("page_count"),
+            "weaviate_doc_id": doc_data.get("weaviate_doc_id"),
+            "metadata": doc_data.get("metadata", {}),
+            "current_version": version,
         }
 
-        self.documents_table.put_item(Item=item)
-        return doc_id
-
-    def get_document_by_id(self, doc_id: str) -> Optional[Dict[str, Any]]:
-        """
-        Get document by ID.
-
-        Args:
-            doc_id: Document UUID
-
-        Returns:
-            Document data or None if not found
-        """
         try:
-            response = self.documents_table.get_item(Key={'document_id': doc_id})
-            return response.get('Item')
-        except Exception as e:
-            print(f"Error getting document {doc_id}: {e}")
+            self.documents_table.put_item(Item=item)
+            print(f"[DynamoDB] Inserted document: {doc_data.get('doc_id')}")
+            return doc_data.get("doc_id")
+        except ClientError as e:
+            print(f"[DynamoDB] Insert failed: {e}")
+            raise
+
+    def get_document(self, doc_id: str) -> Optional[Dict]:
+        """Get a document by ID."""
+        try:
+            response = self.documents_table.get_item(Key={"doc_id": doc_id})
+            return response.get("Item")
+        except ClientError as e:
+            print(f"[DynamoDB] Get document failed: {e}")
             return None
 
-    def get_document_by_hash(self, file_hash: str) -> Optional[Dict[str, Any]]:
-        """
-        Check if document exists by SHA256 hash.
-
-        This is used for duplicate detection.
-
-        Args:
-            file_hash: SHA256 hash of the file
-
-        Returns:
-            Document data or None if not found
-        """
+    def get_document_by_filename(self, file_name: str) -> Optional[Dict]:
+        """Get a document by filename using GSI."""
         try:
             response = self.documents_table.query(
-                IndexName='FileHashIndex',
-                KeyConditionExpression='file_hash = :hash',
-                ExpressionAttributeValues={':hash': file_hash}
+                IndexName="filename-index",
+                KeyConditionExpression="file_name = :fn",
+                ExpressionAttributeValues={":fn": file_name},
+                Limit=1,
             )
-            items = response.get('Items', [])
+            items = response.get("Items", [])
             return items[0] if items else None
-        except Exception as e:
-            print(f"Error querying by hash: {e}")
+        except ClientError as e:
+            print(f"[DynamoDB] Query by filename failed: {e}")
             return None
 
-    def list_documents(self, limit: int = 100, uploaded_by: Optional[str] = None) -> List[Dict[str, Any]]:
-        """
-        List all documents, optionally filtered by user.
+    def check_duplicate_by_filename(self, filename: str) -> Optional[Dict]:
+        """Check if document with this filename exists."""
+        return self.get_document_by_filename(filename)
 
-        Args:
-            limit: Maximum number of documents to return
-            uploaded_by: Filter by user ID (optional)
+    def check_duplicate_by_hash(self, content_hash: str) -> Optional[Dict]:
+        """Check if document with this content hash exists."""
+        if not content_hash or content_hash.startswith("temp-"):
+            return None
 
-        Returns:
-            List of document dictionaries
-        """
         try:
-            if uploaded_by:
-                response = self.documents_table.scan(
-                    FilterExpression='uploaded_by = :user',
-                    ExpressionAttributeValues={':user': uploaded_by},
-                    Limit=limit
-                )
-            else:
-                response = self.documents_table.scan(Limit=limit)
-
-            items = response.get('Items', [])
-
-            # Convert Decimal to int/float for JSON serialization
-            return [self._convert_decimals(item) for item in items]
-        except Exception as e:
-            print(f"Error listing documents: {e}")
-            return []
-
-    def update_document_kb_status(self, doc_id: str, uploaded: bool = True) -> bool:
-        """
-        Update the uploaded_to_kb status for a document.
-
-        Args:
-            doc_id: Document UUID
-            uploaded: Whether document is uploaded to knowledge base
-
-        Returns:
-            True if successful, False otherwise
-        """
-        try:
-            self.documents_table.update_item(
-                Key={'document_id': doc_id},
-                UpdateExpression='SET uploaded_to_kb = :status',
-                ExpressionAttributeValues={':status': uploaded}
+            response = self.documents_table.query(
+                IndexName="content-hash-index",
+                KeyConditionExpression="content_hash = :ch",
+                ExpressionAttributeValues={":ch": content_hash},
+                Limit=1,
             )
-            return True
-        except Exception as e:
-            print(f"Error updating KB status: {e}")
-            return False
+            items = response.get("Items", [])
+            return items[0] if items else None
+        except ClientError as e:
+            print(f"[DynamoDB] Query by hash failed: {e}")
+            return None
+
+    def check_duplicates(
+        self, filename: str, content_hash: Optional[str] = None
+    ) -> Dict:
+        """Check for duplicates (filename or content)."""
+        existing_by_filename = self.check_duplicate_by_filename(filename)
+        existing_by_hash = (
+            self.check_duplicate_by_hash(content_hash) if content_hash else None
+        )
+
+        is_duplicate = bool(existing_by_filename or existing_by_hash)
+        duplicate_type = None
+        existing_doc = None
+        message = None
+
+        if existing_by_filename and existing_by_hash:
+            duplicate_type = "both"
+            existing_doc = existing_by_filename
+            if existing_by_filename["doc_id"] == existing_by_hash["doc_id"]:
+                message = f"This exact file '{filename}' already exists in the knowledge base."
+            else:
+                message = f"Filename '{filename}' already exists, and content matches another file '{existing_by_hash['file_name']}'."
+        elif existing_by_filename:
+            duplicate_type = "filename"
+            existing_doc = existing_by_filename
+            message = f"A file named '{filename}' already exists in the knowledge base."
+        elif existing_by_hash:
+            duplicate_type = "content"
+            existing_doc = existing_by_hash
+            message = f"This file content already exists as '{existing_by_hash['file_name']}' in the knowledge base."
+
+        return {
+            "is_duplicate": is_duplicate,
+            "duplicate_type": duplicate_type,
+            "existing_doc": existing_doc,
+            "message": message,
+        }
 
     def delete_document(self, doc_id: str) -> bool:
-        """
-        Delete document by ID.
-
-        Args:
-            doc_id: Document UUID
-
-        Returns:
-            True if successful, False otherwise
-        """
+        """Delete a document record."""
         try:
-            self.documents_table.delete_item(Key={'document_id': doc_id})
+            self.documents_table.delete_item(Key={"doc_id": doc_id})
+            print(f"[DynamoDB] Deleted document: {doc_id}")
             return True
-        except Exception as e:
-            print(f"Error deleting document {doc_id}: {e}")
+        except ClientError as e:
+            print(f"[DynamoDB] Delete failed: {e}")
             return False
 
-    # ==================== Chat Operations ====================
-
-    def save_chat_message(
+    def list_documents(
         self,
-        session_id: str,
-        role: str,
-        content: str,
-        metadata: Optional[Dict[str, Any]] = None
-    ) -> bool:
-        """
-        Save a chat message to DynamoDB.
-
-        Args:
-            session_id: Chat session ID
-            role: Message role (user/assistant)
-            content: Message content
-            metadata: Additional metadata (sources, token usage, etc.)
-
-        Returns:
-            True if successful, False otherwise
-        """
+        limit: int = 100,
+        offset: int = 0,
+        uploaded_by: Optional[str] = None,
+        order_by: str = "upload_date",
+        order_dir: str = "DESC",
+    ) -> List[Dict]:
+        """List documents with pagination."""
         try:
-            timestamp = int(datetime.utcnow().timestamp() * 1000)  # Milliseconds
+            # DynamoDB doesn't support offset, so we'll scan and skip
+            params = {"Limit": limit + offset}
 
-            item = {
-                'session_id': session_id,
-                'timestamp': timestamp,
-                'role': role,
-                'content': content,
-                'metadata': metadata or {},
-                'ttl': int(datetime.utcnow().timestamp()) + (30 * 24 * 60 * 60)  # 30 days
-            }
+            if uploaded_by:
+                params["FilterExpression"] = "uploaded_by = :ub"
+                params["ExpressionAttributeValues"] = {":ub": uploaded_by}
 
-            self.chat_table.put_item(Item=item)
-            return True
-        except Exception as e:
-            print(f"Error saving chat message: {e}")
-            return False
+            response = self.documents_table.scan(**params)
+            items = response.get("Items", [])
 
-    def get_chat_history(
-        self,
-        session_id: str,
-        limit: int = 50
-    ) -> List[Dict[str, Any]]:
-        """
-        Get chat history for a session.
+            # Sort and paginate in memory (for small datasets)
+            reverse = order_dir.upper() == "DESC"
+            items.sort(key=lambda x: x.get(order_by, ""), reverse=reverse)
 
-        Args:
-            session_id: Chat session ID
-            limit: Maximum number of messages to return
+            return items[offset : offset + limit]
 
-        Returns:
-            List of chat messages, ordered by timestamp
-        """
-        try:
-            response = self.chat_table.query(
-                KeyConditionExpression='session_id = :sid',
-                ExpressionAttributeValues={':sid': session_id},
-                ScanIndexForward=True,  # Ascending order (oldest first)
-                Limit=limit
-            )
-
-            items = response.get('Items', [])
-            return [self._convert_decimals(item) for item in items]
-        except Exception as e:
-            print(f"Error getting chat history: {e}")
+        except ClientError as e:
+            print(f"[DynamoDB] List documents failed: {e}")
             return []
 
-    def delete_chat_session(self, session_id: str) -> bool:
-        """
-        Delete all messages for a chat session.
-
-        Args:
-            session_id: Chat session ID
-
-        Returns:
-            True if successful, False otherwise
-        """
+    def get_document_count(self, uploaded_by: Optional[str] = None) -> int:
+        """Get total document count."""
         try:
-            # Query all items for this session
-            response = self.chat_table.query(
-                KeyConditionExpression='session_id = :sid',
-                ExpressionAttributeValues={':sid': session_id}
-            )
+            if uploaded_by:
+                # Use query on GSI if available, otherwise scan
+                response = self.documents_table.scan(
+                    Select="COUNT",
+                    FilterExpression="uploaded_by = :ub",
+                    ExpressionAttributeValues={":ub": uploaded_by},
+                )
+            else:
+                response = self.documents_table.scan(Select="COUNT")
 
-            # Batch delete
-            with self.chat_table.batch_writer() as batch:
-                for item in response.get('Items', []):
-                    batch.delete_item(
-                        Key={
-                            'session_id': item['session_id'],
-                            'timestamp': item['timestamp']
-                        }
-                    )
+            return response.get("Count", 0)
+        except ClientError as e:
+            print(f"[DynamoDB] Count failed: {e}")
+            return 0
 
-            return True
-        except Exception as e:
-            print(f"Error deleting chat session: {e}")
-            return False
+    def archive_document_version(
+        self, doc_id: str, replaced_by: str = None
+    ) -> Optional[str]:
+        """Archive document to version history."""
+        doc = self.get_document(doc_id)
+        if not doc:
+            return None
 
-    # ==================== Utility Methods ====================
+        ph_tz = timezone(timedelta(hours=8))
+        archived_date = datetime.now(ph_tz).isoformat()
+        version_id = str(uuid.uuid4())
 
-    def _convert_decimals(self, obj: Any) -> Any:
-        """
-        Convert DynamoDB Decimal types to int/float for JSON serialization.
+        version_item = {
+            "version_id": version_id,
+            "doc_id": doc["doc_id"],
+            "file_name": doc["file_name"],
+            "version_number": doc.get("current_version", 1),
+            "upload_date": doc["upload_date"],
+            "archived_date": archived_date,
+            "file_size_bytes": doc.get("file_size_bytes"),
+            "chunks": doc.get("chunks"),
+            "uploaded_by": doc.get("uploaded_by"),
+            "content_hash": doc.get("content_hash"),
+            "page_count": doc.get("page_count"),
+            "replaced_by": replaced_by,
+        }
 
-        Args:
-            obj: Object to convert (can be dict, list, or Decimal)
-
-        Returns:
-            Converted object
-        """
-        if isinstance(obj, Decimal):
-            # Convert to int if it's a whole number, otherwise float
-            return int(obj) if obj % 1 == 0 else float(obj)
-        elif isinstance(obj, dict):
-            return {k: self._convert_decimals(v) for k, v in obj.items()}
-        elif isinstance(obj, list):
-            return [self._convert_decimals(item) for item in obj]
-        return obj
-
-    def health_check(self) -> Dict[str, bool]:
-        """
-        Check DynamoDB connection health.
-
-        Returns:
-            Dictionary with connection status for each table
-        """
         try:
-            # Try to describe tables
-            docs_status = self.documents_table.table_status == 'ACTIVE'
-            chat_status = self.chat_table.table_status == 'ACTIVE'
-
-            return {
-                'documents_table': docs_status,
-                'chat_table': chat_status,
-                'overall': docs_status and chat_status
-            }
-        except Exception as e:
-            print(f"Health check failed: {e}")
-            return {
-                'documents_table': False,
-                'chat_table': False,
-                'overall': False
-            }
+            self.versions_table.put_item(Item=version_item)
+            print(f"[DynamoDB] Archived version: {version_id}")
+            return version_id
+        except ClientError as e:
+            print(f"[DynamoDB] Archive failed: {e}")
+            return None
 
 
-# Singleton instance
-_db_adapter = None
+# Singleton
+_documents_adapter_instance = None
 
-def get_dynamodb_adapter() -> DynamoDBAdapter:
-    """
-    Get or create DynamoDB adapter singleton.
 
-    Returns:
-        DynamoDBAdapter instance
-    """
-    global _db_adapter
-    if _db_adapter is None:
-        _db_adapter = DynamoDBAdapter()
-    return _db_adapter
+def get_documents_adapter() -> DynamoDBDocumentsAdapter:
+    """Get or create DynamoDBDocumentsAdapter instance."""
+    global _documents_adapter_instance
+    if _documents_adapter_instance is None:
+        _documents_adapter_instance = DynamoDBDocumentsAdapter()
+    return _documents_adapter_instance
