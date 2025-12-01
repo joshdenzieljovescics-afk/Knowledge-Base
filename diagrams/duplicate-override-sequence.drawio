@@ -1,0 +1,256 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="29.2.1">
+  <diagram name="Duplicate Override Sequence" id="duplicate-override-sequence">
+    <mxGraphModel dx="2084" dy="1124" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="User" vertex="1">
+          <mxGeometry height="80" width="40" x="80" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="frontend" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Frontend&#xa;(React)" vertex="1">
+          <mxGeometry height="60" width="100" x="240" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="backend" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Backend&#xa;(FastAPI)" vertex="1">
+          <mxGeometry height="60" width="100" x="460" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sqlite" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="SQLite" vertex="1">
+          <mxGeometry height="80" width="80" x="700" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="weaviate" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="Weaviate" vertex="1">
+          <mxGeometry height="80" width="80" x="920" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="user-lifeline" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="100" y="2300" as="sourcePoint" />
+            <mxPoint x="100" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frontend-lifeline" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="290" y="2300" as="sourcePoint" />
+            <mxPoint x="290" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="backend-lifeline" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="510" y="2300" as="sourcePoint" />
+            <mxPoint x="510" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqlite-lifeline" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="740" y="2300" as="sourcePoint" />
+            <mxPoint x="740" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="weaviate-lifeline" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="960" y="2300" as="sourcePoint" />
+            <mxPoint x="960" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="initial-note" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;align=center;verticalAlign=middle;fontSize=10;size=15;" value="[Duplicate Modal is showing]" vertex="1">
+          <mxGeometry height="50" width="160" x="30" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="alt-box1" parent="1" style="shape=rect;dashed=1;" value="" vertex="1">
+          <mxGeometry height="240" width="350" x="50" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="alt-label1" parent="1" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;fontStyle=1;fontSize=11;" value="alt" vertex="1">
+          <mxGeometry height="25" width="50" x="50" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="alt-condition1" parent="1" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;fontStyle=2;fontSize=10;" value="[User confirms override]" vertex="1">
+          <mxGeometry height="25" width="180" x="110" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="msg1" edge="1" parent="1" style="endArrow=classic;html=1;" value="1. Click &quot;Override&quot;">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="100" y="300" as="sourcePoint" />
+            <mxPoint x="290" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg2" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="2. Show Confirm Modal">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="290" y="350" as="sourcePoint" />
+            <mxPoint x="100" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg3" edge="1" parent="1" style="endArrow=classic;html=1;" value="3. Click &quot;Yes, Override&quot;">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="100" y="400" as="sourcePoint" />
+            <mxPoint x="290" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="alt-divider1" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="50" y="440" as="sourcePoint" />
+            <mxPoint x="400" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="alt-condition2" parent="1" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;fontStyle=2;fontSize=10;" value="[User cancels]" vertex="1">
+          <mxGeometry height="25" width="120" x="110" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="msg-cancel" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="Close modal, return">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="290" y="475" as="sourcePoint" />
+            <mxPoint x="100" y="475" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg4-start" edge="1" parent="1" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="540" />
+            </Array>
+            <mxPoint x="290" y="540" as="sourcePoint" />
+            <mxPoint x="290" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg4-label" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="4. Close modals,&#xa;set forceReplaceMode=true" vertex="1">
+          <mxGeometry height="30" width="160" x="350" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="msg5" edge="1" parent="1" style="endArrow=classic;html=1;" value="5. POST /pdf/parse-pdf&#xa;{file, force_reparse: &quot;true&quot;}">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="290" y="650" as="sourcePoint" />
+            <mxPoint x="510" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg6-start" edge="1" parent="1" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="710" />
+            </Array>
+            <mxPoint x="510" y="710" as="sourcePoint" />
+            <mxPoint x="510" y="780" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg6-label" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="6. Skip duplicate check&#xa;(force_reparse)&#xa;Parse PDF, create chunks" vertex="1">
+          <mxGeometry height="50" width="160" x="570" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="msg7" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="7. Return: {chunks, document_metadata,&#xa;content_hash, file_size_bytes}">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="510" y="840" as="sourcePoint" />
+            <mxPoint x="290" y="840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg8-start" edge="1" parent="1" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="900" />
+            </Array>
+            <mxPoint x="290" y="900" as="sourcePoint" />
+            <mxPoint x="290" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg8-label" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="8. Save to localStorage&#xa;Display chunks for review" vertex="1">
+          <mxGeometry height="30" width="170" x="350" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="opt-box" parent="1" style="shape=rect;dashed=1;" value="" vertex="1">
+          <mxGeometry height="180" width="960" x="50" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="opt-label" parent="1" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;fontStyle=1;fontSize=11;" value="opt" vertex="1">
+          <mxGeometry height="25" width="50" x="50" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="opt-condition" parent="1" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;fontStyle=2;fontSize=10;" value="[User decides to upload after review]" vertex="1">
+          <mxGeometry height="25" width="240" x="110" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="msg9" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="9. Review/edit chunks">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="290" y="1030" as="sourcePoint" />
+            <mxPoint x="100" y="1030" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg10" edge="1" parent="1" style="endArrow=classic;html=1;" value="10. Click &quot;Upload to KB&quot;">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="100" y="1090" as="sourcePoint" />
+            <mxPoint x="290" y="1090" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg11" edge="1" parent="1" style="endArrow=classic;html=1;" value="11. POST /kb/upload-to-kb&#xa;{chunks, ..., force_replace: true}">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="290" y="1200" as="sourcePoint" />
+            <mxPoint x="510" y="1200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="loop-box" parent="1" style="shape=rect;dashed=1;" value="" vertex="1">
+          <mxGeometry height="650" width="550" x="460" y="1250" as="geometry" />
+        </mxCell>
+        <mxCell id="loop-label" parent="1" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;fontStyle=1;fontSize=11;" value="loop" vertex="1">
+          <mxGeometry height="25" width="50" x="460" y="1250" as="geometry" />
+        </mxCell>
+        <mxCell id="loop-condition" parent="1" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;fontStyle=2;fontSize=10;" value="[Document replacement transaction]" vertex="1">
+          <mxGeometry height="25" width="240" x="520" y="1250" as="geometry" />
+        </mxCell>
+        <mxCell id="msg12" edge="1" parent="1" style="endArrow=classic;html=1;" value="12. SELECT existing doc by filename">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="510" y="1310" as="sourcePoint" />
+            <mxPoint x="740" y="1310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg13" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="13. Return existing doc&#xa;(with weaviate_doc_id)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="740" y="1370" as="sourcePoint" />
+            <mxPoint x="510" y="1370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg14" edge="1" parent="1" style="endArrow=classic;html=1;" value="14. INSERT INTO document_versions&#xa;(archive current version)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="510" y="1450" as="sourcePoint" />
+            <mxPoint x="740" y="1450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg15" edge="1" parent="1" style="endArrow=classic;html=1;" value="15. DELETE FROM documents (old doc)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="510" y="1520" as="sourcePoint" />
+            <mxPoint x="740" y="1520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg16" edge="1" parent="1" style="endArrow=classic;html=1;" value="16. DELETE Document &amp;amp; Chunks&#xa;using weaviate_doc_id">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="510" y="1600" as="sourcePoint" />
+            <mxPoint x="960" y="1600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg17" edge="1" parent="1" style="endArrow=classic;html=1;" value="17. INSERT new Document &amp;amp; Chunks">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="510" y="1680" as="sourcePoint" />
+            <mxPoint x="960" y="1680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg18" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="18. Return: new weaviate_doc_id">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="960" y="1740" as="sourcePoint" />
+            <mxPoint x="510" y="1740" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg19" edge="1" parent="1" style="endArrow=classic;html=1;" value="19. INSERT INTO documents&#xa;(new doc with new version)">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="510" y="1830" as="sourcePoint" />
+            <mxPoint x="740" y="1830" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg20" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="20. Return: {success, doc_id,&#xa;action:&quot;replaced&quot;, version: 2,&#xa;version_info: {...}}">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="510" y="1950" as="sourcePoint" />
+            <mxPoint x="290" y="1950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg21-start" edge="1" parent="1" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="2020" />
+            </Array>
+            <mxPoint x="290" y="2020" as="sourcePoint" />
+            <mxPoint x="290" y="2060" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg21-label" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="21. Clear localStorage" vertex="1">
+          <mxGeometry height="30" width="140" x="350" y="2025" as="geometry" />
+        </mxCell>
+        <mxCell id="msg22" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="22. Show Success Modal&#xa;with version info">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="290" y="2130" as="sourcePoint" />
+            <mxPoint x="100" y="2130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

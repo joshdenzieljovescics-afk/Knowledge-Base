@@ -10,11 +10,15 @@
    - [Document Upload Activity](#1-document-upload-activity-diagram)
    - [Duplicate Override Activity](#2-duplicate-override-activity-diagram)
    - [Query/Search Activity](#3-querysearch-activity-diagram)
+   - [SFXBot Chat Activity](#4-sfxbot-chat-activity-diagram)
+   - [SFXBot Thread Management Activity](#5-sfxbot-thread-management-activity-diagram)
 2. [System Sequence Diagrams (SSD)](#system-sequence-diagrams)
    - [Document Upload SSD](#1-document-upload-sequence)
    - [Duplicate Override SSD](#2-duplicate-override-sequence)
    - [Version History SSD](#3-version-history-retrieval-sequence)
    - [Document Search SSD](#4-document-search-sequence)
+   - [SFXBot Message Flow SSD](#5-sfxbot-message-flow-sequence)
+   - [SFXBot Thread Operations SSD](#6-sfxbot-thread-operations-sequence)
 
 ---
 
@@ -366,6 +370,309 @@
 
 ---
 
+### 4. SFXBot Chat Activity Diagram
+
+```
+                                    ┌─────────────────┐
+                                    │     START       │
+                                    └────────┬────────┘
+                                             │
+                                             ▼
+                                    ┌─────────────────┐
+                                    │ User opens      │
+                                    │ SFXBot page     │
+                                    └────────┬────────┘
+                                             │
+                                             ▼
+                                    ┌─────────────────┐
+                                    │ Fetch user      │
+                                    │ sessions/threads│
+                                    └────────┬────────┘
+                                             │
+                                             ▼
+                                    ◇─────────────────◇
+                                   ╱                   ╲
+                                  ╱  Active thread?     ╲
+                                 ╱                       ╲
+                                ◇─────────────────────────◇
+                               │                           │
+                          [NO] │                           │ [YES]
+                               ▼                           ▼
+                      ┌─────────────────┐        ┌─────────────────┐
+                      │ Show welcome    │        │ Load thread     │
+                      │ screen with     │        │ history         │
+                      │ suggestions     │        └────────┬────────┘
+                      └────────┬────────┘                 │
+                               │                          ▼
+                               │                 ┌─────────────────┐
+                               │                 │ Display messages│
+                               │                 │ in chat         │
+                               │                 └────────┬────────┘
+                               │                          │
+                               │                          ▼
+                               │                 ┌─────────────────┐
+                               │                 │ Load token usage│
+                               │                 │ (session & total)│
+                               │                 └────────┬────────┘
+                               │                          │
+                               └──────────────────────────┤
+                                                          │
+                                                          ▼
+                                                 ┌─────────────────┐
+                                                 │ User enters     │
+                                                 │ message         │
+                                                 └────────┬────────┘
+                                                          │
+                                                          ▼
+                                                 ◇─────────────────◇
+                                                ╱                   ╲
+                                               ╱  Has active thread? ╲
+                                              ╱                       ╲
+                                             ◇─────────────────────────◇
+                                            │                           │
+                                       [NO] │                           │ [YES]
+                                            ▼                           ▼
+                                   ┌─────────────────┐        ┌─────────────────┐
+                                   │ POST /chat/     │        │ Add user message│
+                                   │ session/new     │        │ to UI           │
+                                   └────────┬────────┘        └────────┬────────┘
+                                            │                          │
+                                            ▼                          ▼
+                                   ┌─────────────────┐        ┌─────────────────┐
+                                   │ Create new      │        │ Add placeholder │
+                                   │ session with    │        │ for assistant   │
+                                   │ auto-title      │        │ message         │
+                                   └────────┬────────┘        └────────┬────────┘
+                                            │                          │
+                                            ▼                          ▼
+                                   ┌─────────────────┐        ┌─────────────────┐
+                                   │ Update threads  │        │ POST /chat/     │
+                                   │ list            │        │ message         │
+                                   └────────┬────────┘        └────────┬────────┘
+                                            │                          │
+                                            └──────────────┬───────────┘
+                                                           │
+                                                           ▼
+                                                  ┌─────────────────┐
+                                                  │ Backend sends   │
+                                                  │ to OpenAI       │
+                                                  └────────┬────────┘
+                                                           │
+                                                           ▼
+                                                  ┌─────────────────┐
+                                                  │ Backend builds  │
+                                                  │ context from KB │
+                                                  └────────┬────────┘
+                                                           │
+                                                           ▼
+                                                  ┌─────────────────┐
+                                                  │ Generate AI     │
+                                                  │ response        │
+                                                  └────────┬────────┘
+                                                           │
+                                                           ▼
+                                                  ┌─────────────────┐
+                                                  │ Update assistant│
+                                                  │ message in UI   │
+                                                  └────────┬────────┘
+                                                           │
+                                                           ▼
+                                                  ┌─────────────────┐
+                                                  │ Refresh token   │
+                                                  │ usage stats     │
+                                                  └────────┬────────┘
+                                                           │
+                                                           ▼
+                                                  ┌─────────────────┐
+                                                  │ Scroll to bottom│
+                                                  └────────┬────────┘
+                                                           │
+                                                           ▼
+                                                  ◇─────────────────◇
+                                                 ╱                   ╲
+                                                ╱  User continues     ╲
+                                               ╱   chatting?           ╲
+                                              ◇─────────────────────────◇
+                                             │                           │
+                                        [YES]│                           │[NO]
+                                             │                           │
+                                             │                           ▼
+                                             │                  ┌─────────────────┐
+                                             └─────────────────>│      END        │
+                                                                └─────────────────┘
+```
+
+---
+
+### 5. SFXBot Thread Management Activity Diagram
+
+```
+                                    ┌─────────────────┐
+                                    │     START       │
+                                    │  (Thread Mgmt)  │
+                                    └────────┬────────┘
+                                             │
+                                             ▼
+                                    ◇─────────────────◇
+                                   ╱                   ╲
+                                  ╱   User action?      ╲
+                                 ╱                       ╲
+                                ◇─────────────────────────◇
+                               ╱            │              ╲
+                [Create New] ╱              │               ╲ [Switch Thread]
+                           ╱                │                ╲
+                          ▼                 │                 ▼
+                 ┌─────────────────┐        │        ┌─────────────────┐
+                 │ Click "New Chat"│        │        │ Click thread    │
+                 │ button          │        │        │ from sidebar    │
+                 └────────┬────────┘        │        └────────┬────────┘
+                          │                 │                 │
+                          ▼                 │                 ▼
+                 ┌─────────────────┐        │        ┌─────────────────┐
+                 │ POST /chat/     │        │        │ GET /chat/      │
+                 │ session/new     │        │        │ session/{id}/   │
+                 └────────┬────────┘        │        │ history         │
+                          │                 │        └────────┬────────┘
+                          ▼                 │                 │
+                 ┌─────────────────┐        │                 ▼
+                 │ Create session  │        │        ┌─────────────────┐
+                 │ without title   │        │        │ Load message    │
+                 │ (auto-gen later)│        │        │ history         │
+                 └────────┬────────┘        │        └────────┬────────┘
+                          │                 │                 │
+                          ▼                 │                 ▼
+                 ┌─────────────────┐        │        ┌─────────────────┐
+                 │ Set as active   │        │        │ Set as active   │
+                 │ thread          │        │        │ thread          │
+                 └────────┬────────┘        │        └────────┬────────┘
+                          │                 │                 │
+                          ▼                 │                 ▼
+                 ┌─────────────────┐        │        ┌─────────────────┐
+                 │ Clear messages  │        │        │ Display messages│
+                 └────────┬────────┘        │        └────────┬────────┘
+                          │                 │                 │
+                          └─────────────────┼─────────────────┘
+                                            │
+                                            │ [Edit Title]
+                                            │
+                                            ▼
+                                   ┌─────────────────┐
+                                   │ Click edit icon │
+                                   │ on thread       │
+                                   └────────┬────────┘
+                                            │
+                                            ▼
+                                   ┌─────────────────┐
+                                   │ Show inline     │
+                                   │ edit input      │
+                                   └────────┬────────┘
+                                            │
+                                            ▼
+                                   ┌─────────────────┐
+                                   │ User edits title│
+                                   └────────┬────────┘
+                                            │
+                                            ▼
+                                   ◇─────────────────◇
+                                  ╱                   ╲
+                                 ╱   Save or cancel?   ╲
+                                ╱                       ╲
+                               ◇─────────────────────────◇
+                              │                           │
+                        [Save]│                           │[Cancel]
+                              ▼                           ▼
+                     ┌─────────────────┐        ┌─────────────────┐
+                     │ PATCH /chat/    │        │ Revert to       │
+                     │ session/{id}/   │        │ original title  │
+                     │ title           │        └────────┬────────┘
+                     └────────┬────────┘                 │
+                              │                          │
+                              ▼                          │
+                     ┌─────────────────┐                 │
+                     │ Update title    │                 │
+                     │ in backend      │                 │
+                     └────────┬────────┘                 │
+                              │                          │
+                              ▼                          │
+                     ┌─────────────────┐                 │
+                     │ Update thread   │                 │
+                     │ in local state  │                 │
+                     └────────┬────────┘                 │
+                              │                          │
+                              └──────────────────────────┤
+                                                         │
+                                                         │
+                                            [Delete Thread]
+                                                         │
+                                                         ▼
+                                                ┌─────────────────┐
+                                                │ Click delete    │
+                                                │ icon (X)        │
+                                                └────────┬────────┘
+                                                         │
+                                                         ▼
+                                                ┌─────────────────┐
+                                                │ Show Delete     │
+                                                │ Confirmation    │
+                                                │ Modal           │
+                                                └────────┬────────┘
+                                                         │
+                                                         ▼
+                                                ◇─────────────────◇
+                                               ╱                   ╲
+                                              ╱  User confirms      ╲
+                                             ╱   deletion?           ╲
+                                            ◇─────────────────────────◇
+                                           │                           │
+                                      [YES]│                           │[NO]
+                                           ▼                           ▼
+                                  ┌─────────────────┐        ┌─────────────────┐
+                                  │ DELETE /chat/   │        │ Close modal     │
+                                  │ session/{id}    │        │ No changes      │
+                                  └────────┬────────┘        └────────┬────────┘
+                                           │                          │
+                                           ▼                          │
+                                  ┌─────────────────┐                 │
+                                  │ Remove thread   │                 │
+                                  │ from backend    │                 │
+                                  └────────┬────────┘                 │
+                                           │                          │
+                                           ▼                          │
+                                  ┌─────────────────┐                 │
+                                  │ Remove from     │                 │
+                                  │ threads list    │                 │
+                                  └────────┬────────┘                 │
+                                           │                          │
+                                           ▼                          │
+                                  ◇─────────────────◇                 │
+                                 ╱                   ╲                │
+                                ╱  Was active thread? ╲               │
+                               ╱                       ╲              │
+                              ◇─────────────────────────◇             │
+                             │                           │            │
+                        [YES]│                           │[NO]        │
+                             ▼                           ▼            │
+                    ┌─────────────────┐        ┌─────────────────┐   │
+                    │ Clear active    │        │ Keep current    │   │
+                    │ thread ID       │        │ view            │   │
+                    └────────┬────────┘        └────────┬────────┘   │
+                             │                          │            │
+                             ▼                          │            │
+                    ┌─────────────────┐                 │            │
+                    │ Clear messages  │                 │            │
+                    │ Show welcome    │                 │            │
+                    └────────┬────────┘                 │            │
+                             │                          │            │
+                             └──────────────────────────┴────────────┘
+                                                        │
+                                                        ▼
+                                               ┌─────────────────┐
+                                               │      END        │
+                                               └─────────────────┘
+```
+
+---
+
 ## System Sequence Diagrams
 
 ### 1. Document Upload Sequence
@@ -642,6 +949,270 @@
      │     response in chat│                     │                     │                     │
      │<────────────────────│                     │                     │                     │
      │                     │                     │                     │                     │
+```
+
+---
+
+### 5. SFXBot Message Flow Sequence
+
+```
+┌──────────┐          ┌──────────┐          ┌──────────┐          ┌──────────┐          ┌──────────┐
+│  User    │          │ Frontend │          │ Backend  │          │  OpenAI  │          │ Database │
+│          │          │ (React)  │          │ (FastAPI)│          │   API    │          │ (SQLite) │
+└────┬─────┘          └────┬─────┘          └────┬─────┘          └────┬─────┘          └────┬─────┘
+     │                     │                     │                     │                     │
+     │ 1. Type message     │                     │                     │                     │
+     │    and press Enter  │                     │                     │                     │
+     │────────────────────>│                     │                     │                     │
+     │                     │                     │                     │                     │
+     │                     │ 2. Check activeThreadId                   │                     │
+     │                     │─────────┐           │                     │                     │
+     │                     │         │           │                     │                     │
+     │                     │<────────┘           │                     │                     │
+     │                     │                     │                     │                     │
+     │                     │ 3. If no thread: POST /chat/session/new   │                     │
+     │                     │────────────────────>│                     │                     │
+     │                     │                     │                     │                     │
+     │                     │                     │ 4. INSERT INTO chat_sessions              │
+     │                     │                     │────────────────────────────────────────────>
+     │                     │                     │                     │                     │
+     │                     │                     │ 5. Return: session_id                     │
+     │                     │                     │<────────────────────────────────────────────
+     │                     │                     │                     │                     │
+     │                     │ 6. Return: {success, session_id}          │                     │
+     │                     │<────────────────────│                     │                     │
+     │                     │                     │                     │                     │
+     │                     │ 7. Set activeThreadId                     │                     │
+     │                     │    Update threads list                    │                     │
+     │                     │─────────┐           │                     │                     │
+     │                     │<────────┘           │                     │                     │
+     │                     │                     │                     │                     │
+     │                     │ 8. Add user message to UI                 │                     │
+     │                     │─────────┐           │                     │                     │
+     │                     │<────────┘           │                     │                     │
+     │                     │                     │                     │                     │
+     │ 9. Display user msg │                     │                     │                     │
+     │<────────────────────│                     │                     │                     │
+     │                     │                     │                     │                     │
+     │                     │ 10. Add assistant placeholder             │                     │
+     │                     │─────────┐           │                     │                     │
+     │                     │<────────┘           │                     │                     │
+     │                     │                     │                     │                     │
+     │                     │ 11. POST /chat/message                    │                     │
+     │                     │     {session_id, message,                 │                     │
+     │                     │      options: {include_context: true}}    │                     │
+     │                     │────────────────────>│                     │                     │
+     │                     │                     │                     │                     │
+     │                     │                     │ 12. GET session context                   │
+     │                     │                     │────────────────────────────────────────────>
+     │                     │                     │                     │                     │
+     │                     │                     │ 13. Return: conversation history          │
+     │                     │                     │<────────────────────────────────────────────
+     │                     │                     │                     │                     │
+     │                     │                     │ 14. Search knowledge base (if enabled)    │
+     │                     │                     │─────────┐           │                     │
+     │                     │                     │         │           │                     │
+     │                     │                     │<────────┘           │                     │
+     │                     │                     │                     │                     │
+     │                     │                     │ 15. POST /v1/chat/completions             │
+     │                     │                     │     {messages: [...context, user_msg]}    │
+     │                     │                     │────────────────────>│                     │
+     │                     │                     │                     │                     │
+     │                     │                     │ 16. Return: AI response                   │
+     │                     │                     │<────────────────────│                     │
+     │                     │                     │                     │                     │
+     │                     │                     │ 17. Save user & assistant messages        │
+     │                     │                     │────────────────────────────────────────────>
+     │                     │                     │                     │                     │
+     │                     │                     │ 18. Update token usage                    │
+     │                     │                     │────────────────────────────────────────────>
+     │                     │                     │                     │                     │
+     │                     │                     │ 19. Auto-generate title (if first msg)    │
+     │                     │                     │─────────┐           │                     │
+     │                     │                     │         │           │                     │
+     │                     │                     │<────────┘           │                     │
+     │                     │                     │                     │                     │
+     │                     │ 20. Return: {success, content,            │                     │
+     │                     │     sources, metadata}                    │                     │
+     │                     │<────────────────────│                     │                     │
+     │                     │                     │                     │                     │
+     │                     │ 21. Update assistant message              │                     │
+     │                     │─────────┐           │                     │                     │
+     │                     │<────────┘           │                     │                     │
+     │                     │                     │                     │                     │
+     │ 22. Display AI      │                     │                     │                     │
+     │     response        │                     │                     │                     │
+     │<────────────────────│                     │                     │                     │
+     │                     │                     │                     │                     │
+     │                     │ 23. Fetch token usage stats               │                     │
+     │                     │────────────────────>│                     │                     │
+     │                     │                     │                     │                     │
+     │                     │                     │ 24. GET session tokens                    │
+     │                     │                     │────────────────────────────────────────────>
+     │                     │                     │                     │                     │
+     │                     │                     │ 25. GET user total tokens                 │
+     │                     │                     │────────────────────────────────────────────>
+     │                     │                     │                     │                     │
+     │                     │                     │ 26. Return: token usage                   │
+     │                     │                     │<────────────────────────────────────────────
+     │                     │                     │                     │                     │
+     │                     │ 27. Return: {session_tokens,              │                     │
+     │                     │     total_tokens, costs}                  │                     │
+     │                     │<────────────────────│                     │                     │
+     │                     │                     │                     │                     │
+     │                     │ 28. Update token display                  │                     │
+     │                     │─────────┐           │                     │                     │
+     │                     │<────────┘           │                     │                     │
+     │                     │                     │                     │                     │
+     │ 29. View updated    │                     │                     │                     │
+     │     token stats     │                     │                     │                     │
+     │<────────────────────│                     │                     │                     │
+     │                     │                     │                     │                     │
+```
+
+---
+
+### 6. SFXBot Thread Operations Sequence
+
+```
+┌──────────┐          ┌──────────┐          ┌──────────┐          ┌──────────┐
+│  User    │          │ Frontend │          │ Backend  │          │ Database │
+│          │          │ (React)  │          │ (FastAPI)│          │ (SQLite) │
+└────┬─────┘          └────┬─────┘          └────┬─────┘          └────┬─────┘
+     │                     │                     │                     │
+     │ === CREATE NEW THREAD ===                 │                     │
+     │                     │                     │                     │
+     │ 1. Click "New Chat" │                     │                     │
+     │────────────────────>│                     │                     │
+     │                     │                     │                     │
+     │                     │ 2. POST /chat/session/new                 │
+     │                     │────────────────────>│                     │
+     │                     │                     │                     │
+     │                     │                     │ 3. INSERT INTO chat_sessions             │
+     │                     │                     │     (no title - auto-gen later)          │
+     │                     │                     │────────────────────>│
+     │                     │                     │                     │
+     │                     │                     │ 4. Return: new row  │
+     │                     │                     │<────────────────────│
+     │                     │                     │                     │
+     │                     │ 5. Return: {success, session_id, session} │
+     │                     │<────────────────────│                     │
+     │                     │                     │                     │
+     │                     │ 6. Add to threads list                    │
+     │                     │    Set as active thread                   │
+     │                     │    Clear messages                         │
+     │                     │─────────┐           │                     │
+     │                     │<────────┘           │                     │
+     │                     │                     │                     │
+     │ 7. Show empty chat  │                     │                     │
+     │<────────────────────│                     │                     │
+     │                     │                     │                     │
+     │                     │                     │                     │
+     │ === SWITCH THREAD ===                     │                     │
+     │                     │                     │                     │
+     │ 8. Click thread     │                     │                     │
+     │    from sidebar     │                     │                     │
+     │────────────────────>│                     │                     │
+     │                     │                     │                     │
+     │                     │ 9. GET /chat/session/{id}/history         │
+     │                     │────────────────────>│                     │
+     │                     │                     │                     │
+     │                     │                     │ 10. SELECT messages │
+     │                     │                     │     FROM chat_messages                   │
+     │                     │                     │     WHERE session_id = ?                 │
+     │                     │                     │     ORDER BY timestamp                   │
+     │                     │                     │────────────────────>│
+     │                     │                     │                     │
+     │                     │                     │ 11. Return: messages│
+     │                     │                     │<────────────────────│
+     │                     │                     │                     │
+     │                     │ 12. Return: {success, messages: [...]}    │
+     │                     │<────────────────────│                     │
+     │                     │                     │                     │
+     │                     │ 13. Set activeThreadId                    │
+     │                     │     Update messages state                 │
+     │                     │─────────┐           │                     │
+     │                     │<────────┘           │                     │
+     │                     │                     │                     │
+     │ 14. Display chat    │                     │                     │
+     │     history         │                     │                     │
+     │<────────────────────│                     │                     │
+     │                     │                     │                     │
+     │                     │                     │                     │
+     │ === EDIT THREAD TITLE ===                 │                     │
+     │                     │                     │                     │
+     │ 15. Click edit icon │                     │                     │
+     │────────────────────>│                     │                     │
+     │                     │                     │                     │
+     │                     │ 16. Show inline edit input                │
+     │                     │─────────┐           │                     │
+     │                     │<────────┘           │                     │
+     │                     │                     │                     │
+     │ 17. Edit & save     │                     │                     │
+     │────────────────────>│                     │                     │
+     │                     │                     │                     │
+     │                     │ 18. PATCH /chat/session/{id}/title        │
+     │                     │     {title: "new title"}                  │
+     │                     │────────────────────>│                     │
+     │                     │                     │                     │
+     │                     │                     │ 19. UPDATE chat_sessions                 │
+     │                     │                     │     SET title = ?   │
+     │                     │                     │     WHERE session_id = ?                 │
+     │                     │                     │────────────────────>│
+     │                     │                     │                     │
+     │                     │                     │ 20. Return: success │
+     │                     │                     │<────────────────────│
+     │                     │                     │                     │
+     │                     │ 21. Return: {success, title}              │
+     │                     │<────────────────────│                     │
+     │                     │                     │                     │
+     │                     │ 22. Update thread in local state          │
+     │                     │─────────┐           │                     │
+     │                     │<────────┘           │                     │
+     │                     │                     │                     │
+     │ 23. Show updated    │                     │                     │
+     │     title           │                     │                     │
+     │<────────────────────│                     │                     │
+     │                     │                     │                     │
+     │                     │                     │                     │
+     │ === DELETE THREAD ===                     │                     │
+     │                     │                     │                     │
+     │ 24. Click delete (X)│                     │                     │
+     │────────────────────>│                     │                     │
+     │                     │                     │                     │
+     │                     │ 25. Show confirmation modal               │
+     │                     │─────────┐           │                     │
+     │                     │<────────┘           │                     │
+     │                     │                     │                     │
+     │ 26. Confirm delete  │                     │                     │
+     │<────────────────────│                     │                     │
+     │────────────────────>│                     │                     │
+     │                     │                     │                     │
+     │                     │ 27. DELETE /chat/session/{id}             │
+     │                     │────────────────────>│                     │
+     │                     │                     │                     │
+     │                     │                     │ 28. DELETE FROM chat_messages            │
+     │                     │                     │     WHERE session_id = ?                 │
+     │                     │                     │────────────────────>│
+     │                     │                     │                     │
+     │                     │                     │ 29. DELETE FROM chat_sessions            │
+     │                     │                     │     WHERE session_id = ?                 │
+     │                     │                     │────────────────────>│
+     │                     │                     │                     │
+     │                     │                     │ 30. Return: success │
+     │                     │                     │<────────────────────│
+     │                     │                     │                     │
+     │                     │ 31. Return: {success}                     │
+     │                     │<────────────────────│                     │
+     │                     │                     │                     │
+     │                     │ 32. Remove from threads list              │
+     │                     │     Clear active if was active            │
+     │                     │─────────┐           │                     │
+     │                     │<────────┘           │                     │
+     │                     │                     │                     │
+     │ 33. Update UI       │                     │                     │
+     │<────────────────────│                     │                     │
+     │                     │                     │                     │
 ```
 
 ---

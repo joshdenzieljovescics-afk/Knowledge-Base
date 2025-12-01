@@ -1,0 +1,157 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="29.2.1">
+  <diagram name="Document Search Sequence" id="document-search-sequence">
+    <mxGraphModel dx="2316" dy="1249" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="2200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="User" vertex="1">
+          <mxGeometry height="80" width="40" x="80" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="frontend" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Frontend&#xa;(React)" vertex="1">
+          <mxGeometry height="60" width="100" x="280" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="backend" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Backend&#xa;(FastAPI)" vertex="1">
+          <mxGeometry height="60" width="100" x="520" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="openai" parent="1" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" value="OpenAI&#xa;API" vertex="1">
+          <mxGeometry height="80" width="120" x="760" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="weaviate" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="Weaviate" vertex="1">
+          <mxGeometry height="80" width="80" x="1020" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="user-lifeline" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="100" y="1650" as="sourcePoint" />
+            <mxPoint x="100" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="frontend-lifeline" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="1650" as="sourcePoint" />
+            <mxPoint x="330" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="backend-lifeline" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="570" y="1650" as="sourcePoint" />
+            <mxPoint x="570" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="openai-lifeline" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="820" y="1650" as="sourcePoint" />
+            <mxPoint x="820" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="weaviate-lifeline" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1060" y="1650" as="sourcePoint" />
+            <mxPoint x="1060" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg1" edge="1" parent="1" style="endArrow=classic;html=1;" value="Enter search query">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="100" y="200" as="sourcePoint" />
+            <mxPoint x="330" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg2" edge="1" parent="1" style="endArrow=classic;html=1;" value="POST /chat/send&#xa;{query: &quot;...&quot;}">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="280" as="sourcePoint" />
+            <mxPoint x="570" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="loop-box" parent="1" style="shape=rect;dashed=1;" value="" vertex="1">
+          <mxGeometry height="1150" width="600" x="520" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="loop-label" parent="1" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;fontStyle=1;fontSize=11;" value="loop" vertex="1">
+          <mxGeometry height="25" width="50" x="520" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="msg3" edge="1" parent="1" style="endArrow=classic;html=1;" value="POST /v1/embeddings&#xa;{model: &quot;text-embedding-3-small&quot;,&#xa;input: &quot;user query&quot;}">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="570" y="420" as="sourcePoint" />
+            <mxPoint x="820" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg4" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="Return: embedding&#xa;[1536 floats]">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="820" y="500" as="sourcePoint" />
+            <mxPoint x="570" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg5" edge="1" parent="1" style="endArrow=classic;html=1;" value="nearVector search in&#xa;DocumentChunk collection">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="570" y="580" as="sourcePoint" />
+            <mxPoint x="1060" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg6" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="Return: top-k chunks&#xa;with similarity scores">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1060" y="670" as="sourcePoint" />
+            <mxPoint x="570" y="670" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg7-start" edge="1" parent="1" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="750" />
+            </Array>
+            <mxPoint x="570" y="750" as="sourcePoint" />
+            <mxPoint x="570" y="870" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg7-label" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="Build context from chunks:&#xa;- Rank by relevance&#xa;- Filter by threshold&#xa;- Format for prompt&#xa;- Add metadata" vertex="1">
+          <mxGeometry height="90" width="180" x="630" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="msg8" edge="1" parent="1" style="endArrow=classic;html=1;" value="POST /v1/chat/completions&#xa;{messages: [system, context, query]}">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="570" y="950" as="sourcePoint" />
+            <mxPoint x="820" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg9" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="Return: AI response">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="820" y="1040" as="sourcePoint" />
+            <mxPoint x="570" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="format-start" edge="1" parent="1" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="1110" />
+            </Array>
+            <mxPoint x="570" y="1110" as="sourcePoint" />
+            <mxPoint x="570" y="1190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="format-label" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="Format response:&#xa;- Add source citations&#xa;- Include chunk metadata" vertex="1">
+          <mxGeometry height="50" width="180" x="630" y="1130" as="geometry" />
+        </mxCell>
+        <mxCell id="compile-start" edge="1" parent="1" style="endArrow=classic;html=1;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="1260" />
+            </Array>
+            <mxPoint x="570" y="1260" as="sourcePoint" />
+            <mxPoint x="570" y="1390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="compile-label" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=10;" value="Compile final response:&#xa;- Combine AI response&#xa;- Add chunks used&#xa;- Include confidence scores&#xa;- Add processing metadata" vertex="1">
+          <mxGeometry height="100" width="180" x="630" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell id="msg10" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="Return: {response, chunks_used}">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="570" y="1470" as="sourcePoint" />
+            <mxPoint x="330" y="1470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg11" edge="1" parent="1" style="endArrow=classic;html=1;dashed=1;" value="Display AI response in chat">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="1550" as="sourcePoint" />
+            <mxPoint x="100" y="1550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
