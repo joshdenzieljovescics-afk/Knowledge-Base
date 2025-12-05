@@ -94,18 +94,13 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "safexpressops_local",
-        "USER": "root",
-        "PASSWORD": "",  # Change this
-        "HOST": "localhost",
-        "PORT": "3306",
-        "OPTIONS": {
-            "charset": "utf8mb4",
-            "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+# Custom User Model
+AUTH_USER_MODEL = "api.CustomUser"
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -218,6 +213,13 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 SOCIALACCOUNT_STORE_TOKENS = True
+
+# AllAuth settings for custom user model
+ACCOUNT_USER_MODEL_EMAIL_FIELD = "gmail"
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 GOOGLE_OAUTH2_CLIENT_ID = (
     "747803539173-ntak8kgdlpncf93q6g955tukmss974tr.apps.googleusercontent.com"

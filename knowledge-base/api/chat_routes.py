@@ -1,5 +1,6 @@
 # api/chat_routes.py
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Dict, Any, List
 from services.chat_service import ChatService
@@ -9,9 +10,21 @@ from middleware.security_middleware import (
     MAX_MESSAGE_LENGTH,
     MAX_SESSION_TITLE_LENGTH
 )
+from utils.llm_error_handler import LLMServiceException
 
 chat_router = APIRouter(prefix='/chat', tags=['chat'])
 chat_service = ChatService()
+
+
+def extract_user_id(current_user: dict) -> Optional[str]:
+    """
+    Extract user_id from JWT payload.
+    Prioritizes 'uuid' (the UUID from auth_user table) for quota/tracking,
+    falls back to 'user_id' or 'sub' for backwards compatibility.
+    """
+    # Prefer uuid for quota service (matches Django User model UUID)
+    user_id = current_user.get("uuid") or current_user.get("user_id") or current_user.get("sub")
+    return str(user_id) if user_id is not None else None
 
 # Request models with validation
 class CreateSessionRequest(BaseModel):
@@ -69,7 +82,34 @@ async def create_session(
 ):
     """Create a new chat session"""
     try:
-        user_id = current_user.get("sub") or current_user.get("user_id")
+        user_id = extract_user_id(current_user)
+        print(f"[ChatRoutes] Creating session for user_id: {user_id}")
+        
+        # Check if user is active before creating session
+        import os
+        from utils.quota_client import QuotaClientSync, UserDeactivatedException
+        quota_enabled = os.getenv("QUOTA_ENABLED", "true").lower() == "true"
+        if quota_enabled and user_id:
+            try:
+                quota_client = QuotaClientSync()
+                print(f"[ChatRoutes] Checking quota for user_id: {user_id}")
+                quota_client.check(
+                    user_id=user_id,
+                    estimated_tokens=0,
+                    service="knowledge-base",
+                    operation="create_session",
+                    raise_on_exceed=False
+                )
+                print(f"[ChatRoutes] ✅ User {user_id} is active")
+            except UserDeactivatedException as e:
+                print(f"[ChatRoutes] ❌ User {user_id} is DEACTIVATED")
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail=f"Access denied: {e.message}"
+                )
+            except Exception as e:
+                print(f"[ChatRoutes] ⚠️ Quota check error: {e} - allowing operation")
+                pass  # Allow if quota service is unavailable
         
         # Create session
         session = chat_service.create_session(user_id, request.title)
@@ -90,13 +130,24 @@ async def create_session(
             'message': 'Session created successfully'
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
+        error_msg = str(e)
         print(f"Error creating session: {e}")
         import traceback
         traceback.print_exc()
+        
+        # Check if this is an access denied error (deactivated user)
+        if "Access denied" in error_msg or "deactivated" in error_msg.lower():
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=error_msg
+            )
+        
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            detail=error_msg
         )
 
 
@@ -107,7 +158,7 @@ async def send_message(
 ):
     """Send a message in a chat session"""
     try:
-        user_id = current_user.get("sub") or current_user.get("user_id")
+        user_id = extract_user_id(current_user)
         
         if not request.session_id:
             raise HTTPException(
@@ -136,13 +187,32 @@ async def send_message(
         
     except HTTPException:
         raise
+    except LLMServiceException as llm_ex:
+        # Return LLM error with structured response for frontend popup
+        print(f"🔴 LLM Error in chat: {llm_ex}")
+        return JSONResponse(
+            status_code=llm_ex.status_code,
+            content={
+                'success': False,
+                **llm_ex.to_dict()
+            }
+        )
     except Exception as e:
+        error_msg = str(e)
         print(f"Error processing message: {e}")
         import traceback
         traceback.print_exc()
+        
+        # Check if this is an access denied error (deactivated user)
+        if "Access denied" in error_msg or "deactivated" in error_msg.lower():
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=error_msg
+            )
+        
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            detail=error_msg
         )
 
 
@@ -154,7 +224,7 @@ async def get_session_history(
 ):
     """Get session history with messages"""
     try:
-        user_id = current_user.get("sub") or current_user.get("user_id")
+        user_id = extract_user_id(current_user)
         
         result = chat_service.get_session_history(session_id, limit, user_id)
         
@@ -192,7 +262,7 @@ async def get_user_sessions(
 ):
     """Get all sessions for a user"""
     try:
-        user_id = current_user.get("sub") or current_user.get("user_id")
+        user_id = extract_user_id(current_user)
         
         result = chat_service.get_user_sessions(user_id, limit, offset)
         
@@ -218,7 +288,7 @@ async def get_session(
 ):
     """Get session details"""
     try:
-        user_id = current_user.get("sub") or current_user.get("user_id")
+        user_id = extract_user_id(current_user)
         result = chat_service.get_session_history(session_id, limit=0, user_id=user_id)
         
         if not result:
@@ -250,7 +320,7 @@ async def update_session_title(
 ):
     """Update session title"""
     try:
-        user_id = current_user.get("sub") or current_user.get("user_id")
+        user_id = extract_user_id(current_user)
         
         # Validate ownership
         session = chat_service.chat_db.get_session(session_id)
@@ -297,7 +367,7 @@ async def delete_session(
 ):
     """Delete a session"""
     try:
-        user_id = current_user.get("sub") or current_user.get("user_id")
+        user_id = extract_user_id(current_user)
         success = chat_service.delete_session(session_id, user_id)
         
         if not success:
@@ -315,6 +385,77 @@ async def delete_session(
         raise
     except Exception as e:
         print(f"Error deleting session: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+@chat_router.get('/quota')
+async def get_user_quota(
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Get current user's token quota balance.
+    
+    Returns quota information including:
+    - remaining_tokens: Tokens left in monthly quota
+    - monthly_limit: Total monthly limit
+    - current_usage: Tokens used this month
+    - percentage_used: Percentage of quota consumed
+    - tier: User's quota tier (free, pro, enterprise)
+    - resets_at: When the quota resets
+    """
+    try:
+        from utils.quota_client import QuotaClientSync
+        import os
+        
+        user_id = extract_user_id(current_user)
+        
+        # Check if quota service is enabled
+        quota_enabled = os.getenv("QUOTA_ENABLED", "true").lower() == "true"
+        if not quota_enabled:
+            return {
+                'success': True,
+                'quota_enabled': False,
+                'message': 'Quota tracking is disabled'
+            }
+        
+        quota_client = QuotaClientSync()
+        
+        try:
+            import httpx
+            with httpx.Client(timeout=5.0) as client:
+                response = client.get(
+                    f"{quota_client.base_url}/quota/balance/{user_id}"
+                )
+                response.raise_for_status()
+                data = response.json()
+                
+                return {
+                    'success': True,
+                    'quota_enabled': True,
+                    'user_id': user_id,
+                    'remaining_tokens': data.get('remaining_tokens', 0),
+                    'monthly_limit': data.get('monthly_limit', 0),
+                    'current_usage': data.get('current_usage', 0),
+                    'percentage_used': data.get('percentage_used', 0),
+                    'tier': data.get('tier', 'free'),
+                    'resets_at': data.get('resets_at'),
+                    'warning': data.get('warning', False),
+                    'warning_message': data.get('warning_message')
+                }
+        except Exception as e:
+            # Quota service unavailable
+            return {
+                'success': True,
+                'quota_enabled': True,
+                'quota_service_available': False,
+                'message': f'Quota service unavailable: {str(e)}'
+            }
+            
+    except Exception as e:
+        print(f"Error getting quota: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)

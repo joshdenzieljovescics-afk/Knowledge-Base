@@ -1,32 +1,25 @@
 from django.shortcuts import redirect
-from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from allauth.socialaccount.models import SocialToken, SocialAccount
-from .serializers import UserSerializer
+from .serializers import UserSerializer, OnboardUserSerializer
+from .models import CustomUser
 import json
 import os
 import requests
 import re
 from django.utils import timezone
 from datetime import datetime, timedelta
-from api.mysql_db import SafexpressMySQLDB
 from django.conf import settings
 from api.permissions import IsAdminUser
-
-mysql_db = SafexpressMySQLDB(
-    host="localhost",
-    database="safexpressops_local",
-    user="root",
-    password="",
-)
 
 User = get_user_model()
 
@@ -90,7 +83,17 @@ def validate_google_token(request):
 
 @csrf_exempt
 def google_auth_dynamodb(request):
-    """Handle Google OAuth authentication"""
+    """
+    Handle Google OAuth authentication with onboarding check.
+    
+    Flow:
+    1. Exchange auth code for Google access token
+    2. Get user info from Google
+    3. Check if user is onboarded (exists in auth_user with is_active=True)
+    4. If not onboarded, reject login
+    5. If onboarded, create/update SocialAccount and SocialToken
+    6. Return JWT tokens
+    """
     if request.method == "POST":
         try:
             data = json.loads(request.body)
@@ -103,6 +106,7 @@ def google_auth_dynamodb(request):
 
             print(f"Received auth code: {auth_code[:20]}...")
 
+            # Step 1: Exchange auth code for Google tokens
             token_url = "https://oauth2.googleapis.com/token"
             token_data = {
                 "code": auth_code,
@@ -134,6 +138,7 @@ def google_auth_dynamodb(request):
                     {"error": "No access token received from Google"}, status=400
                 )
 
+            # Step 2: Get user info from Google
             userinfo_url = "https://www.googleapis.com/oauth2/v2/userinfo"
             headers = {"Authorization": f"Bearer {access_token}"}
             userinfo_response = requests.get(userinfo_url, headers=headers)
@@ -151,39 +156,44 @@ def google_auth_dynamodb(request):
                     {"error": "Email not provided by Google"}, status=400
                 )
 
-            print(f"👤 Getting/creating user for: {email}")
+            print(f"👤 Checking onboarding status for: {email}")
 
-            # Try to get existing user by email first
+            # Step 3: Check if user is onboarded (exists and is_active=True)
             try:
-                user = User.objects.get(email=email)
-                print(f"✅ Found existing user: {user.email}")
-            except User.DoesNotExist:
-                # Create new user with unique username handling
-                base_username = email.split("@")[0]
-                username = base_username
-                counter = 1
-
-                # Keep trying until we find a unique username
-                while User.objects.filter(username=username).exists():
-                    username = f"{base_username}{counter}"
-                    counter += 1
-
-                print(f"Creating new user with username: {username}")
-
-                user = User.objects.create(
-                    email=email,
-                    username=username,
-                    first_name=name.split()[0] if name else "",
-                    last_name=(
-                        " ".join(name.split()[1:])
-                        if name and len(name.split()) > 1
-                        else ""
-                    ),
+                user = CustomUser.objects.get(gmail=email)
+                
+                # Check if user is active (onboarded)
+                if not user.is_active:
+                    print(f"❌ User {email} exists but is not onboarded (is_active=False)")
+                    return JsonResponse(
+                        {
+                            "error": "Account not activated",
+                            "message": "Your account has not been onboarded yet. Please contact an administrator to activate your account.",
+                            "email": email
+                        },
+                        status=403
+                    )
+                
+                print(f"✅ Found onboarded user: {user.gmail}")
+                
+                # Update picture if available
+                if picture and user.google_picture != picture:
+                    user.google_picture = picture
+                    user.save(update_fields=["google_picture", "updated_at"])
+                    
+            except CustomUser.DoesNotExist:
+                # User not found - not onboarded
+                print(f"❌ User {email} not found in database - not onboarded")
+                return JsonResponse(
+                    {
+                        "error": "Account not found",
+                        "message": "Your account has not been onboarded yet. Please contact an administrator to create your account.",
+                        "email": email
+                    },
+                    status=403
                 )
-                print(
-                    f"✅ Created new user: {user.email} with username: {user.username}"
-                )
 
+            # Step 4: Create/update SocialAccount and SocialToken
             from allauth.socialaccount.models import (
                 SocialAccount,
                 SocialToken,
@@ -208,6 +218,11 @@ def google_auth_dynamodb(request):
                 },
             )
 
+            # Update extra_data if account already exists
+            if not created:
+                social_account.extra_data = userinfo
+                social_account.save()
+
             refresh_token = token_response_data.get("refresh_token", "")
             try:
                 social_token = SocialToken.objects.get(
@@ -223,7 +238,7 @@ def google_auth_dynamodb(request):
                 if refresh_token:
                     social_token.token_secret = refresh_token
                 social_token.save()
-                print(f"✅ Updated existing SocialToken for {user.email}")
+                print(f"✅ Updated existing SocialToken for {user.gmail}")
             except SocialToken.DoesNotExist:
                 # Create new token
                 social_token = SocialToken.objects.create(
@@ -234,15 +249,22 @@ def google_auth_dynamodb(request):
                     expires_at=timezone.now()
                     + timedelta(seconds=token_response_data.get("expires_in", 3600)),
                 )
-                print(f"✅ Created new SocialToken for {user.email}")
+                print(f"✅ Created new SocialToken for {user.gmail}")
 
-            print(f"✅ Created/updated SocialAccount and SocialToken for {user.email}")
+            print(f"✅ Created/updated SocialAccount and SocialToken for {user.gmail}")
             print(f"   Access token: {access_token[:20]}...")
             print(
-                f"   Refresh token: {token_response_data.get('refresh_token', 'None')[:20]}..."
+                f"   Refresh token: {token_response_data.get('refresh_token', 'None')[:20] if token_response_data.get('refresh_token') else 'None'}..."
             )
 
+            # Step 5: Generate JWT tokens
             refresh = RefreshToken.for_user(user)
+            
+            # Add custom claims to JWT
+            refresh["role"] = user.role
+            refresh["fullname"] = user.fullname
+            refresh["gmail"] = user.gmail
+            
             access_token_jwt = str(refresh.access_token)
 
             return JsonResponse(
@@ -251,11 +273,10 @@ def google_auth_dynamodb(request):
                     "refresh": str(refresh),
                     "user": {
                         "id": user.id,
-                        "email": user.email,
-                        "username": user.username,
-                        "first_name": user.first_name,
-                        "last_name": user.last_name,
-                        "name": name,
+                        "fullname": user.fullname,
+                        "gmail": user.gmail,
+                        "role": user.role,
+                        "is_active": user.is_active,
                         "picture": picture,
                     },
                 },
@@ -274,6 +295,260 @@ def google_auth_dynamodb(request):
             )
 
     return JsonResponse({"error": "Method not allowed"}, status=405)
+
+
+# ==========================================
+# ONBOARDING ENDPOINTS
+# ==========================================
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def onboard_user(request):
+    """
+    Onboard a new user (Admin only).
+    
+    Creates a new user account with is_active=True.
+    Only admins can onboard new users.
+    
+    Request body:
+    {
+        "fullname": "John Doe",
+        "gmail": "john.doe@example.com",
+        "role": "staff"  # Options: admin, manager, staff
+    }
+    """
+    try:
+        # Check if requesting user is an admin
+        if request.user.role != "admin":
+            return Response(
+                {"error": "Permission denied. Only admins can onboard users."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        serializer = OnboardUserSerializer(data=request.data)
+        
+        if not serializer.is_valid():
+            return Response(
+                {"error": "Invalid data", "details": serializer.errors},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        gmail = serializer.validated_data["gmail"]
+        
+        # Check if user already exists
+        if CustomUser.objects.filter(gmail=gmail).exists():
+            existing_user = CustomUser.objects.get(gmail=gmail)
+            if existing_user.is_active:
+                return Response(
+                    {"error": f"User with email {gmail} is already onboarded."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            else:
+                # Activate existing inactive user
+                existing_user.is_active = True
+                existing_user.fullname = serializer.validated_data["fullname"]
+                existing_user.role = serializer.validated_data.get("role", "staff")
+                existing_user.created_by = request.user.gmail
+                existing_user.save()
+                
+                return Response(
+                    {
+                        "message": f"User {gmail} has been activated.",
+                        "user": UserSerializer(existing_user).data
+                    },
+                    status=status.HTTP_200_OK
+                )
+        
+        # Create new onboarded user
+        new_user = CustomUser.objects.create(
+            fullname=serializer.validated_data["fullname"],
+            gmail=gmail,
+            role=serializer.validated_data.get("role", "staff"),
+            is_active=True,  # Onboarded users are active
+            created_by=request.user.gmail,
+        )
+        
+        print(f"✅ Admin {request.user.gmail} onboarded new user: {gmail}")
+        
+        return Response(
+            {
+                "message": f"User {gmail} has been successfully onboarded.",
+                "user": UserSerializer(new_user).data
+            },
+            status=status.HTTP_201_CREATED
+        )
+        
+    except Exception as e:
+        import traceback
+        print(f"Error in onboard_user: {str(e)}")
+        print(traceback.format_exc())
+        return Response(
+            {"error": f"Failed to onboard user: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def list_users(request):
+    """
+    List all users (Admin only).
+    
+    Query params:
+    - role: Filter by role (admin, manager, staff)
+    - is_active: Filter by active status (true/false)
+    """
+    try:
+        # Check if requesting user is an admin
+        if request.user.role != "admin":
+            return Response(
+                {"error": "Permission denied. Only admins can view all users."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        users = CustomUser.objects.all().order_by("-created_at")
+        
+        # Filter by role if provided
+        role = request.query_params.get("role")
+        if role:
+            users = users.filter(role=role)
+        
+        # Filter by is_active if provided
+        is_active = request.query_params.get("is_active")
+        if is_active is not None:
+            is_active_bool = is_active.lower() == "true"
+            users = users.filter(is_active=is_active_bool)
+        
+        serializer = UserSerializer(users, many=True)
+        
+        return Response(
+            {
+                "count": users.count(),
+                "users": serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
+        
+    except Exception as e:
+        import traceback
+        print(f"Error in list_users: {str(e)}")
+        print(traceback.format_exc())
+        return Response(
+            {"error": f"Failed to list users: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@csrf_exempt
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+def update_user(request, user_id):
+    """
+    Update a user's details (Admin only).
+    
+    Request body (all fields optional):
+    {
+        "fullname": "New Name",
+        "role": "manager",
+        "is_active": false
+    }
+    """
+    try:
+        # Check if requesting user is an admin
+        if request.user.role != "admin":
+            return Response(
+                {"error": "Permission denied. Only admins can update users."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        try:
+            user = CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
+            return Response(
+                {"error": f"User with ID {user_id} not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Update fields if provided
+        if "fullname" in request.data:
+            user.fullname = request.data["fullname"]
+        if "role" in request.data:
+            user.role = request.data["role"]
+        if "is_active" in request.data:
+            user.is_active = request.data["is_active"]
+        
+        user.save()
+        
+        print(f"✅ Admin {request.user.gmail} updated user: {user.gmail}")
+        
+        return Response(
+            {
+                "message": f"User {user.gmail} has been updated.",
+                "user": UserSerializer(user).data
+            },
+            status=status.HTTP_200_OK
+        )
+        
+    except Exception as e:
+        import traceback
+        print(f"Error in update_user: {str(e)}")
+        print(traceback.format_exc())
+        return Response(
+            {"error": f"Failed to update user: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@csrf_exempt
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def deactivate_user(request, user_id):
+    """
+    Deactivate a user (Admin only). Soft delete - sets is_active=False.
+    """
+    try:
+        # Check if requesting user is an admin
+        if request.user.role != "admin":
+            return Response(
+                {"error": "Permission denied. Only admins can deactivate users."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        try:
+            user = CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
+            return Response(
+                {"error": f"User with ID {user_id} not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Prevent self-deactivation
+        if user.id == request.user.id:
+            return Response(
+                {"error": "You cannot deactivate your own account."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        user.is_active = False
+        user.save()
+        
+        print(f"✅ Admin {request.user.gmail} deactivated user: {user.gmail}")
+        
+        return Response(
+            {"message": f"User {user.gmail} has been deactivated."},
+            status=status.HTTP_200_OK
+        )
+        
+    except Exception as e:
+        import traceback
+        print(f"Error in deactivate_user: {str(e)}")
+        print(traceback.format_exc())
+        return Response(
+            {"error": f"Failed to deactivate user: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @csrf_exempt
@@ -1267,305 +1542,12 @@ def submit_agent_feedback(request):
         return JsonResponse({"error": str(e)}, status=500)
 
 
-@csrf_exempt
-@api_view(["POST"])
-@permission_classes([IsAuthenticated, IsAdminUser])
-def create_user_account(request):
-    """
-    Admin endpoint to create new user accounts
-    """
-    try:
-        data = request.data
-
-        # Required fields
-        email = data.get("email")
-        name = data.get("name")
-        role = data.get("role", "User")
-        department = data.get("department")
-        warehouse = data.get("warehouse")
-        position = data.get("position")
-
-        # Validate required fields
-        if not email or not name:
-            return JsonResponse({"error": "Email and name are required"}, status=400)
-
-        # Validate role
-        if role not in ["Admin", "User"]:
-            return JsonResponse(
-                {"error": "Role must be either 'Admin' or 'User'"}, status=400
-            )
-
-        # Get current admin user
-        from rest_framework_simplejwt.tokens import AccessToken
-
-        auth_header = request.META.get("HTTP_AUTHORIZATION", "")
-        token = auth_header.split(" ")[1]
-        access_token = AccessToken(token)
-        admin_email = access_token.get("email")
-
-        # Create user in MySQL
-        user = mysql_db.create_user(
-            email=email,
-            name=name,
-            role=role,
-            department=department,
-            warehouse=warehouse,
-            position=position,
-            created_by=admin_email,
-        )
-
-        if user:
-            # Log activity
-            mysql_db.log_activity(
-                user_id=user["user_id"],
-                user_email=admin_email,
-                user_name=name,
-                user_role="Admin",
-                action="create_user",
-                details=f"Admin {admin_email} created new user {email} with role {role}",
-                ip_address=request.META.get("REMOTE_ADDR"),
-                user_agent=request.META.get("HTTP_USER_AGENT"),
-            )
-
-            return JsonResponse(
-                {
-                    "success": True,
-                    "message": f"User {email} created successfully",
-                    "user": {
-                        "user_id": user["user_id"],
-                        "email": user["email"],
-                        "name": user["name"],
-                        "role": user["role"],
-                        "department": user["department"],
-                        "warehouse": user["warehouse"],
-                    },
-                },
-                status=201,
-            )
-        else:
-            return JsonResponse({"error": "Failed to create user"}, status=500)
-
-    except Exception as e:
-        import traceback
-
-        print(f"❌ Error in create_user_account: {str(e)}")
-        print(traceback.format_exc())
-        return JsonResponse({"error": str(e)}, status=500)
-
-
-@csrf_exempt
-@api_view(["GET"])
-@permission_classes([IsAuthenticated, IsAdminUser])
-def get_all_users(request):
-    """
-    Admin endpoint to get all users
-    Only accessible by users with Admin role in JWT token
-    """
-    try:
-        # ✅ Get user email from JWT token
-        from rest_framework_simplejwt.tokens import AccessToken
-
-        auth_header = request.META.get("HTTP_AUTHORIZATION", "")
-        if not auth_header.startswith("Bearer "):
-            return JsonResponse({"error": "Invalid authorization header"}, status=401)
-
-        token = auth_header.split(" ")[1]
-        access_token = AccessToken(token)
-
-        current_user_email = access_token.get("email")
-
-        # Optional: Get full user data from MySQL if needed
-        # current_user = mysql_db.get_user_by_email(current_user_email)
-
-        # Get role filter from query params
-        role_filter = request.GET.get("role")
-        users = mysql_db.get_all_users(role=role_filter)
-
-        # Remove sensitive fields
-        for user in users:
-            user.pop("google_access_token", None)
-            user.pop("google_refresh_token", None)
-
-        return JsonResponse(
-            {"success": True, "users": users, "count": len(users)}, status=200
-        )
-
-    except Exception as e:
-        import traceback
-
-        print(f"❌ Error in get_all_users: {str(e)}")
-        print(traceback.format_exc())
-        return JsonResponse({"error": str(e)}, status=500)
-
-
-@csrf_exempt
-def google_auth_mysql(request):
-    """
-    Handle Google OAuth authentication with MySQL
-    """
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            auth_code = data.get("code")
-
-            if not auth_code:
-                return JsonResponse(
-                    {"error": "Authorization code is missing."}, status=400
-                )
-
-            print(f"Received auth code: {auth_code[:20]}...")
-
-            # Exchange code for tokens
-            token_url = "https://oauth2.googleapis.com/token"
-            token_data = {
-                "code": auth_code,
-                "client_id": settings.GOOGLE_OAUTH2_CLIENT_ID,
-                "client_secret": settings.GOOGLE_OAUTH2_CLIENT_SECRET,
-                "redirect_uri": "postmessage",
-                "grant_type": "authorization_code",
-            }
-
-            token_response = requests.post(token_url, data=token_data)
-            token_response_data = token_response.json()
-
-            if "error" in token_response_data:
-                return JsonResponse(
-                    {
-                        "error": token_response_data.get(
-                            "error_description", token_response_data["error"]
-                        )
-                    },
-                    status=400,
-                )
-
-            access_token = token_response_data.get("access_token")
-            refresh_token = token_response_data.get("refresh_token", "")
-
-            # Get user info from Google
-            userinfo_url = "https://www.googleapis.com/oauth2/v2/userinfo"
-            headers = {"Authorization": f"Bearer {access_token}"}
-            userinfo_response = requests.get(userinfo_url, headers=headers)
-            userinfo = userinfo_response.json()
-
-            email = userinfo.get("email")
-            name = userinfo.get("name", "")
-            google_id = userinfo.get("id")
-            picture = userinfo.get("picture", "")
-
-            if not email:
-                return JsonResponse(
-                    {"error": "Email not provided by Google"}, status=400
-                )
-
-            print(f"👤 Authenticating user: {email}")
-
-            # Check if user exists in MySQL
-            user = mysql_db.get_user_by_email(email)
-
-            if not user:
-                return JsonResponse(
-                    {
-                        "error": "User not found. Please contact your administrator to create an account."
-                    },
-                    status=404,
-                )
-
-            if not user["is_active"]:
-                return JsonResponse(
-                    {
-                        "error": "Your account has been deactivated. Please contact your administrator."
-                    },
-                    status=403,
-                )
-
-            # Update Google tokens in MySQL
-            from datetime import datetime, timedelta
-
-            token_expiry = datetime.now() + timedelta(
-                seconds=token_response_data.get("expires_in", 3600)
-            )
-
-            mysql_db.update_user_google_tokens(
-                user_id=user["user_id"],
-                google_id=google_id,
-                access_token=access_token,
-                refresh_token=refresh_token,
-                token_expiry=token_expiry,
-            )
-
-            # Log activity
-            mysql_db.log_activity(
-                user_id=user["user_id"],
-                user_email=user["email"],
-                user_name=user["name"],
-                user_role=user["role"],
-                action="login",
-                details=f"User logged in via Google OAuth",
-                ip_address=request.META.get("REMOTE_ADDR"),
-                user_agent=request.META.get("HTTP_USER_AGENT"),
-            )
-
-            # Create Django user for JWT
-            try:
-                django_user = User.objects.get(email=email)
-            except User.DoesNotExist:
-                username = email.split("@")[0]
-                counter = 1
-                while User.objects.filter(username=username).exists():
-                    username = f"{email.split('@')[0]}{counter}"
-                    counter += 1
-
-                django_user = User.objects.create(
-                    email=email,
-                    username=username,
-                    first_name=name.split()[0] if name else "",
-                    last_name=(
-                        " ".join(name.split()[1:])
-                        if name and len(name.split()) > 1
-                        else ""
-                    ),
-                )
-
-            # ✅ Generate JWT tokens with custom claims (role, department, etc.)
-            from rest_framework_simplejwt.tokens import RefreshToken
-
-            refresh = RefreshToken.for_user(django_user)
-
-            # Add custom claims to the token payload
-            refresh["role"] = user["role"]
-            refresh["department"] = user["department"]
-            refresh["warehouse"] = user["warehouse"]
-            refresh["mysql_user_id"] = user["user_id"]
-            refresh["email"] = user["email"]
-            refresh["name"] = user["name"]
-
-            access_token_jwt = str(refresh.access_token)
-
-            print(
-                f"✅ User {email} authenticated successfully with role: {user['role']}"
-            )
-
-            return JsonResponse(
-                {
-                    "access": access_token_jwt,
-                    "refresh": str(refresh),
-                    "user": {
-                        "email": user["email"],
-                        "name": user["name"],
-                        "picture": picture,
-                        # ⚠️ Don't send role here - it's in the JWT token now
-                    },
-                },
-                status=200,
-            )
-
-        except Exception as e:
-            import traceback
-
-            print(f"Error in google_auth_mysql: {str(e)}")
-            print(traceback.format_exc())
-            return JsonResponse(
-                {"error": f"Authentication failed: {str(e)}"}, status=500
-            )
-
-    return JsonResponse({"error": "Method not allowed"}, status=405)
+# ==========================================
+# DEPRECATED - MySQL functions removed
+# Use the new SQLite-based endpoints:
+# - POST /api/auth/google/ - Google OAuth login (requires onboarded user)
+# - POST /api/users/onboard/ - Onboard new user (Admin only)
+# - GET /api/users/ - List all users (Admin only)
+# - PATCH /api/users/<id>/ - Update user (Admin only)
+# - DELETE /api/users/<id>/deactivate/ - Deactivate user (Admin only)
+# ==========================================
