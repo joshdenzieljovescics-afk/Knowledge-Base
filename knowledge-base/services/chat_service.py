@@ -2,6 +2,7 @@
 import os
 import time
 import openai
+import asyncio
 from typing import List, Dict, Optional
 from dotenv import load_dotenv
 from database.chat_db import ChatDatabase
@@ -10,6 +11,8 @@ from services.query_processor import QueryProcessor
 from services.context_manager import ContextManager
 from utils.kb_logger import KBLogger
 from utils.token_tracker import TokenTracker, estimate_cost
+from utils.quota_client import QuotaClientSync  # Only using for reporting, not enforcement
+from utils.llm_error_handler import handle_llm_error, LLMServiceException, is_llm_error
 
 # Ensure environment variables are loaded
 load_dotenv()
@@ -17,6 +20,14 @@ load_dotenv()
 # Initialize logger and token tracker
 kb_logger = KBLogger()
 token_tracker = TokenTracker()
+
+# Initialize quota client (sync version for non-async methods)
+# Set QUOTA_SERVICE_URL env var or defaults to http://localhost:8011
+quota_client = QuotaClientSync()
+
+# Enable/disable quota enforcement
+QUOTA_ENABLED = os.getenv("QUOTA_ENABLED", "true").lower() == "true"
+
 
 class ChatService:
     def __init__(self):
@@ -145,7 +156,17 @@ class ChatService:
             print(f"[ChatService]     - Page: {chunk.get('page', 'N/A')}")
             print(f"[ChatService]     - Rerank Score: {chunk.get('rerank_score', chunk.get('score', 0)):.3f}")
         
-        # 6. Generate response with OpenAI
+        # 6. Token estimation (for logging purposes only - no enforcement)
+        # Note: Token quota enforcement is disabled for Knowledge Base.
+        # Users can use the KB functionality regardless of token usage.
+        # Usage is still tracked/reported for analytics purposes after the LLM call.
+        if QUOTA_ENABLED and user_id:
+            estimated_tokens = self._estimate_tokens(user_message, context, top_chunks)
+            print(f"\n[ChatService] 💰 TOKEN ESTIMATE (tracking only, no enforcement)")
+            print(f"[ChatService] User ID: {user_id}")
+            print(f"[ChatService] Estimated tokens: {estimated_tokens}")
+        
+        # 7. Generate response with OpenAI
         print(f"\n[ChatService] 🤖 GENERATING AI RESPONSE")
         print(f"[ChatService] Using {len(top_chunks)} knowledge chunks")
         print(f"[ChatService] Context messages: {len(context)}")
@@ -156,7 +177,8 @@ class ChatService:
             knowledge_chunks=top_chunks,
             chunks_retrieved=len(search_results),
             chunks_used=len(top_chunks),
-            session_id=session_id
+            session_id=session_id,
+            user_id=user_id
         )
         
         print(f"[ChatService] ✅ Generated response")
@@ -206,6 +228,34 @@ class ChatService:
         
         return assistant_msg
     
+    def _estimate_tokens(
+        self,
+        user_message: str,
+        context: List[Dict],
+        knowledge_chunks: List[Dict]
+    ) -> int:
+        """
+        Estimate tokens for a chat request.
+        
+        Rough estimation: ~4 characters = 1 token
+        Plus buffer for system prompt and response.
+        """
+        # User message
+        tokens = len(user_message) // 4
+        
+        # Context messages (previous conversation)
+        for msg in context:
+            tokens += len(msg.get('content', '')) // 4
+        
+        # Knowledge chunks
+        for chunk in knowledge_chunks:
+            tokens += len(chunk.get('text', '')) // 4
+        
+        # System prompt (~500 tokens) + expected response (~500 tokens)
+        tokens += 1000
+        
+        return tokens
+    
     def _generate_response(
         self,
         user_message: str,
@@ -213,7 +263,8 @@ class ChatService:
         knowledge_chunks: List[Dict],
         chunks_retrieved: int = 0,
         chunks_used: int = 0,
-        session_id: str = None
+        session_id: str = None,
+        user_id: str = None
     ) -> Dict:
         """
         Generate response using OpenAI with KB context
@@ -286,6 +337,8 @@ Use all this information to provide comprehensive, well-cited answers that synth
             
             duration_ms = (time.time() - start_time) * 1000  # Calculate duration
             tokens_used = response.usage.total_tokens
+            input_tokens = response.usage.prompt_tokens
+            output_tokens = response.usage.completion_tokens
             cost = estimate_cost("gpt-4o", total_tokens=tokens_used)
             
             # Log the chat LLM call with full metrics
@@ -301,6 +354,28 @@ Use all this information to provide comprehensive, well-cited answers that synth
                 chunks_used=chunks_used,
                 session_id=session_id
             )
+            
+            # Report usage to Token Quota Service
+            if QUOTA_ENABLED and user_id:
+                try:
+                    quota_client.report(
+                        user_id=user_id,
+                        service="knowledge-base",
+                        model="gpt-4o",
+                        input_tokens=input_tokens,
+                        output_tokens=output_tokens,
+                        operation="chat",
+                        cost_usd=cost,  # Include calculated cost
+                        session_id=session_id,
+                        metadata={
+                            "chunks_retrieved": chunks_retrieved,
+                            "chunks_used": chunks_used,
+                            "duration_ms": duration_ms
+                        }
+                    )
+                    print(f"[ChatService] 📊 Reported {tokens_used} tokens (${cost:.6f}) to quota service")
+                except Exception as quota_error:
+                    print(f"[ChatService] ⚠️ Failed to report quota: {quota_error}")
             
             return {
                 'content': response.choices[0].message.content,
@@ -328,7 +403,12 @@ Use all this information to provide comprehensive, well-cited answers that synth
                 session_id=session_id
             )
             
-            # Fallback response
+            # Check if this is an LLM-specific error and raise it properly
+            if is_llm_error(e):
+                llm_error = handle_llm_error(e, context="KB Chat - Response Generation")
+                raise LLMServiceException(llm_error)
+            
+            # Fallback response for non-LLM errors
             return {
                 'content': "I apologize, but I encountered an error while processing your question. Please try again.",
                 'tokens_used': 0

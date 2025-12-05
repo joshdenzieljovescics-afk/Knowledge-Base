@@ -47,12 +47,23 @@ def create_app():
     
     allowed_origins = Config.ALLOWED_ORIGINS if Config.ENVIRONMENT == "production" else [
         "http://localhost:5173",      # Vite dev server (default)
+        "http://localhost:5174",      # Alternative Vite port
         "http://localhost:3000",      # Alternative dev port
         "http://127.0.0.1:5173",
         "http://127.0.0.1:3000",
-        # Add your frontend port here if different, e.g.:
-        # "http://localhost:8080",
-        # "http://localhost:4200",
+        # Agent service ports
+        "http://localhost:8000",
+        "http://localhost:8001",
+        "http://localhost:8002",
+        "http://localhost:8003",
+        "http://localhost:8004",
+        "http://localhost:8005",
+        "http://localhost:8006",
+        "http://localhost:8007",
+        "http://localhost:8008",
+        "http://localhost:8009",
+        "http://localhost:8010",
+        "http://localhost:8011",
     ]
     
     app.add_middleware(

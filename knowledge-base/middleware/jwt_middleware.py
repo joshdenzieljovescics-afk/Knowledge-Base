@@ -100,11 +100,13 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 async def get_user_id(current_user: dict = Depends(get_current_user)) -> str:
     """
     Helper dependency to extract just the user_id from the token.
-    Supports both 'sub' (standard JWT) and 'user_id' (Django SimpleJWT) claims.
+    Uses 'user_id' claim which contains the unique UUID from auth_user table.
+    Falls back to 'sub' for backwards compatibility.
     
     Usage:
         @router.get("/protected")
         async def protected_route(user_id: str = Depends(get_user_id)):
             ...
     """
-    return current_user.get("sub") or current_user.get("user_id")
+    user_id = current_user.get("user_id") or current_user.get("sub")
+    return str(user_id) if user_id is not None else None

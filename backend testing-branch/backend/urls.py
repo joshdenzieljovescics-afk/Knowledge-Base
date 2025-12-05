@@ -3,7 +3,7 @@ from django.urls import path, include
 from api.views import *
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.conf.urls.static import static
-from api.views import dynamic_mapping_workflow
+from api.views import dynamic_mapping_workflow, onboard_user, list_users, update_user, deactivate_user
 from api.serializers import CustomTokenObtainPairSerializer
 
 urlpatterns = [
@@ -21,14 +21,15 @@ urlpatterns = [
     path("callback/", google_login_callback, name="callback"),
     path("api/auth/user/", UserDetailView.as_view(), name="user_detail"),
     path("api/google/validate_token/", validate_google_token, name="validate_token"),
-    # ✅ DynamoDB authentication (legacy - can remove if not using)
+    # ✅ Google OAuth authentication with onboarding check
     path(
-        "api/auth/dynamodb/google/", google_auth_dynamodb, name="google_auth_dynamodb"
+        "api/auth/google/", google_auth_dynamodb, name="google_auth"
     ),
-    # ✅ MySQL authentication (current implementation)
-    path("api/auth/mysql/google/", google_auth_mysql, name="google_auth_mysql"),
-    path("api/auth/mysql/create-user/", create_user_account, name="create_user"),
-    path("api/auth/mysql/users/", get_all_users, name="get_all_users"),  # ✅ Add this
+    # ✅ User Onboarding endpoints (Admin only)
+    path("api/users/onboard/", onboard_user, name="onboard_user"),
+    path("api/users/", list_users, name="list_users"),
+    path("api/users/<int:user_id>/", update_user, name="update_user"),
+    path("api/users/<int:user_id>/deactivate/", deactivate_user, name="deactivate_user"),
     # Workflow endpoints
     path(
         "api/dynamic-mapping/upload/",

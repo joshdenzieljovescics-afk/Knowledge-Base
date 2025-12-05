@@ -3,7 +3,7 @@ import os
 import glob
 import uuid
 from datetime import datetime
-from fastapi import APIRouter, HTTPException, status, Header
+from fastapi import APIRouter, HTTPException, status, Header, Depends
 from typing import Optional
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, List, Dict, Any
@@ -16,6 +16,7 @@ from middleware.security_middleware import (
     MAX_QUERY_LENGTH,
     MAX_FILENAME_LENGTH
 )
+from middleware.rbac import Roles, require_roles, require_admin, require_manager_or_above
 import traceback
 
 kb_router = APIRouter(prefix='/kb', tags=['knowledge-base'])
@@ -61,7 +62,8 @@ class QueryRequest(BaseModel):
 @kb_router.post('/upload-to-kb')
 async def upload_to_kb(
     request: UploadToKBRequest,
-    authorization: Optional[str] = Header(None)
+    authorization: Optional[str] = Header(None),
+    current_user: dict = Depends(require_manager_or_above)  # Only managers/admins can upload
 ):
     """
     Upload processed chunks to knowledge base and save metadata to document database.
@@ -411,7 +413,8 @@ async def query_knowledge_base(request: QueryRequest):
 @kb_router.delete('/delete/{doc_id}')
 async def delete_document(
     doc_id: str,
-    authorization: Optional[str] = Header(None)
+    authorization: Optional[str] = Header(None),
+    current_user: dict = Depends(require_admin)  # Only admins can delete documents
 ):
     """
     Delete a document from the knowledge base and local database.
