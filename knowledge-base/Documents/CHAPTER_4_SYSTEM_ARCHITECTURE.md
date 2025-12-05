@@ -318,6 +318,165 @@ The Knowledge Base Management System is an AI-powered document management and ch
 - **C-5**: Frontend requires modern browser (ES6+ support)
 - **C-6**: JWT secret key must be shared between authentication server and this system
 
+### 3.4 Performance & Scalability Benchmarks
+
+The Knowledge Base system is designed for **internal organizational deployment** with the following capacity targets and performance benchmarks.
+
+#### 3.4.1 User Load Specifications
+
+**Target User Base:**
+
+The system is optimized for internal deployment, serving two main user groups:
+
+- **Primary Users (AI Assistant)**: 10-20 concurrent users
+  - Management team and selected personnel
+  - Full AI assistant capabilities with RAG (Retrieval-Augmented Generation)
+  - Token-intensive operations (embedding + chat completions)
+  - Average 100,000-500,000 tokens per day per user
+
+- **Secondary Users (Knowledge Base Query)**: 30-50 concurrent users
+  - General staff querying document knowledge base
+  - Read-only vector search operations
+  - Lower token consumption (10,000-50,000 tokens per day per user)
+
+**Maximum Concurrent Users**: 100 users (NFR-1.4)
+
+**Current Infrastructure Capacity:**
+- Conservative estimate: 10-20 concurrent active users (chat + upload operations)
+- Optimistic estimate: 50-100 concurrent users (read-only query operations)
+
+#### 3.4.2 Document Capacity Specifications
+
+**Storage Benchmarks:**
+- **Maximum Documents**: 10,000 PDF documents (NFR-2.1)
+- **Chunk Capacity**: Millions of chunks (Weaviate Cloud scalable)
+- **Upload Throughput**: 20 documents per hour per user (rate limited)
+- **Maximum File Size**: 10MB per PDF
+- **Processing Time**: < 30 seconds for documents < 10MB (NFR-1.2)
+
+**Indexing Performance:**
+- Vector embedding generation: 1-2 seconds per chunk
+- Database insertion: 100-500ms per document
+- Duplicate detection: < 200ms (SQLite query + SHA256 hash comparison)
+- Full document processing: 30-60 seconds average (10-page PDF)
+
+#### 3.4.3 API Response Time Benchmarks
+
+**Performance Targets (NFR-1):**
+- Document list queries: < 2 seconds
+- PDF parsing: < 30 seconds (< 10MB files)
+- Chat response generation: < 5 seconds
+- Vector search queries: < 1 second
+- Session switching: < 500ms
+- Authentication: < 300ms
+
+#### 3.4.4 Rate Limiting Framework
+
+**Request Quotas (Per User):**
+
+The system enforces endpoint-specific rate limits to ensure fair resource allocation and prevent abuse:
+
+- **Chat Operations**: 60 requests/minute
+  - Includes thread creation, switching, message sending
+  - Protects against rapid session switching abuse
+  
+- **Upload Operations**: 20 requests/hour
+  - PDF parsing and document uploads
+  - Storage and processing protection
+  
+- **Query Operations**: 30 requests/minute
+  - Knowledge base searches
+  - Vector similarity queries
+  
+- **Authentication**: 5 requests/minute
+  - Login attempts
+  - Brute force protection
+  
+- **Default Endpoints**: 100 requests/minute
+  - General API operations
+  - Document listing, metadata retrieval
+
+**Rate Limiter Implementation:**
+- Algorithm: Sliding window
+- Storage: In-memory (single instance) or Redis (distributed)
+- Identifier: User ID (authenticated) or IP address (unauthenticated)
+- Response: HTTP 429 with Retry-After header
+
+#### 3.4.5 Token Quota Configuration
+
+The system enforces a token quota and rate-limiting mechanism for the OpenAI API to ensure efficient resource management, cost predictability, and prevention of misuse.
+
+**Token Governance Framework:**
+
+The quota framework is structured into two protective layers designed to balance performance, fairness, and cost control:
+
+**Layer 1 – Pre-Request Limits:**
+
+This layer safeguards the system from excessive token consumption and infinite execution loops:
+- **Maximum tokens per request**: 8,000 tokens
+- **Supervisor-to-agent calls**: 4,000 tokens per interaction
+- **Maximum workflow depth**: 20 steps (prevents recursive or uncontrolled task expansion)
+
+**Layer 2 – Per-User Daily Quota:**
+
+Daily usage is tracked individually to ensure equitable access across all users:
+- **Daily allocation**: 500,000 tokens per user
+- **Reset schedule**: Automatic at midnight UTC
+- **Quota exceeded behavior**: Graceful blocking with clear user notification
+- **Session continuity**: Preserved to prevent abrupt task interruptions
+- **Cost estimate**: ~$10 per day per power user (at $0.02 per 1K tokens)
+
+**Expected Usage Patterns:**
+- Light user (10k tokens/day): 220,000 tokens/month (~$4.40)
+- Average user (100k tokens/day): 2.2M tokens/month (~$44)
+- Power user (500k tokens/day): 11M tokens/month (~$220)
+
+**Monthly System Cost Estimate:**
+- 10-20 AI users × 2.2M tokens average = 22-44M tokens/month (~$440-$880)
+- 30-50 query users × 220k tokens average = 6.6-11M tokens/month (~$132-$220)
+- **Total estimated range**: $570-$1,100 per month
+
+Together, these two layers establish a controlled and transparent token governance system that prevents abuse, maintains predictable operational costs, and ensures stable performance across both assistant-driven and data-query workflows.
+
+#### 3.4.6 Infrastructure Specifications
+
+**Current Architecture:**
+- **Backend**: FastAPI + Uvicorn ASGI server (single worker)
+- **Database**: SQLite (no connection pooling) + Weaviate Cloud
+- **Concurrency Model**: Async I/O (limited by SQLite sequential writes)
+- **Scaling**: Vertical scaling only (no load balancing configured)
+- **Deployment**: Single instance on port 8009
+
+**Known Bottlenecks:**
+1. **SQLite Write Concurrency**: Sequential writes limit parallel upload operations
+2. **Single Worker Process**: Uvicorn runs with one worker by default
+3. **No Horizontal Scaling**: No load balancer or multiple instances
+4. **In-Memory Rate Limiter**: Not distributed across multiple instances
+5. **No Connection Pooling**: Each request creates new database connections
+
+#### 3.4.7 Scaling Roadmap
+
+**To support > 100 concurrent users:**
+1. Migrate from SQLite to PostgreSQL (enables connection pooling)
+2. Deploy multiple Uvicorn workers (`uvicorn app:app --workers 4`)
+3. Implement Redis-backed rate limiter for distributed deployment
+4. Add load balancer (Nginx or HAProxy) for request distribution
+5. Enable horizontal pod autoscaling (if containerized with Kubernetes)
+
+**To support > 10,000 documents:**
+1. Upgrade Weaviate Cloud tier (already horizontally scalable)
+2. Implement batch upload endpoints for bulk operations
+3. Add background job queue (Celery or RQ) for async processing
+4. Optimize chunk size strategy to reduce embedding costs
+5. Implement document archival for inactive documents
+
+**To reduce OpenAI costs:**
+1. Implement embedding caching for frequently accessed chunks
+2. Use GPT-4o-mini for simple queries, GPT-4o for complex reasoning
+3. Optimize system prompts to reduce token consumption
+4. Implement response streaming to improve perceived performance
+5. Cache common query results with TTL expiration
+
 ---
 
 ## 4. System Sequence Diagrams
