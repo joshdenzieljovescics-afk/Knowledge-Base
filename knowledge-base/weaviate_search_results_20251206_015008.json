@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2025-12-05T03:23:08.756730",
+    "timestamp": "2025-12-06T01:50:08.665806",
     "query": "Hello",
     "search_type": "hybrid",
     "total_results": 50
@@ -42,7 +42,7 @@
         "company",
         "standards"
       ],
-      "score": 0.41258716583251953
+      "score": 0.4124520719051361
     },
     {
       "chunk_id": "chunk-8-d37fdab4",
@@ -61,7 +61,7 @@
         "overview",
         "core"
       ],
-      "score": 0.3184889554977417
+      "score": 0.3184156119823456
     },
     {
       "chunk_id": "CV Latest-chunk-1",
@@ -81,7 +81,7 @@
         "GitHub",
         "phone"
       ],
-      "score": 0.31480950117111206
+      "score": 0.31449785828590393
     },
     {
       "chunk_id": "Company-Manual.pdf-chunk-1",
@@ -95,7 +95,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.29188093543052673
+      "score": 0.2916735112667084
     },
     {
       "chunk_id": "Company-Manual.pdf-chunk-1",
@@ -109,7 +109,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.2914988398551941
+      "score": 0.291291743516922
     },
     {
       "chunk_id": "Company-Manual.pdf-chunk-0",
@@ -123,7 +123,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.2852592170238495
+      "score": 0.28496432304382324
     },
     {
       "chunk_id": "Company-Manual.pdf-chunk-0",
@@ -137,7 +137,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.28495562076568604
+      "score": 0.2846614122390747
     },
     {
       "chunk_id": "CV Latest-chunk-0",
@@ -155,7 +155,7 @@
         "contact",
         "information"
       ],
-      "score": 0.26319271326065063
+      "score": 0.2629508674144745
     },
     {
       "chunk_id": "SOP.pdf-chunk-0",
@@ -169,7 +169,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.23265215754508972
+      "score": 0.23268531262874603
     },
     {
       "chunk_id": "Company-Manual.pdf-chunk-3",
@@ -183,7 +183,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.22669167816638947
+      "score": 0.2265854924917221
     },
     {
       "chunk_id": "Company-Manual.pdf-chunk-3",
@@ -197,7 +197,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.22618666291236877
+      "score": 0.2260812371969223
     },
     {
       "chunk_id": "CV-chunk-0",
@@ -217,7 +217,7 @@
         "email",
         "phone"
       ],
-      "score": 0.22496360540390015
+      "score": 0.22470098733901978
     },
     {
       "chunk_id": "chunk-34-04bc51c4",
@@ -235,7 +235,7 @@
         "human",
         "resources"
       ],
-      "score": 0.21034538745880127
+      "score": 0.21036460995674133
     },
     {
       "chunk_id": "chunk-27-9ec961b0",
@@ -255,7 +255,7 @@
         "clients",
         "must"
       ],
-      "score": 0.2073587328195572
+      "score": 0.20718030631542206
     },
     {
       "chunk_id": "HSE.pdf-chunk-0",
@@ -269,7 +269,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.1863774210214615
+      "score": 0.186094731092453
     },
     {
       "chunk_id": "HSE.pdf-chunk-0",
@@ -283,7 +283,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.1863774210214615
+      "score": 0.186094731092453
     },
     {
       "chunk_id": "HSE.pdf-chunk-0",
@@ -297,7 +297,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.1863774210214615
+      "score": 0.186094731092453
     },
     {
       "chunk_id": "HSE.pdf-chunk-0",
@@ -311,7 +311,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.1863774210214615
+      "score": 0.186094731092453
     },
     {
       "chunk_id": "comany rules.pdf-chunk-0",
@@ -325,7 +325,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.18235905468463898
+      "score": 0.18208135664463043
     },
     {
       "chunk_id": "comany rules.pdf-chunk-0",
@@ -339,7 +339,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.18235905468463898
+      "score": 0.18208135664463043
     },
     {
       "chunk_id": "chunk-10-0d605e30",
@@ -359,7 +359,7 @@
         "dynamic",
         "company"
       ],
-      "score": 0.16933971643447876
+      "score": 0.16920432448387146
     },
     {
       "chunk_id": "Company-Manual.pdf-chunk-4",
@@ -373,7 +373,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.1682417243719101
+      "score": 0.16804750263690948
     },
     {
       "chunk_id": "Company-Manual.pdf-chunk-4",
@@ -387,7 +387,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.16815806925296783
+      "score": 0.16796429455280304
     },
     {
       "chunk_id": "CV-chunk-2",
@@ -408,7 +408,7 @@
         "development",
         "leadership"
       ],
-      "score": 0.16693934798240662
+      "score": 0.16681693494319916
     },
     {
       "chunk_id": "CV-chunk-3",
@@ -429,7 +429,7 @@
         "Python",
         "JavaScript"
       ],
-      "score": 0.16476702690124512
+      "score": 0.16468888521194458
     },
     {
       "chunk_id": "Company-Manual.pdf-chunk-6",
@@ -443,7 +443,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.1571822315454483
+      "score": 0.15710093080997467
     },
     {
       "chunk_id": "Company-Manual.pdf-chunk-6",
@@ -457,7 +457,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.15711042284965515
+      "score": 0.15702876448631287
     },
     {
       "chunk_id": "chunk-35-b38c7909",
@@ -473,7 +473,7 @@
       "tags": [
         "administration"
       ],
-      "score": 0.14840732514858246
+      "score": 0.14847686886787415
     },
     {
       "chunk_id": "chunk-5-e98bf248",
@@ -493,7 +493,7 @@
         "quality",
         "safety"
       ],
-      "score": 0.1452571302652359
+      "score": 0.14536137878894806
     },
     {
       "chunk_id": "chunk-1-80b8e033",
@@ -513,7 +513,7 @@
         "incoming",
         "goods"
       ],
-      "score": 0.14374683797359467
+      "score": 0.14387819170951843
     },
     {
       "chunk_id": "chunk-0-d9d7869f",
@@ -530,7 +530,7 @@
         "safexpress",
         "logistics"
       ],
-      "score": 0.1401277482509613
+      "score": 0.14006854593753815
     },
     {
       "chunk_id": "CV-chunk-7",
@@ -550,7 +550,7 @@
         "AI",
         "MERN stack"
       ],
-      "score": 0.13681797683238983
+      "score": 0.13656990230083466
     },
     {
       "chunk_id": "Company-Manual.pdf-chunk-5",
@@ -564,7 +564,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.12975122034549713
+      "score": 0.12960630655288696
     },
     {
       "chunk_id": "Company-Manual.pdf-chunk-5",
@@ -578,7 +578,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.12953519821166992
+      "score": 0.1293901801109314
     },
     {
       "chunk_id": "chunk-1-909e5caf",
@@ -596,7 +596,7 @@
         "company",
         "manual"
       ],
-      "score": 0.12940974533557892
+      "score": 0.1293392926454544
     },
     {
       "chunk_id": "CV Latest-chunk-5",
@@ -617,7 +617,7 @@
         "JavaScript",
         "Python"
       ],
-      "score": 0.12464609742164612
+      "score": 0.12459173053503036
     },
     {
       "chunk_id": "chunk-6-f7ea13ce",
@@ -636,7 +636,7 @@
         "safexpress",
         "family"
       ],
-      "score": 0.12427562475204468
+      "score": 0.12415885925292969
     },
     {
       "chunk_id": "HSE.pdf-chunk-3",
@@ -650,7 +650,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.12403278052806854
+      "score": 0.12398512661457062
     },
     {
       "chunk_id": "HSE.pdf-chunk-3",
@@ -664,7 +664,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.12403278052806854
+      "score": 0.12398512661457062
     },
     {
       "chunk_id": "HSE.pdf-chunk-3",
@@ -678,7 +678,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.12403278052806854
+      "score": 0.12398512661457062
     },
     {
       "chunk_id": "HSE.pdf-chunk-3",
@@ -692,7 +692,7 @@
       "parent_section": "",
       "context": "",
       "tags": [],
-      "score": 0.12403278052806854
+      "score": 0.12398512661457062
     },
     {
       "chunk_id": "chunk-3-c06fba35",
@@ -708,7 +708,7 @@
       "tags": [
         "version"
       ],
-      "score": 0.1183074489235878
+      "score": 0.11830753087997437
     },
     {
       "chunk_id": "CV Latest-chunk-7",
@@ -729,7 +729,7 @@
         "React",
         "AWS"
       ],
-      "score": 0.11184649914503098
+      "score": 0.11172277480363846
     },
     {
       "chunk_id": "chunk-12-427405b9",
@@ -748,7 +748,7 @@
         "disruption",
         "emergency"
       ],
-      "score": 0.1093117892742157
+      "score": 0.10942630469799042
     },
     {
       "chunk_id": "chunk-25-0706382a",
@@ -766,7 +766,7 @@
         "general",
         "employment"
       ],
-      "score": 0.10557255893945694
+      "score": 0.10567837953567505
     },
     {
       "chunk_id": "chunk-23-9cb752f1",
@@ -782,7 +782,7 @@
       "tags": [
         "table"
       ],
-      "score": 0.0936843529343605
+      "score": 0.09371047466993332
     },
     {
       "chunk_id": "chunk-24-70ec169f",
@@ -802,7 +802,7 @@
         "employee",
         "satisfaction"
       ],
-      "score": 0.09031263738870621
+      "score": 0.09033053368330002
     },
     {
       "chunk_id": "chunk-16-251f9bdf",
@@ -822,7 +822,7 @@
         "must",
         "immediately"
       ],
-      "score": 0.0876404270529747
+      "score": 0.0878114104270935
     },
     {
       "chunk_id": "chunk-3-7c538300",
@@ -839,7 +839,7 @@
         "procedure",
         "steps"
       ],
-      "score": 0.08710899204015732
+      "score": 0.087287038564682
     }
   ]
 }

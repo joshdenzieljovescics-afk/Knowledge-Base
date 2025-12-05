@@ -13,10 +13,6 @@
           "contact",
           "information"
         ],
-        "row_index": null,
-        "continues": false,
-        "is_page_break": false,
-        "siblings": [],
         "page": 1
       }
     },
@@ -35,10 +31,6 @@
           "GitHub",
           "phone"
         ],
-        "row_index": null,
-        "continues": false,
-        "is_page_break": false,
-        "siblings": [],
         "page": 1
       }
     },
@@ -49,19 +41,15 @@
         "section": "Career Objective",
         "section_title": "Career Objective",
         "parent_section": "",
-        "context": "Career goals focused on technology and AI roles",
+        "context": "Career goals focusing on technical depth and leadership in technology",
         "tags": [
           "career",
           "objective",
           "technology",
           "AI",
-          "development",
-          "leadership"
+          "leadership",
+          "development"
         ],
-        "row_index": null,
-        "continues": false,
-        "is_page_break": false,
-        "siblings": [],
         "page": 1
       }
     },
@@ -72,22 +60,18 @@
         "section": "Education",
         "section_title": "Education",
         "parent_section": "",
-        "context": "Educational background in IT and Economics",
+        "context": "Educational background including degrees and institutions",
         "tags": [
           "education",
           "university",
           "information technology",
           "economics"
         ],
-        "row_index": null,
-        "continues": false,
-        "is_page_break": false,
-        "siblings": [],
         "page": 1
       }
     },
     {
-      "text": "Certification: CompTIA IT Fundamentals (ITF+) Certification",
+      "text": "Certification CompTIA IT Fundamentals (ITF+) Certification",
       "metadata": {
         "type": "paragraph",
         "section": "Certification",
@@ -100,78 +84,64 @@
           "ITF+",
           "IT"
         ],
-        "row_index": null,
-        "continues": false,
-        "is_page_break": false,
-        "siblings": [],
         "page": 1
       }
     },
     {
       "text": "Technical Skills: Java, C++, JavaScript, PHP, MySQL, Kotlin, Firebase, C#, ASP.NET, AngularJs, React, Express.js, Node.js, MongoDB, Python, Django, FastAPI, Laravel, HTML, CSS, Bootstrap, Tailwind CSS",
       "metadata": {
-        "type": "paragraph",
+        "type": "list",
         "section": "Technical Skills",
         "section_title": "Technical Skills",
         "parent_section": "",
-        "context": "List of programming languages and technologies known",
+        "context": "List of technical skills and programming languages",
         "tags": [
-          "technical skills",
+          "technical",
+          "skills",
           "programming",
+          "languages",
           "Java",
-          "C++",
-          "JavaScript",
-          "Python"
+          "Python",
+          "React"
         ],
-        "row_index": null,
-        "continues": false,
-        "is_page_break": false,
-        "siblings": [],
         "page": 1
       }
     },
     {
-      "text": "Achievements/Responsibilities: - Served as Project Manager for a bakeshop attendance and salary computation web application (MERN stack), leading end-to-end project execution from client consultation to delivery, gathering and validating requirements, contributing to system architecture and business logic, evaluating technical approaches, resolving design issues, managing tasks via Trello, coordinating stakeholder communication, preparing SPMP/SRS/SDD documentation, and performing comprehensive scenario-based manual testing to ensure system quality and alignment with project standards.",
+      "text": "Achievements/Responsibilities - Served as Project Manager for a bakeshop attendance and salary computation web application (MERN stack), leading end-to-end project execution from client consultation to delivery, gathering and validating requirements, contributing to system architecture and business logic, evaluating technical approaches, resolving design issues, managing tasks via Trello, coordinating stakeholder communication, preparing SPMP/SRS/SDD documentation, and performing comprehensive scenario-based manual testing to ensure system quality and alignment with project standards.",
       "metadata": {
-        "type": "list",
+        "type": "paragraph",
         "section": "Achievements/Responsibilities",
-        "section_title": "Achievements/Responsibilities",
+        "section_title": "Project Management",
         "parent_section": "",
-        "context": "Project management experience in web application development",
+        "context": "Project management role in a web application development",
         "tags": [
-          "achievements",
-          "responsibilities",
-          "project management",
+          "project",
+          "management",
           "MERN",
-          "web application"
+          "web application",
+          "leadership"
         ],
-        "row_index": null,
-        "continues": true,
-        "is_page_break": false,
-        "siblings": [],
         "page": 1
       }
     },
     {
-      "text": "- Led the design and development of an agentic AI system for a logistics company web application, integrating LLM-powered knowledge-base querying, an AI assistant capable of emulating real assistant workflows, and intelligent data mapping with automated data entry. Built core AI workflows using Python, React, LangChain, LangGraph, and OpenAI LLM/embedding models, with agent services deployed independently as microservices on AWS as part of an ongoing Capstone Project.",
+      "text": "Led the design and development of an agentic AI system for a logistics company web application, integrating LLM-powered knowledge-base querying, an AI assistant capable of emulating real assistant workflows, and intelligent data mapping with automated data entry. Built core AI workflows using Python, React, LangChain, LangGraph, and OpenAI LLM/embedding models, with agent services deployed independently as microservices on AWS as part of an ongoing Capstone Project.",
       "metadata": {
-        "type": "list",
+        "type": "paragraph",
         "section": "Achievements/Responsibilities",
-        "section_title": "Achievements/Responsibilities",
+        "section_title": "AI System Development",
         "parent_section": "",
-        "context": "AI system development for logistics application",
+        "context": "Development of an AI system for a logistics web application",
         "tags": [
           "AI",
+          "system",
+          "development",
           "logistics",
-          "web application",
           "Python",
           "React",
           "AWS"
         ],
-        "row_index": null,
-        "continues": false,
-        "is_page_break": false,
-        "siblings": [],
         "page": 1
       }
     }

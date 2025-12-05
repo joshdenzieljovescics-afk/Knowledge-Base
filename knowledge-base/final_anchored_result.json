@@ -12,13 +12,9 @@
         "contact",
         "information"
       ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
       "page": 1,
       "source_file": "CV Latest.pdf",
-      "created_at": "2025-12-03T00:57:32.807915",
+      "created_at": "2025-12-06T02:15:01.064935",
       "processing_method": "two_pass",
       "box": {
         "l": 72.0,
@@ -32,7 +28,7 @@
         "p1-ln-0"
       ]
     },
-    "id": "chunk-0-c75a1b4b"
+    "id": "chunk-0-48d14444"
   },
   {
     "text": "Denz.joves@gmail.com | https://www.linkedin.com/in/josh-denziel-joves-824769394/ | 09499973474 | https://github.com/Jdenziieel/denz-portfolio",
@@ -49,13 +45,9 @@
         "GitHub",
         "phone"
       ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
       "page": 1,
       "source_file": "CV Latest.pdf",
-      "created_at": "2025-12-03T00:57:32.807941",
+      "created_at": "2025-12-06T02:15:01.064958",
       "processing_method": "two_pass",
       "box": {
         "l": 72.0,
@@ -70,7 +62,7 @@
         "p1-ln-2"
       ]
     },
-    "id": "chunk-1-2530195b"
+    "id": "chunk-1-e96edb33"
   },
   {
     "text": "Career Objective: A graduating student committed to learning industry best practices, including end-to-end development processes, client requirement analysis, and technology-driven problem solving. Seeks a role that cultivates technical depth, leadership capability, and eager hands-on experience while supporting initiatives involving artificial intelligence and modern application architectures. Aims to build a strong foundation in solution design and system architecture as part of a long-term career in the technology field.",
@@ -79,22 +71,18 @@
       "section": "Career Objective",
       "section_title": "Career Objective",
       "parent_section": "",
-      "context": "Career goals focused on technology and AI roles",
+      "context": "Career goals focusing on technical depth and leadership in technology",
       "tags": [
         "career",
         "objective",
         "technology",
         "AI",
-        "development",
-        "leadership"
+        "leadership",
+        "development"
       ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
       "page": 1,
       "source_file": "CV Latest.pdf",
-      "created_at": "2025-12-03T00:57:32.807952",
+      "created_at": "2025-12-06T02:15:01.064971",
       "processing_method": "two_pass",
       "box": {
         "l": 72.0,
@@ -114,7 +102,7 @@
         "p1-ln-10"
       ]
     },
-    "id": "chunk-2-82c53fbb"
+    "id": "chunk-2-a0961955"
   },
   {
     "text": "Education: University of Santo Tomas - BS Information and Technology - August 2022 - June 2026 University of Santo Tomas - AB in Economics  - August 2018 - June 2022",
@@ -123,20 +111,16 @@
       "section": "Education",
       "section_title": "Education",
       "parent_section": "",
-      "context": "Educational background in IT and Economics",
+      "context": "Educational background including degrees and institutions",
       "tags": [
         "education",
         "university",
         "information technology",
         "economics"
       ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
       "page": 1,
       "source_file": "CV Latest.pdf",
-      "created_at": "2025-12-03T00:57:32.807962",
+      "created_at": "2025-12-06T02:15:01.064981",
       "processing_method": "two_pass",
       "box": {
         "l": 72.0,
@@ -152,10 +136,10 @@
         "p1-ln-14"
       ]
     },
-    "id": "chunk-3-1b557ebf"
+    "id": "chunk-3-023a494e"
   },
   {
-    "text": "Certification: CompTIA IT Fundamentals (ITF+) Certification",
+    "text": "Certification CompTIA IT Fundamentals (ITF+) Certification",
     "metadata": {
       "type": "paragraph",
       "section": "Certification",
@@ -168,13 +152,9 @@
         "ITF+",
         "IT"
       ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
       "page": 1,
       "source_file": "CV Latest.pdf",
-      "created_at": "2025-12-03T00:57:32.807969",
+      "created_at": "2025-12-06T02:15:01.065066",
       "processing_method": "two_pass",
       "box": {
         "l": 72.0,
@@ -189,31 +169,28 @@
         "p1-ln-17"
       ]
     },
-    "id": "chunk-4-3b15a248"
+    "id": "chunk-4-72c7ad08"
   },
   {
     "text": "Technical Skills: Java, C++, JavaScript, PHP, MySQL, Kotlin, Firebase, C#, ASP.NET, AngularJs, React, Express.js, Node.js, MongoDB, Python, Django, FastAPI, Laravel, HTML, CSS, Bootstrap, Tailwind CSS",
     "metadata": {
-      "type": "paragraph",
+      "type": "list",
       "section": "Technical Skills",
       "section_title": "Technical Skills",
       "parent_section": "",
-      "context": "List of programming languages and technologies known",
+      "context": "List of technical skills and programming languages",
       "tags": [
-        "technical skills",
+        "technical",
+        "skills",
         "programming",
+        "languages",
         "Java",
-        "C++",
-        "JavaScript",
-        "Python"
+        "Python",
+        "React"
       ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
       "page": 1,
       "source_file": "CV Latest.pdf",
-      "created_at": "2025-12-03T00:57:32.807977",
+      "created_at": "2025-12-06T02:15:01.065090",
       "processing_method": "two_pass",
       "box": {
         "l": 72.0,
@@ -230,30 +207,26 @@
         "p1-ln-22"
       ]
     },
-    "id": "chunk-5-c1f7c42a"
+    "id": "chunk-5-021e1ae3"
   },
   {
-    "text": "Achievements/Responsibilities: - Served as Project Manager for a bakeshop attendance and salary computation web application (MERN stack), leading end-to-end project execution from client consultation to delivery, gathering and validating requirements, contributing to system architecture and business logic, evaluating technical approaches, resolving design issues, managing tasks via Trello, coordinating stakeholder communication, preparing SPMP/SRS/SDD documentation, and performing comprehensive scenario-based manual testing to ensure system quality and alignment with project standards.",
+    "text": "Achievements/Responsibilities - Served as Project Manager for a bakeshop attendance and salary computation web application (MERN stack), leading end-to-end project execution from client consultation to delivery, gathering and validating requirements, contributing to system architecture and business logic, evaluating technical approaches, resolving design issues, managing tasks via Trello, coordinating stakeholder communication, preparing SPMP/SRS/SDD documentation, and performing comprehensive scenario-based manual testing to ensure system quality and alignment with project standards.",
     "metadata": {
-      "type": "list",
+      "type": "paragraph",
       "section": "Achievements/Responsibilities",
-      "section_title": "Achievements/Responsibilities",
+      "section_title": "Project Management",
       "parent_section": "",
-      "context": "Project management experience in web application development",
+      "context": "Project management role in a web application development",
       "tags": [
-        "achievements",
-        "responsibilities",
-        "project management",
+        "project",
+        "management",
         "MERN",
-        "web application"
+        "web application",
+        "leadership"
       ],
-      "row_index": null,
-      "continues": true,
-      "is_page_break": false,
-      "siblings": [],
       "page": 1,
       "source_file": "CV Latest.pdf",
-      "created_at": "2025-12-03T00:57:32.807984",
+      "created_at": "2025-12-06T02:15:01.065102",
       "processing_method": "two_pass",
       "box": {
         "l": 72.0,
@@ -274,31 +247,28 @@
         "p1-ln-31"
       ]
     },
-    "id": "chunk-6-04515e81"
+    "id": "chunk-6-ed65765d"
   },
   {
-    "text": "- Led the design and development of an agentic AI system for a logistics company web application, integrating LLM-powered knowledge-base querying, an AI assistant capable of emulating real assistant workflows, and intelligent data mapping with automated data entry. Built core AI workflows using Python, React, LangChain, LangGraph, and OpenAI LLM/embedding models, with agent services deployed independently as microservices on AWS as part of an ongoing Capstone Project.",
+    "text": "Led the design and development of an agentic AI system for a logistics company web application, integrating LLM-powered knowledge-base querying, an AI assistant capable of emulating real assistant workflows, and intelligent data mapping with automated data entry. Built core AI workflows using Python, React, LangChain, LangGraph, and OpenAI LLM/embedding models, with agent services deployed independently as microservices on AWS as part of an ongoing Capstone Project.",
     "metadata": {
-      "type": "list",
+      "type": "paragraph",
       "section": "Achievements/Responsibilities",
-      "section_title": "Achievements/Responsibilities",
+      "section_title": "AI System Development",
       "parent_section": "",
-      "context": "AI system development for logistics application",
+      "context": "Development of an AI system for a logistics web application",
       "tags": [
         "AI",
+        "system",
+        "development",
         "logistics",
-        "web application",
         "Python",
         "React",
         "AWS"
       ],
-      "row_index": null,
-      "continues": false,
-      "is_page_break": false,
-      "siblings": [],
       "page": 1,
       "source_file": "CV Latest.pdf",
-      "created_at": "2025-12-03T00:57:32.807991",
+      "created_at": "2025-12-06T02:15:01.065110",
       "processing_method": "two_pass",
       "box": {
         "l": 72.0,
@@ -317,6 +287,6 @@
         "p1-ln-38"
       ]
     },
-    "id": "chunk-7-8aeb59a7"
+    "id": "chunk-7-a1a9411e"
   }
 ]
